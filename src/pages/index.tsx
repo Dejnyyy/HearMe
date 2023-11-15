@@ -1,9 +1,11 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { PrismaClient } from '@prisma/client'
+
 
 import { api } from "~/utils/api";
+//planetscale
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -20,7 +22,9 @@ main()
     await prisma.$disconnect()
     process.exit(1)
   })
-  
+
+//planetscale*
+
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
 
