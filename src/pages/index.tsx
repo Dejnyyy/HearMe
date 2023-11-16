@@ -36,7 +36,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#9b55fd] to-[#131431]">
-        <div className="center"></div>
+        <div className="center w-60 h-60 bg-slate-100 rounded-l"></div>
+      <div className="text-white font-mono font-semibold">Hello, {} welcome to My App</div>
+     
       </main>
     </>
   );
