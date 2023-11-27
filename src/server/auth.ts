@@ -29,8 +29,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     SpotifyProvider({
-      clientId: process.env.SPOTIFY_PUBLIC,
-      clientSecret: process.env.SPOTIFY_SECRET
+      clientId: env.SPOTIFY_CLIENT_ID,
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
     })
   ],
 };

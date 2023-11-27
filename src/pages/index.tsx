@@ -1,7 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-
+import Image from "next/image";
 
 import { api } from "~/utils/api";
 //planetscale
@@ -67,8 +67,9 @@ export default function Home() {
           </li>
           </ul>
         </div>
-        <div className="center w-60 h-60 bg-slate-100 rounded-l"></div>
+       
       <div className="text-white font-mono font-semibold">Hello, {} welcome to My App</div>
+      <AuthShowcase />
      
       </main>
     </>
@@ -86,7 +87,19 @@ function AuthShowcase() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {sessionData && 
+        <div>
+          <span>Logged in as {sessionData.user?.name}</span>
+          <Image
+            className="rounded-2xl  m-auto"
+            src={sessionData.user?.image ?? ""}
+            alt={"pfp of user" + sessionData.user?.name}
+            width={300}
+            height={300}
+          />
+        </div>
+        }
+        
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button

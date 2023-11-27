@@ -51,8 +51,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    SPOTIFY_PUBLIC: process.env.SPOTIFY_PUBLIC,
-    SPOTIFY_SECRET: process.env.SPOTIFY_SECRET,
+    SPOTIFY_PUBLIC: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
