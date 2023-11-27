@@ -99,14 +99,13 @@ function AuthShowcase() {
           />
         </div>
         }
-        
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        className="rounded-full bg-purple-500 px-10 py-3 font-mono font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
       >
-        {sessionData ? "Sign out" : "Sign in"}
+        {sessionData ? "Sign out" : "Sign in via Spotify"}
       </button>
     </div>
   );
