@@ -71,7 +71,6 @@ export default function Home() {
        
       <div className="text-white font-mono font-semibold">Hello, {} welcome to My App</div>
       <AuthShowcase />
-     
       </main>
     </>
   );
