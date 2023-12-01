@@ -68,7 +68,7 @@ export default function Home() {
           </li>
           </ul>
         </div>
-       
+        
       <div className="text-white font-mono font-semibold">Hello, {} welcome to My App</div>
       <AuthShowcase />
       </main>
