@@ -39,7 +39,7 @@ export default function Home() {
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#481b48] to-[#000000]">      
       {sessionData && <HamburgerMenu />}
-      <div className="text-white font-mono font-semibold">Hello, {} welcome to My App</div>
+      {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to My App</div>}
       <AuthShowcase />
       </main>
     </>
@@ -59,13 +59,13 @@ function AuthShowcase() {
       <p className="text-center text-2xl text-white">
         {sessionData && 
         <div>
-          <span>Logged in as {sessionData.user?.name}</span>
+          {/*<span>Logged in as {sessionData.user?.name}</span>*/}
           <Image
             className="rounded-2xl  m-auto"
             src={sessionData.user?.image ?? ""}
             alt={"pfp of user" + sessionData.user?.name}
-            width={300}
-            height={300}
+            width={250}
+            height={250}
           />
         </div>
         }
