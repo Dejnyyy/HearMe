@@ -11,6 +11,7 @@
     left: 20px; 
     z-index: 1000; 
   }
+
   
   .bar {
     width: 30px;
@@ -20,16 +21,17 @@
   }
   
   .open {
-    transform: rotate(-45deg);
-    width: 25px;
+    transform: rotate(180deg);
+    opacity: 0;
   }
   
   .open:nth-child(2) {
+    transform: rotate(180deg);
     opacity: 0;
   }
   
   .open:nth-child(3) {
-    transform: rotate(45deg);
-    width: 25px;
+    transform: rotate(180deg);
+    opacity: 0;
   }
   
