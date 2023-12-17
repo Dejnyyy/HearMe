@@ -8,6 +8,9 @@ import { api } from "~/utils/api";
 import { PrismaClient } from '@prisma/client';
 import Header from './components/Header';
 import HamburgerMenu from "./components/HamburgerMenu";
+import { useRouter } from 'next/router';
+
+
 /*const prisma = new PrismaClient()
 
 async function main() {
@@ -48,7 +51,7 @@ export default function Home() {
 
 function AuthShowcase() {
   const { data: sessionData } = useSession();
-
+ 
   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
     undefined, // no input
     { enabled: sessionData?.user !== undefined }
@@ -61,11 +64,11 @@ function AuthShowcase() {
         <div>
           {/*<span>Logged in as {sessionData.user?.name}</span>*/}
           <Image
-            className="rounded-2xl  m-auto"
-            src={sessionData.user?.image ?? ""}
-            alt={"pfp of user" + sessionData.user?.name}
-            width={250}
-            height={250}
+             className="rounded-2xl  m-auto"
+             src={sessionData.user?.image ?? ""}
+             alt={"pfp of user" + sessionData.user?.name}
+             width={250}
+             height={250}
           />
         </div>
         }
