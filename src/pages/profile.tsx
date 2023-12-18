@@ -16,15 +16,7 @@ const Profile: React.FC = () => {
         <section>
           <div>
             <h1>Dejny</h1>
-            {image && (
-              <Image
-                className="rounded-2xl  m-auto"
-                src={image as string}
-                alt="pfp of user"
-                width={250}
-                height={250}
-              />
-            )}
+            
           </div>
         </section>
       </main>
