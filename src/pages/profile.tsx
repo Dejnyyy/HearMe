@@ -4,24 +4,28 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const Profile: React.FC = () => {
-  const router = useRouter();
-  const { image } = router.query;
+	const router = useRouter();
+	const { image } = router.query;
 
-  return (
-    <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gradient-to-b from-[#000000] to-[#481b48] text-lg cursor-pointer font-mono font-semibold">
-        <Link href="/" className="absolute right-10 top-5">
-          back
-        </Link>
-        <section>
-          <div>
-            <h1>Dejny</h1>
-            
-          </div>
-        </section>
-      </main>
-    </div>
-  );
+	return (
+		<div>
+			<main className="flex min-h-screen flex-col text-white items-center justify-center bg-gradient-to-b from-[#000000] to-[#481b48] text-lg cursor-pointer font-mono font-semibold">
+				<Link href="/" className="absolute right-10 top-5">
+					back
+				</Link>
+				<section>
+					<div>
+						<h1>Dejny</h1>
+					</div>
+				</section>
+				<div className="grid gap-x-60 my-5 grid-cols-3">
+					<div><span>Votes</span> - <span>Registered Date</span></div>
+					<div>02</div>
+					<div>03</div>
+				</div>
+			</main>
+		</div>
+	);
 };
 
 export default Profile;
