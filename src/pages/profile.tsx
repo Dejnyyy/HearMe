@@ -2,10 +2,13 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
 
 const Profile: React.FC = () => {
 	const router = useRouter();
 	const { image } = router.query;
+    const { data: sessionData } = useSession();
 
 	return (
 		<div>
@@ -16,6 +19,7 @@ const Profile: React.FC = () => {
 				<section>
 					<div>
 						<h1>Dejny</h1>
+                        <AuthShowcase />
 					</div>
 				</section>
 				<div className="grid gap-x-60 my-5 grid-cols-3">
@@ -30,5 +34,28 @@ const Profile: React.FC = () => {
 		</div>
 	);
 };
+
+function AuthShowcase() {
+    const { data: sessionData } = useSession();
+  
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        <p className="text-center text-2xl text-white">
+          {sessionData && 
+          <div>
+            <Image
+               className="rounded-2xl  m-auto"
+               src={sessionData.user?.image ?? ""}
+               alt={"pfp of user" + sessionData.user?.name}
+               width={250}
+               height={250} 
+            />
+          </div>
+          }
+        </p>
+      </div>
+    );
+  }
+  
 
 export default Profile;
