@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
 
 	return (
 		<div>
-			<main className="flex min-h-screen flex-col text-white items-center justify-center bg-gradient-to-b from-[#000000] to-[#481b48] text-lg  font-mono font-semibold">
+			<main className="flex min-h-screen flex-col text-white items-center justify-center bg-gradient-to-b  from-[#481b48] to-[#000000] text-lg  font-mono font-semibold">
 				<Link href="/" className="absolute right-10 top-5">
 					back
 				</Link>
@@ -44,7 +44,7 @@ function AuthShowcase() {
           {sessionData && 
           <div>
             <Image
-               className="rounded-2xl  m-auto"
+               className="rounded-full w-24 h-24"
                src={sessionData.user?.image ?? ""}
                alt={"pfp of user" + sessionData.user?.name}
                width={250}
