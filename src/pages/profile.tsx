@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
 				</Link>
 				<section>
 					<div>
-						<h1>Dejny</h1>
+						<h1 className='text-center my-3'>Dejny</h1>
                         <AuthShowcase />
 					</div>
 				</section>

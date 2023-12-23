@@ -64,7 +64,7 @@ function AuthShowcase() {
         <div>
           {/*<span>Logged in as {sessionData.user?.name}</span>*/}
           <Image
-             className="rounded-2xl  m-auto"
+             className="rounded-3xl m-auto"
              src={sessionData.user?.image ?? ""}
              alt={"pfp of user" + sessionData.user?.name}
              width={250}
