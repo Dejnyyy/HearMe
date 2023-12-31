@@ -1,4 +1,4 @@
-// pages/about.tsx
+// pages/vote.tsx
 import Link from 'next/link';
 
 const Vote: React.FC = () => {
@@ -11,6 +11,8 @@ const Vote: React.FC = () => {
 						<h1>Vote</h1>
 					</div>
 				</section>
+				<div className='w-96 h-96 my-2 shadow-md shadow-white rounded-lg'>
+				</div>
 			</main>
 		</div>
 	);

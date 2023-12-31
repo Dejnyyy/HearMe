@@ -27,9 +27,7 @@ const Profile: React.FC = () => {
                     <div><span>Votes</span> - <span>Registered Date</span></div>
 					<div>Favourite Album</div>
 				</div>
-                <h2>Activity</h2>
-                <div className="activity w-4/12 h-24 bg-stone-50 rounded-xl my-5"></div>
-                <div className="activity w-3/12 h-12 bg-stone-50 rounded-full my-5"><h1 className='text-black mt-2 text-center'>Today's Vote</h1></div>
+                <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5"><h1 className='text-black mt-2 text-center'>Today's Vote</h1></div>
 			</main>
 		</div>
 	);
