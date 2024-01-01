@@ -1,4 +1,3 @@
-// SearchForm.tsx
 import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
 
@@ -13,7 +12,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get('/api/spotify/search', {
+      // Replace 'your-access-token' with the actual access token obtained from your server
+      const response = await axios.get('http://localhost:3001/search', {
         params: {
           query,
         },
