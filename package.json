@@ -27,6 +27,9 @@
     "@trpc/react-query": "^10.37.1",
     "@trpc/server": "^10.37.1",
     "@types/next-auth": "^3.15.0",
+    "axios": "^1.6.3",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
     "next": "^14.0.0",
     "next-auth": "^4.24.5",
     "react": "18.2.0",
@@ -37,7 +40,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.19.5",
     "@types/eslint": "^8.44.2",
+    "@types/express": "^4.17.21",
     "@types/node": "^18.19.2",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
@@ -51,8 +56,8 @@
     "prettier-plugin-tailwindcss": "^0.5.1",
     "prisma": "^5.1.1",
     "tailwindcss": "^3.3.3",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.3.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.23.2"
