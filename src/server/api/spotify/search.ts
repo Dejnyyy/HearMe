@@ -1,12 +1,16 @@
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { env } from '~/env.mjs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { query } = req.query;
+  const clientId = env.SPOTIFY_CLIENT_ID;
+  const clientSecret = env.SPOTIFY_CLIENT_SECRET;
+  const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
   try {
-    // Fetch the access token dynamically using your method (e.g., from a function)
-    const yourAccessToken = await getAccessToken();
+    // Function to get access token (replace with your actual implementation)
+    const yourAccessToken = await getAccessToken(clientId, clientSecret);
 
     const response = await axios.get('https://api.spotify.com/v1/search', {
       headers: {
@@ -25,10 +29,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-// Function to get access token (replace with your actual implementation)
-async function getAccessToken(): Promise<string> {
-  // Implement your logic to obtain the access token
-  // This could involve making a request to the Spotify token endpoint or using your authentication method
-  // Return the obtained access token
-  return 'your_actual_access_token';
+async function getAccessToken(clientId: string, clientSecret: string): Promise<string> {
+  const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+  const tokenEndpoint = 'https://accounts.spotify.com/api/token';
+
+  try {
+    const response = await axios.post(
+      tokenEndpoint,
+      'grant_type=client_credentials',
+      {
+        headers: {
+          Authorization: `Basic ${base64Credentials}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    const accessToken = response.data.access_token;
+    return accessToken;
+  } catch (error) {
+    console.error('Error obtaining access token:', error);
+    throw new Error('Failed to obtain access token');
+  }
 }
+
