@@ -10,7 +10,6 @@ import Header from './components/Header';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
 
-
 /*const prisma = new PrismaClient()
 
 async function main() {
@@ -27,7 +26,6 @@ main()
     process.exit(1)
   })
 */
-//planetscale*
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
