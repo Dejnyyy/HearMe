@@ -35,7 +35,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <button type="submit">Search</button>
+      <button type="submit" className='mx-11'>Search</button>
     </form>
   );
 };
