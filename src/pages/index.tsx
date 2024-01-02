@@ -62,7 +62,7 @@ function AuthShowcase() {
         <div>
           {/*<span>Logged in as {sessionData.user?.name}</span>*/}
           <Image
-             className="rounded-3xl m-auto shadow-md shadow-white"
+             className="rounded-3xl m-auto border border-white "
              src={sessionData.user?.image ?? ""}
              alt={"pfp of user" + sessionData.user?.name}
              width={250}
@@ -72,7 +72,7 @@ function AuthShowcase() {
         }
          <p className="text-center text-2xl text-white"> {secretMessage && <span> - {secretMessage}</span>} </p>
       <button
-        className="rounded-full bg-white px-10 py-3 font-mono font-semibold shadow-md shadow-white text-black no-underline transition hover:bg-white/50"
+        className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
         onClick={sessionData ? () => void signOut() : () => void signIn("spotify")}
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}

@@ -7,6 +7,7 @@ interface Track {
   // For example, name, artist, etc.
   name: string;
   artist: string;
+  album: string;
 }
 
 const SearchForm: React.FC = () => {
