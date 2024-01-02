@@ -1,42 +1,42 @@
-import React, { useState, FormEvent } from 'react';
+// SearchForm.tsx
 import axios from 'axios';
+import React, { useState } from 'react';
 
-interface SearchFormProps {
-  onSearch: (results: any[]) => void;
+interface Track {
+  // Define your track properties here
+  // For example, name, artist, etc.
+  name: string;
+  artist: string;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState<string>('');
+const SearchForm: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<Track[]>([]);
 
-  const handleSearch = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const handleSearch = async () => {
     try {
-      // Replace 'your-access-token' with the actual access token obtained from your server
-      const response = await axios.get('http://localhost:3001/search', {
-        params: {
-          query,
-        },
+      const response = await axios.get('/search', {
+        params: { query: searchQuery },
       });
 
-      const results = response.data;
-      onSearch(results);
+      setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching songs:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSearch}>
-      <input
-        className='text-black rounded-md m-2 p-1'
-        type="text"
-        placeholder="Search for songs..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button type="submit" className='mx-11'>Search</button>
-    </form>
+    <div>
+      <input type="text" className='text-black rounded-lg mx-1 my-1 py-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+      <button onClick={handleSearch}>Search</button>
+      <ul>
+        {searchResults.map((track) => (
+          <li key={track.name}>
+            {track.name} by {track.artist}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

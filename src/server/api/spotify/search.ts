@@ -6,8 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { query } = req.query;
   const clientId = env.SPOTIFY_CLIENT_ID;
   const clientSecret = env.SPOTIFY_CLIENT_SECRET;
-  const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-
+ 
   try {
     // Function to get access token (replace with your actual implementation)
     const yourAccessToken = await getAccessToken(clientId, clientSecret);
@@ -46,10 +45,10 @@ async function getAccessToken(clientId: string, clientSecret: string): Promise<s
     );
 
     const accessToken = response.data.access_token;
+    console.log(`Access token: ${accessToken}`);
     return accessToken;
   } catch (error) {
     console.error('Error obtaining access token:', error);
     throw new Error('Failed to obtain access token');
   }
 }
-
