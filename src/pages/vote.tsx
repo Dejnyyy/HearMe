@@ -27,10 +27,11 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
+        {/* Display search results */}
         <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg">
           <SearchForm />
         </div>
-        {/* Display search results */}
+        
       </main>
     </div>
   );

@@ -46,17 +46,20 @@ const SearchForm: React.FC = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button className='ml-16' onClick={handleSearch}>Search</button>
+      <button className='m-auto' onClick={handleSearch}>Search</button>
       {searchResults.map((song) => (
-         <li className='list-none mx-2 px-2' key={song.id}>
+         <li className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500 ' key={song.id}>
             <img
             src={song.album.images[2]?.url || 'default-image-url'} // Replace 'default-image-url' with a URL for a default image
             alt={`Album cover for ${song.name}`}
             className='song-image'
           />
-            <div className='w-auto'>{song.name}</div>
-            <span className='text-gray-500 text-md'><div className='w-auto'>- {getArtistsNames(song)}</div></span>
-          </li> 
+          <div className='mx-2'>
+          <strong className='w-auto'>{song.name}</strong>
+          <br></br>
+            <span className='w-auto text-gray-400'>{getArtistsNames(song)}</span>
+          </div>
+             </li> 
       ))}
     </div>
   );
