@@ -13,8 +13,8 @@ const SearchForm: React.FC = () => {
 
       // Update this line based on the actual structure of your session object
       console.log(session?.user);
-      const accessToken = session?.user?.accessToken;
-
+      let accessToken = await getAccessToken("8ad546d15e0c498db993f5f2899ae835","c4a7ca1b8c404757b70e5e5c147bb51c" );
+     
       if (accessToken) {
         const result = await searchSpotifySongs(searchQuery, accessToken);
         setSearchResults(result.tracks.items);
@@ -22,8 +22,8 @@ const SearchForm: React.FC = () => {
       else{
         console.log("no access token");
         //getAccessToken();
-
-      }
+        console.log(accessToken);
+       }
     }  catch (error) {
       // Handle error
     }
