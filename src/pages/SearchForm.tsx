@@ -49,8 +49,13 @@ const SearchForm: React.FC = () => {
       <button className='ml-16' onClick={handleSearch}>Search</button>
       {searchResults.map((song) => (
          <li className='list-none mx-2 px-2' key={song.id}>
+            <img
+            src={song.album.images[2]?.url || 'default-image-url'} // Replace 'default-image-url' with a URL for a default image
+            alt={`Album cover for ${song.name}`}
+            className='song-image'
+          />
             <div>{song.name}</div>
-            <span className='text-gray-500 text-md'><div>-{getArtistsNames(song)}</div></span>
+            <span className='text-gray-500 text-md'><div>- {getArtistsNames(song)}</div></span>
           </li> 
       ))}
     </div>
