@@ -1,42 +1,47 @@
-// SearchForm.tsx
-import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
+import { get } from 'http';
 
-interface Track {
-  // Define your track properties here
-  // For example, name, artist, etc.
-  name: string;
-  artist: string;
-  album: string;
-}
 
 const SearchForm: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<Track[]>([]);
+
+  const { data: session } = useSession();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get('/search', {
-        params: { query: searchQuery },
-      });
 
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error('Error searching songs:', error);
+      // Update this line based on the actual structure of your session object
+      const accessToken = session?.user?.accessToken;
+
+      if (accessToken) {
+        const result = await searchSpotifySongs(searchQuery, accessToken);
+        setSearchResults(result.tracks.items);
+      }
+      else{
+        console.log("no access token");
+
+      }
+    }  catch (error) {
+      // Handle error
     }
   };
 
   return (
     <div>
-      <input type="text" className='text-black rounded-lg mx-1 my-1 py-1' value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-      <button onClick={handleSearch}>Search</button>
-      <ul>
-        {searchResults.map((track) => (
-          <li key={track.name}>
-            {track.name} by {track.artist}
-          </li>
-        ))}
-      </ul>
+      <input
+        className="rounded-md text-black py-1 m-3 pl-2"
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button className='ml-16' onClick={handleSearch}>Search</button>
+
+      {searchResults.map((song) => (
+        <div key={song.id}>{song.name}</div>
+      ))}
     </div>
   );
 };

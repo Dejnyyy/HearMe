@@ -6,12 +6,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { query } = req.query;
   const clientId = env.SPOTIFY_CLIENT_ID;
   const clientSecret = env.SPOTIFY_CLIENT_SECRET;
- 
+  const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
   try {
     // Function to get access token (replace with your actual implementation)
     const yourAccessToken = await getAccessToken(clientId, clientSecret);
 
-    const response = await axios.get('https://api.spotify.com/v1/search', {
+    const response = await axios.get(`${SPOTIFY_API_BASE_URL}/search`, {
       headers: {
         Authorization: `Bearer ${yourAccessToken}`,
       },
@@ -52,3 +52,4 @@ async function getAccessToken(clientId: string, clientSecret: string): Promise<s
     throw new Error('Failed to obtain access token');
   }
 }
+export { getAccessToken };

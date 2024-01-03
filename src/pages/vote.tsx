@@ -21,8 +21,8 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
-        <div className="w-96 h-96 my-2 shadow-md shadow-white rounded-lg">
-          <SearchForm onSearch={handleSearch} />
+        <div className="w-96 h-96 my-2 border rounded-lg">
+          <SearchForm />
         </div>
         {/* Display search results */}
         <ul>
