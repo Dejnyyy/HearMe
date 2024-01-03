@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import SearchForm from './SearchForm';
 import { useState } from 'react';
+import HamburgerMenu from "./components/HamburgerMenu";
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
