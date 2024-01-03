@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
-import { get } from 'http';
-
 
 const SearchForm: React.FC = () => {
 
@@ -14,6 +12,7 @@ const SearchForm: React.FC = () => {
     try {
 
       // Update this line based on the actual structure of your session object
+      console.log(session?.user);
       const accessToken = session?.user?.accessToken;
 
       if (accessToken) {
@@ -22,6 +21,7 @@ const SearchForm: React.FC = () => {
       }
       else{
         console.log("no access token");
+        //getAccessToken();
 
       }
     }  catch (error) {
