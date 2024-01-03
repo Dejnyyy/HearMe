@@ -54,8 +54,8 @@ const SearchForm: React.FC = () => {
             alt={`Album cover for ${song.name}`}
             className='song-image'
           />
-            <div>{song.name}</div>
-            <span className='text-gray-500 text-md'><div>- {getArtistsNames(song)}</div></span>
+            <div className='w-auto'>{song.name}</div>
+            <span className='text-gray-500 text-md'><div className='w-auto'>- {getArtistsNames(song)}</div></span>
           </li> 
       ))}
     </div>
