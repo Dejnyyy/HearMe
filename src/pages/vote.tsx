@@ -9,7 +9,13 @@ const Vote: React.FC = () => {
   const handleSearch = (results: any[]) => {
     setSearchResults(results);
   };
-
+  const getArtistsNames = (track: any): string => {
+    if (track.artists && track.artists.length > 0) {
+      return track.artists.map((artist: any) => artist.name).join(', ');
+    } else {
+      return 'Unknown Artist';
+    }
+  };
   return (
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
@@ -25,11 +31,6 @@ const Vote: React.FC = () => {
           <SearchForm />
         </div>
         {/* Display search results */}
-        <ul>
-          {searchResults.map((track) => (
-            <li key={track.id}>{track.name}</li>
-          ))}
-        </ul>
       </main>
     </div>
   );

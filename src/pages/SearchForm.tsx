@@ -8,6 +8,14 @@ const SearchForm: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
+  const getArtistsNames = (track: any): string => {
+    if (track.artists && track.artists.length > 0) {
+      return track.artists.map((artist: any) => artist.name).join(', ');
+    } else {
+      return 'Unknown Artist';
+    }
+  };
+
   const handleSearch = async () => {
     try {
 
@@ -34,13 +42,16 @@ const SearchForm: React.FC = () => {
       <input
         className="rounded-md text-black py-1 m-3 pl-2"
         type="text"
+        placeholder='Search for a song...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <button className='ml-16' onClick={handleSearch}>Search</button>
-
       {searchResults.map((song) => (
-        <div key={song.id}>{song.name}</div>
+         <li className='list-none mx-2 px-2' key={song.id}>
+            <div>{song.name}</div>
+            <span className='text-gray-500 text-md'><div>-{getArtistsNames(song)}</div></span>
+          </li> 
       ))}
     </div>
   );
