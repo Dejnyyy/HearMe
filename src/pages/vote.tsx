@@ -1,12 +1,22 @@
 // pages/vote.tsx
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import SearchForm from './SearchForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if there's a selectedSong in the query params
+    const { selectedSong } = router.query;
+    if (selectedSong) {
+      setSelectedSong(JSON.parse(selectedSong as string));
+    }
+  }, [router.query]);
 
   const handleSearch = (results: any[]) => {
     setSearchResults(results);
@@ -24,6 +34,14 @@ const Vote: React.FC = () => {
     setSelectedSong(clickedSong);
     // Do something with the selected song data
     console.log('Selected Song:', clickedSong);
+  };
+
+  const handleVote = () => {
+    // Redirect to profile page with the selected song data as a query parameter
+    router.push({
+      pathname: '/profile',
+      query: { selectedSong: JSON.stringify(selectedSong) },
+    });
   };
 
   return (
@@ -59,10 +77,13 @@ const Vote: React.FC = () => {
             </div>
           </div>
         )}
+
         <button
-        className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50">
-        Vote
-      </button>
+          className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
+          onClick={handleVote}
+        >
+          Vote
+        </button>
       </main>
     </div>
   );
