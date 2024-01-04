@@ -17,9 +17,14 @@ const Vote: React.FC = () => {
       return 'Unknown Artist';
     }
   };
+  const handleSongClick = (selectedSong: any) => {
+    // Do something with the selected song data
+    console.log('Selected Song:', selectedSong);
+  };
   return (
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
+        <HamburgerMenu />
         <Link href="/" className="absolute right-10 top-5">
           back
         </Link>
@@ -30,7 +35,7 @@ const Vote: React.FC = () => {
         </section>
         {/* Display search results */}
         <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg">
-          <SearchForm />
+          <SearchForm onSongClick={handleSongClick} />
         </div>
         
       </main>
