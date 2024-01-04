@@ -10,6 +10,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedSong, setSelectedSong] = useState<any | null>(null);
 
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
@@ -35,8 +36,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
     }
   };
 
-  const handleSongClick = (selectedSong: any) => {
-    onSongClick(selectedSong);
+  const handleSongClick = (clickedSong: any) => {
+    setSelectedSong(clickedSong);
+    onSongClick(clickedSong);
   };
 
   return (
