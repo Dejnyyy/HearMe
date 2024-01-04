@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
 
+
 const SearchForm: React.FC = () => {
 
   const { data: session } = useSession();
