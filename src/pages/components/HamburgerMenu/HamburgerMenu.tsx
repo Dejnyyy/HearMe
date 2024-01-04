@@ -22,7 +22,7 @@ const HamburgerMenu = () => {
       </div>
       {isOpen && (
         <div className=" py-4 px-2 rounded-lg absolute left-2 top-10">
-          <ul>
+          <ul className='bg-black p-1 rounded-md'>
           <li className="py-0.5">
                 <Link href="/">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="w-10 h-10 cursor-pointer">
