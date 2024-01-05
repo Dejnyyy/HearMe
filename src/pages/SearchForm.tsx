@@ -50,7 +50,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <button className='m-auto' onClick={handleSearch}>Search</button>
+      <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
       {searchResults.map((song) => (
         <li
           className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500'
