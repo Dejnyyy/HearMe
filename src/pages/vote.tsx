@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import SearchForm from './SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
+import { toast } from 'react-toastify';
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -38,11 +39,26 @@ const Vote: React.FC = () => {
 
   const handleVote = () => {
     // Redirect to profile page with the selected song data as a query parameter
+    
     router.push({
       pathname: '/profile',
       query: { selectedSong: JSON.stringify(selectedSong) },
     });
+
+    // Show a thank you notification
+    toast.success('Thank you for your vote!', {
+      className: "toast-message",
+      position: 'top-right',
+      autoClose: 3000, // Close after 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      
+    });
   };
+
 
   return (
     <div>
