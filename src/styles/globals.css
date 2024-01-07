@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --toastify-color-success: white;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
@@ -24,8 +28,9 @@
     background: rgb(130, 130, 130); 
   }
   .toast-message {
-    background: darkblue;
+    background: black;
     color: #fff;
     font-size: 20px;
     padding: 30px 20px;
   }
+  
