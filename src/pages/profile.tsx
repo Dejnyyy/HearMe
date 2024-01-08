@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
         </Link>
         <section>
           <div>
-            <h1 className='text-center my-3'>Dejny</h1>
+            <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
             <AuthShowcase />
           </div>
         </section>
