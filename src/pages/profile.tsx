@@ -42,17 +42,17 @@ const Profile: React.FC = () => {
 
         {/* Display selected song */}
         {selectedSong && (
-          <div className="my-2 border-white border rounded-md p-4">
+          <div className="my-2 border-white border rounded-md p-4 flex items-center">
             {/* Use JSON.parse to convert the string to an object */}
             <img
               src={JSON.parse(selectedSong as string).album.images[2]?.url || 'default-image-url'}
               alt={`Album cover for ${JSON.parse(selectedSong as string).name}`}
-              className='song-image'
+              className='song-image mb-1'
             />
-            <div>
-              <strong>{JSON.parse(selectedSong as string).name}</strong>
+            <div className='mx-2'>
+              <strong className='w-auto'>{JSON.parse(selectedSong as string).name}</strong>
               <br />
-              <span className='text-gray-400'>{getArtistsNames(JSON.parse(selectedSong as string))}</span>
+              <span className='text-gray-400 w-auto'>{getArtistsNames(JSON.parse(selectedSong as string))}</span>
             </div>
           </div>
         )}
