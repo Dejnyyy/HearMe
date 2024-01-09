@@ -10,6 +10,7 @@ import Header from './components/Header';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
 
+
 /*const prisma = new PrismaClient()
 
 async function main() {
@@ -57,7 +58,6 @@ function AuthShowcase() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-     
         {sessionData && 
         <div>
           {/*<span>Logged in as {sessionData.user?.name}</span>*/}
