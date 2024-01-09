@@ -5,7 +5,10 @@
 :root {
   --toastify-color-success: white;
 }
-
+::selection {
+  background: white;
+  color: black;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
