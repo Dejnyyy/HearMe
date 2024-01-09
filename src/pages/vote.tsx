@@ -65,7 +65,7 @@ const Vote: React.FC = () => {
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
         <HamburgerMenu />
         <Link href="/" className="absolute right-10 top-5">
-          back
+          home
         </Link>
         <section>
           <div>

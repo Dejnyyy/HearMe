@@ -23,7 +23,7 @@ const Profile: React.FC = () => {
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white bg-black items-center justify-center text-lg  font-mono font-semibold">
         <Link href="/" className="absolute right-10 top-5">
-          back
+          home
         </Link>
         <section>
           <div>
