@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
             <AuthShowcase />
           </div>
         </section>
-        <div className="grid gap-x-60 my-5 grid-cols-3">
+        <div className="grid gap-x-60 my-5 mx-5 grid-cols-3">
           <div>Favourite Artist</div>
           <div><span>Votes</span> - <span>Registered Date</span></div>
           <div>Favourite Album</div>
