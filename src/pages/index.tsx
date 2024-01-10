@@ -40,7 +40,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center bg-black">      
-      <img src="favicon.png" className="w-64 my-2 absolute top-5"></img>
+      <img src="favicon.png" className="w-64 my-2 absolute top-10"></img>
       {sessionData && <HamburgerMenu />}
       {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
       <AuthShowcase />
@@ -61,7 +61,6 @@ function AuthShowcase() {
     <div className="flex flex-col items-center justify-center gap-4">
         {sessionData && 
         <div>
-          {/*<span>Logged in as {sessionData.user?.name}</span>*/}
           <Image
              className="rounded-3xl m-auto border border-white "
              src={sessionData.user?.image ?? ""}
@@ -71,8 +70,6 @@ function AuthShowcase() {
           />
         </div>
         }
-         {/* <p className="text-center text-2xl text-white"> {secretMessage && <span> - {secretMessage}</span>} </p> */}
-        
       <button
         className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
         onClick={sessionData ? () => void signOut() : () => void signIn("spotify")}
