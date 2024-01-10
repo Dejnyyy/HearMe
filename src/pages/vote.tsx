@@ -79,18 +79,21 @@ const Vote: React.FC = () => {
 
         {/* Display selected song */}
         {selectedSong && (
-          <div className="my-2 border-white border rounded-md p-4">
+          <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
+            <div className="my-2 p-4 border-white border rounded-md flex items-center">
             <img
               src={selectedSong.album.images[2]?.url || 'default-image-url'}
               alt={`Album cover for ${selectedSong.name}`}
-              className='song-image'
+              className='song-image mb-1'
             />
-            <div>
+            <div className='mx-2'>
               <strong>{selectedSong.name}</strong>
               <br />
               <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
             </div>
+            </div>
+            
           </div>
         )}
 
