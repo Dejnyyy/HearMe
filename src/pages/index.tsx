@@ -76,7 +76,6 @@ function AuthShowcase() {
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}
       </button>
-      
     </div>
   );
 }

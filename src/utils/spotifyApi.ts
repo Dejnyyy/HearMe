@@ -26,7 +26,6 @@ export const searchSpotifySongs = async (query: string, accessToken: string) => 
 async function getAccessToken(clientId: string, clientSecret: string): Promise<string> {
     const base64Credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
     const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-  
     try {
       const response = await axios.post(
         tokenEndpoint,
