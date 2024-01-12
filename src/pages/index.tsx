@@ -6,7 +6,6 @@ import Image from "next/image";
 import { api } from "~/utils/api";
 //planetscale
 import { PrismaClient } from '@prisma/client';
-import Header from './components/Header';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
 
