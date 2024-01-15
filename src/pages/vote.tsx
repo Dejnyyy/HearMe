@@ -11,11 +11,22 @@ const Vote: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const router = useRouter();
 
+  const storageKey = 'lastVotedDate';
+
   useEffect(() => {
     // Check if there's a selectedSong in the query params
     const { selectedSong } = router.query;
     if (selectedSong) {
       setSelectedSong(JSON.parse(selectedSong as string));
+    }
+
+    // Check if the user has already voted today
+    const lastVotedDate = localStorage.getItem(storageKey);
+    const currentDate = new Date().toLocaleDateString();
+
+    if (lastVotedDate === currentDate) {
+      // User has already voted today, disable voting
+      setSelectedSong(null); // Deselect the song
     }
   }, [router.query]);
 
@@ -38,27 +49,47 @@ const Vote: React.FC = () => {
   };
 
   const handleVote = () => {
-    // Redirect to profile page with the selected song data as a query parameter
-    
-    router.push({
-      pathname: '/profile',
-      query: { selectedSong: JSON.stringify(selectedSong) },
-    });
+    // Check if the user has already voted today
+    const lastVotedDate = localStorage.getItem(storageKey);
+    const currentDate = new Date().toLocaleDateString();
 
-    // Show a thank you notification
-    toast.success('Thank you for your vote!', {
-      className: "toast-message",
-      position: 'top-right',
-      autoClose: 3000, // Close after 3 seconds
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      
-    });
+    if (lastVotedDate !== currentDate) {
+      // User can vote today
+
+      // Redirect to profile page with the selected song data as a query parameter
+      router.push({
+        pathname: '/profile',
+        query: { selectedSong: JSON.stringify(selectedSong) },
+      });
+
+      // Update the last voted date in localStorage
+      localStorage.setItem(storageKey, currentDate);
+
+      // Show a thank you notification
+      toast.success('Thank you for your vote!', {
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000, // Close after 3 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      // User has already voted today, show a message with toast
+      toast.error('You can only vote once a day.', {
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000, // Close after 3 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
-
 
   return (
     <div>
