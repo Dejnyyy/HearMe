@@ -4,11 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
+import { useEffect, useState } from 'react'; 
 
 const Profile: React.FC = () => {
   const router = useRouter();
-  const { selectedSong } = router.query;
   const { data: sessionData } = useSession();
+  const { selectedSong: storedSelectedSong } = router.query;
+  const [selectedSong, setSelectedSong] = useState<any | null>(null);
 
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
@@ -18,6 +20,21 @@ const Profile: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    // Check if there's a selectedSong in the query params
+    if (storedSelectedSong) {
+      // Use JSON.parse to convert the string to an object
+      setSelectedSong(JSON.parse(storedSelectedSong as string));
+      // Store the selectedSong data in localStorage)
+      localStorage.setItem('selectedSong', storedSelectedSong as string);
+    } else {
+      // If there's no selectedSong in the query params, try to retrieve it from localStorage
+      const localStorageSelectedSong = localStorage.getItem('selectedSong');
+      if (localStorageSelectedSong) {
+        setSelectedSong(JSON.parse(localStorageSelectedSong));
+      }
+    }
+  }, [storedSelectedSong]);
   return (
     <div>
       <HamburgerMenu />
@@ -39,23 +56,20 @@ const Profile: React.FC = () => {
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Today's Vote</h1>
         </div>
-
-        {/* Display selected song */}
         {selectedSong && (
-          <div className="my-2 border-white border rounded-md p-4 flex items-center">
-            {/* Use JSON.parse to convert the string to an object */}
-            <img
-              src={JSON.parse(selectedSong as string).album.images[2]?.url || 'default-image-url'}
-              alt={`Album cover for ${JSON.parse(selectedSong as string).name}`}
-              className='song-image mb-1'
-            />
-            <div className='mx-2'>
-              <strong className='w-auto'>{JSON.parse(selectedSong as string).name}</strong>
-              <br />
-              <span className='text-gray-400 w-auto'>{getArtistsNames(JSON.parse(selectedSong as string))}</span>
-            </div>
-          </div>
-        )}
+  <div className="my-2 border-white border rounded-md p-4 flex items-center">
+    <img
+      src={selectedSong.album.images[2]?.url || 'default-image-url'}
+      alt={`Album cover for ${selectedSong.name}`}
+      className='song-image mb-1'
+    />
+    <div className='mx-2'>
+      <strong className='w-auto'>{selectedSong.name}</strong>
+      <br />
+      <span className='text-gray-400 w-auto'>{getArtistsNames(selectedSong)}</span>
+    </div>
+  </div>
+)}
       </main>
     </div>
   );

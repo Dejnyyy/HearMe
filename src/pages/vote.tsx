@@ -14,19 +14,20 @@ const Vote: React.FC = () => {
   const storageKey = 'lastVotedDate';
 
   useEffect(() => {
-    // Check if there's a selectedSong in the query params
+    // check if there is a selectedSong in the query params
     const { selectedSong } = router.query;
     if (selectedSong) {
       setSelectedSong(JSON.parse(selectedSong as string));
+         // store the song in localStorage
+         localStorage.setItem('selectedSong', selectedSong as string);
     }
 
-    // Check if the user has already voted today
     const lastVotedDate = localStorage.getItem(storageKey);
     const currentDate = new Date().toLocaleDateString();
 
     if (lastVotedDate === currentDate) {
-      // User has already voted today, disable voting
-      setSelectedSong(null); // Deselect the song
+      // user has already voted today, disable voting
+      setSelectedSong(null);
     }
   }, [router.query]);
 
@@ -44,32 +45,36 @@ const Vote: React.FC = () => {
 
   const handleSongClick = (clickedSong: any) => {
     setSelectedSong(clickedSong);
-    // Do something with the selected song data
+    // the selected song data
     console.log('Selected Song:', clickedSong);
   };
 
   const handleVote = () => {
-    // Check if the user has already voted today
+    // check if the user voted today
     const lastVotedDate = localStorage.getItem(storageKey);
     const currentDate = new Date().toLocaleDateString();
-
+    // user can vote today
     if (lastVotedDate !== currentDate) {
-      // User can vote today
+      
+      // update the last voted date in localStorage
+      localStorage.setItem(storageKey, currentDate);
+      // store the selected song in localStorage
+      localStorage.setItem('selectedSong', JSON.stringify(selectedSong));
 
-      // Redirect to profile page with the selected song data as a query parameter
+      // go to profile page with the selected song data as a query parameter
       router.push({
         pathname: '/profile',
         query: { selectedSong: JSON.stringify(selectedSong) },
       });
 
-      // Update the last voted date in localStorage
+      // update last vote date in localStorage
       localStorage.setItem(storageKey, currentDate);
 
-      // Show a thank you notification
+      // notification
       toast.success('Thank you for your vote!', {
         className: "toast-message",
         position: 'top-right',
-        autoClose: 3000, // Close after 3 seconds
+        autoClose: 3000, // 3s
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -77,11 +82,11 @@ const Vote: React.FC = () => {
         progress: undefined,
       });
     } else {
-      // User has already voted today, show a message with toast
+      // user has already voted today
       toast.error('You can only vote once a day.', {
         className: "toast-message",
         position: 'top-right',
-        autoClose: 3000, // Close after 3 seconds
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -103,12 +108,10 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
-        {/* Display search results */}
+       
         <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg">
           <SearchForm onSongClick={handleSongClick} />
         </div>
-
-        {/* Display selected song */}
         {selectedSong && (
           <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
