@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react';
 import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
 import { env } from "~/env.mjs";
 
-
 interface SearchFormProps {
   onSongClick: (selectedSong: any) => void;
 }
