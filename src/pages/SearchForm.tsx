@@ -23,9 +23,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
 
   const handleSearch = async () => {
     try {
-      if (searchQuery.length > 2){
+      if (searchQuery.length > 1){
       console.log(session?.user);
-      let accessToken = await getAccessToken("8ad546d15e0c498db993f5f2899ae835","c4a7ca1b8c404757b70e5e5c147bb51c" );
+      let accessToken = await getAccessToken( );
       console.log("Query: ", searchQuery);
          if (accessToken) {
           const result = await searchSpotifySongs(searchQuery, accessToken);
