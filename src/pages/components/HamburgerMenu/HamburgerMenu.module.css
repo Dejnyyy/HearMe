@@ -1,34 +1,38 @@
 /* styles/HamburgerMenu.module.css */
 .hamburgerMenu {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 20px;
-    position: fixed;
-    top: 20px; 
-    left: 20px; 
-    z-index: 1000; 
-  }
-  .bar {
-    width: 30px;
-    height: 4px;
-    background-color: white;
-    transition: 0.3s;
-  }
-  
-  .open {
-    transform: rotate(180deg);
-    opacity: 100;
-  }
-  
-  .open:nth-child(2) {
-    transform: rotate(180deg);
-    opacity: 100;
-  }
-  
-  .open:nth-child(3) {
-    transform: rotate(180deg);
-    opacity: 100;
-  }
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+.bar {
+  width: 30px;
+  height: 4px;
+  background-color: white;
+  transition: 0.3s;
+}
+
+.open {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.menu {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.menu:hover {
+  transition-delay: 0.1s;
+  opacity: 1;
+  text-decoration: underline;
+}
+.menu.show {
+  opacity: 1;
+}

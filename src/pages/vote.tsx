@@ -105,7 +105,7 @@ const Vote: React.FC = () => {
           </div>
         </section>
        
-        <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg">
+        <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-900">
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
