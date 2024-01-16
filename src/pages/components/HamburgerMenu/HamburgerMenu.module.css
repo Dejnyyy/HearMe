@@ -20,16 +20,15 @@
   
   .open {
     transform: rotate(180deg);
-    opacity: 0;
+    opacity: 100;
   }
   
   .open:nth-child(2) {
     transform: rotate(180deg);
-    opacity: 0;
+    opacity: 100;
   }
   
   .open:nth-child(3) {
     transform: rotate(180deg);
-    opacity: 0;
+    opacity: 100;
   }
-  

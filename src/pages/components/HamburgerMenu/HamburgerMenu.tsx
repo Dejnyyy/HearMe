@@ -10,7 +10,6 @@ const HamburgerMenu = () => {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
   return (
     <div>
       <div className={styles.hamburgerMenu} onClick={toggleMenu}>
@@ -18,6 +17,7 @@ const HamburgerMenu = () => {
         <div className={`${styles.bar} ${isOpen ? styles.open : ''}`}></div>
         <div className={`${styles.bar} ${isOpen ? styles.open : ''}`}></div>
       </div>
+      
       {isOpen && (
         <div className=" py-4 px-2 rounded-lg absolute left-2 top-10">
           <ul className='bg-black p-1 rounded-md'>
