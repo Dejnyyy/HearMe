@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
+import { env } from "~/env.mjs";
+
 
 interface SearchFormProps {
   onSongClick: (selectedSong: any) => void;
@@ -55,7 +57,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
         <li
           className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500'
           key={song.id}
-          onClick={() => handleSongClick(song)} // handleSongClick pri kliknuti na song
+          onClick={() => handleSongClick(song)}
         >
           <img
             src={song.album.images[2]?.url || 'default-image-url'}

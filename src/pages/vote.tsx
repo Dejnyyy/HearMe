@@ -70,7 +70,6 @@ const Vote: React.FC = () => {
       // update last vote date in localStorage
       localStorage.setItem(storageKey, currentDate);
 
-      // notification
       toast.success('Thank you for your vote!', {
         className: "toast-message",
         position: 'top-right',
@@ -100,9 +99,6 @@ const Vote: React.FC = () => {
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
         <HamburgerMenu />
-        <Link href="/" className="absolute right-10 top-5">
-          home
-        </Link>
         <section>
           <div>
             <h1>Vote</h1>

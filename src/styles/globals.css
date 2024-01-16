@@ -9,24 +9,23 @@
   background: white;
   color: black;
 }
-/* width */
+/* width scrollbaru */
 ::-webkit-scrollbar {
     width: 5px;
   }
   
-  /* Track */
+  /* Track scrollbaru */
   ::-webkit-scrollbar-track {
     border-radius: 5%;
   }
    
-  /* Handle */
+  /* ten posouvak*/
   ::-webkit-scrollbar-thumb {
     background: white; 
     border-radius: 50px;
-
   }
   
-  /* Handle on hover */
+  /* najeti na posouvak */
   ::-webkit-scrollbar-thumb:hover {
     background: rgb(130, 130, 130); 
   }

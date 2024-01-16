@@ -39,9 +39,6 @@ const Profile: React.FC = () => {
     <div>
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white bg-black items-center justify-center text-lg  font-mono font-semibold">
-        <Link href="/" className="absolute right-10 top-5">
-          home
-        </Link>
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
