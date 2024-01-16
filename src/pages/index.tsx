@@ -8,8 +8,6 @@ import { api } from "~/utils/api";
 import { PrismaClient } from '@prisma/client';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
-
-
 /*const prisma = new PrismaClient()
 
 async function main() {
