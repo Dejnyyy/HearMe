@@ -37,7 +37,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
         console.log("too short search query");
       }
     }  catch (error) {
-      // Handle error
+      console.log(error);
     }
   };
 
