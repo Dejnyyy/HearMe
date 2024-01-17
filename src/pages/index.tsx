@@ -68,7 +68,7 @@ function AuthShowcase() {
         </div>
         }
       <button
-        className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
+        className="rounded-full bg-white px-10 py-3 mt-10  font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
         onClick={sessionData ? () => void signOut() : () => void signIn("spotify")}
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}
