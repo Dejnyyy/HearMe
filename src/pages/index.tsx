@@ -58,13 +58,13 @@ function AuthShowcase() {
     <div className="flex flex-col items-center justify-center gap-4">
         {sessionData && 
         <div>
-          <Image
+          {/* <Image
              className="rounded-3xl m-auto border border-white "
              src={sessionData.user?.image ?? ""}
              alt={"pfp of user" + sessionData.user?.name}
              width={250}
              height={250}
-          />
+          /> */}
         </div>
         }
       <button

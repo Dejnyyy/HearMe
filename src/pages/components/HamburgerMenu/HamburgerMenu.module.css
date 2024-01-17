@@ -27,7 +27,7 @@
   transition: opacity 0.3s ease-in-out;
   opacity: 1;
 }
-
+/*
 .menu:hover {
   transition-delay: 0.1s;
   opacity: 1;
@@ -35,4 +35,4 @@
 }
 .menu.show {
   opacity: 1;
-}
+}*/
