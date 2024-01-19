@@ -123,7 +123,6 @@ const Vote: React.FC = () => {
               <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
             </div>
             </div>
-            
           </div>
         )}
 
