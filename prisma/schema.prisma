@@ -22,6 +22,7 @@ model Post {
 
     @@index([name])
 }
+
 // Necessary for Next auth
 //!!!!!!!!!!!NESAHAT!!!!!!!!!!!!!!
 model Account {
