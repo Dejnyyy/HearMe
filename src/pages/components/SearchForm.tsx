@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { searchSpotifySongs, getAccessToken } from '../utils/spotifyApi';
+import { searchSpotifySongs, getAccessToken } from '../../utils/spotifyApi';
 import { env } from "~/env.mjs";
 
 interface SearchFormProps {
@@ -56,6 +56,8 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
+
+
       {searchResults.map((song) => (
         <li
           className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500'

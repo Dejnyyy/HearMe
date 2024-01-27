@@ -1,14 +1,13 @@
-// utils/spotifyApi.ts
 import axios from 'axios';
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
-export const searchSpotifySongs = async (query: string, accessToken: string) => {
+export const searchSpotify = async (query: string, accessToken: string, type: string) => {
   try {
     const response = await axios.get(`${SPOTIFY_API_BASE_URL}/search`, {
       params: {
         q: query,
-        type: 'track',
+        type: type,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -17,9 +16,17 @@ export const searchSpotifySongs = async (query: string, accessToken: string) => 
 
     return response.data;
   } catch (error) {
-    console.error('Error searching Spotify songs:', error);
+    console.error(`Error searching Spotify ${type}:`, error);
     throw error;
   }
+};
+
+export const searchSpotifySongs = async (query: string, accessToken: string) => {
+  return searchSpotify(query, accessToken, 'track');
+};
+
+export const searchSpotifyArtists = async (query: string, accessToken: string) => {
+  return searchSpotify(query, accessToken, 'artist');
 };
 
 async function getAccessToken(): Promise<string> {

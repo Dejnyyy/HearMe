@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react'; 
 import FaveArtist from './components/FaveArtist';
+import SearchArtists from './components/SearchArtists';
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -52,8 +53,8 @@ const Profile: React.FC = () => {
           <div>
             <FaveArtist />
           </div>
-          <div><span>Votes</span> - <span>Registered Date</span></div>
-          <div>Favourite Album</div>
+          <div className="rounded-md border py-1 text-center cursor-pointer p-10"><span>Votes</span> - <span>Registered Date</span></div>
+          <div className="rounded-md border py-1 text-center cursor-pointer">Favourite Album</div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Today's Vote</h1>

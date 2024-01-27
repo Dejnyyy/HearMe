@@ -1,7 +1,7 @@
 // pages/vote.tsx
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import SearchForm from './SearchForm';
+import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
