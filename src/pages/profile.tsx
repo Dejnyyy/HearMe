@@ -1,4 +1,4 @@
-// Profile component
+// Profile.tsx component
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -42,7 +42,9 @@ const Profile: React.FC = () => {
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
+            
             <AuthShowcase />
+            
           </div>
         </section>
         <div className="grid gap-x-60 my-5 mx-5 grid-cols-3">
