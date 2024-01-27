@@ -11,7 +11,7 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
-
+  
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
@@ -34,7 +34,8 @@ const Profile: React.FC = () => {
         setSelectedSong(JSON.parse(localStorageSelectedSong));
       }
     }
-  }, [storedSelectedSong]);
+    }, [storedSelectedSong, sessionData]);
+  
   return (
     <div>
       <HamburgerMenu />
@@ -44,7 +45,6 @@ const Profile: React.FC = () => {
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
             
             <AuthShowcase />
-            
           </div>
         </section>
         <div className="grid gap-x-60 my-5 mx-5 grid-cols-3">
