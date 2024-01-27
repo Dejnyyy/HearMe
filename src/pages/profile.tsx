@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react'; 
+import FaveArtist from './components/FaveArtist';
 
 const Profile: React.FC = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
-  
+
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
@@ -48,7 +49,9 @@ const Profile: React.FC = () => {
           </div>
         </section>
         <div className="grid gap-x-60 my-5 mx-5 grid-cols-3">
-          <div>Favourite Artist</div>
+          <div>
+            <FaveArtist />
+          </div>
           <div><span>Votes</span> - <span>Registered Date</span></div>
           <div>Favourite Album</div>
         </div>

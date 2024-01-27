@@ -1,0 +1,9 @@
+/* styles/FaveArtist.module.css */
+.FaveArtist {
+    cursor: pointer;
+  }
+ .open{
+    color:red;
+    opacity: 0.;
+ }
+  
