@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './FaveArtist.module.css';
 import SearchArtists from '../SearchArtists';
 import { toast } from 'react-toastify';
@@ -6,8 +6,19 @@ import { useRouter } from 'next/router';
 
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
+  const [lastVotedArtist, setLastVotedArtist] = useState<any | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const storedLastVotedArtist = localStorage.getItem('lastVotedArtist');
+      if (storedLastVotedArtist) {
+        setLastVotedArtist(JSON.parse(storedLastVotedArtist));
+      }
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+    }
+  }, []); // Run only on mount
 
   const toggleSearch = () => {
     setIsOpen(!isOpen);
@@ -15,8 +26,8 @@ const FaveArtist: React.FC = () => {
 
   const handleArtistClick = (artist: any) => {
     console.log('Selected Artist:', artist);
-    setSelectedArtist(artist);
-    localStorage.setItem('selectedArtist', JSON.stringify(artist));
+    setLastVotedArtist(artist);
+    localStorage.setItem('lastVotedArtist', JSON.stringify(artist));
   };
 
   const handleVoteClick = () => {
@@ -38,8 +49,8 @@ const FaveArtist: React.FC = () => {
       return;
     }
 
-    // Log the selected artist when the "Vote" button is clicked
-    console.log('Vote clicked for:', selectedArtist);
+    // Log the last voted artist when the "Vote" button is clicked
+    console.log('Vote clicked for:', lastVotedArtist);
 
     // Add any additional logic related to voting
 
@@ -56,28 +67,33 @@ const FaveArtist: React.FC = () => {
       draggable: true,
       progress: undefined,
     });
-    
   };
 
   return (
     <div>
       <div className="rounded-md border py-1 text-center cursor-pointer" onClick={toggleSearch}>
-        Favourite Artist
+        {lastVotedArtist ? (
+          <div>
+            <h2>Favourite Artist:</h2>
+            <p>{lastVotedArtist.name}</p>
+          </div>
+        ) : (
+          "Favorite Artist"
+        )}
       </div>
+
       {isOpen && (
         <div className=" absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchArtists onArtistClick={handleArtistClick} />
         </div>
       )}
 
-      {selectedArtist && (
+      {lastVotedArtist && (
         <div className="absolute top-0 left">
-          <h2>Selected Artist</h2>
-          <p>{selectedArtist.name}</p>
           <button
             className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
             onClick={handleVoteClick}
-            disabled={!selectedArtist}
+            disabled={!lastVotedArtist}
           >
             Vote
           </button>

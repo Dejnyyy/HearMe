@@ -54,10 +54,10 @@ const Profile: React.FC = () => {
             <FaveArtist />
           </div>
           <div className="rounded-md border py-1 text-center cursor-pointer p-10"><span>Votes</span> - <span>Registered Date</span></div>
-          <div className="rounded-md border py-1 text-center cursor-pointer">Favourite Album</div>
+          <div className="rounded-md border py-1 text-center cursor-pointer my-auto">Favourite Album</div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Today's Vote</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote</h1>
         </div>
         {selectedSong && (
   <div className="my-2 border-white border rounded-md p-4 flex items-center">
