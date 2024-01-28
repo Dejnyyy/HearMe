@@ -71,7 +71,7 @@ const FaveArtist: React.FC = () => {
 
   return (
     <div>
-      <div className="rounded-md py-1 text-center cursor-pointer" onClick={toggleSearch}>
+      <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
         {lastVotedArtist ? (
           <div>
             <h2>Favourite Artist:</h2>
@@ -79,7 +79,7 @@ const FaveArtist: React.FC = () => {
             <img  src={lastVotedArtist.images[2]?.url || 'default-image-url'}
             alt={`Image for ${lastVotedArtist.name}`}
             className='artist-image w-20 h-auto'></img>
-            <div className='mx-2'>
+            <div className='ml-2'>
             <strong>{lastVotedArtist.name}</strong>
             </div>  
             </div>        
