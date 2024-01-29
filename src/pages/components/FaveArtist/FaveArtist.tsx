@@ -55,7 +55,7 @@ const FaveArtist: React.FC = () => {
     // Add any additional logic related to voting
 
     // Update the last vote date in local storage
-    localStorage.setItem('lastVoteDate', currentDate);
+    localStorage.setItem('lastVoteDate - Artist', currentDate);
 
     toast.success('Thank you for your vote!', {
       className: "toast-message",

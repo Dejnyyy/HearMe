@@ -13,6 +13,8 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const storedVotes = localStorage.getItem('votes');
+  const votes = storedVotes ? parseInt(storedVotes, 10) : 0;
 
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
@@ -53,8 +55,8 @@ const Profile: React.FC = () => {
           <div>
             <FaveArtist />
           </div>
-          <div className="rounded-md border py-1 text-center cursor-pointer p-10"><span>Votes</span> - <span>Registered Date</span></div>
-          <div className="rounded-md border py-1 text-center cursor-pointer my-auto">Favourite Album</div>
+          <div className="rounded-md  py-1 text-center cursor-pointer p-10"><span>Votes: {votes}</span> - <span>First Vote</span></div>
+          <div className="rounded-md  py-1 text-center cursor-pointer my-auto">Favourite Album</div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote</h1>

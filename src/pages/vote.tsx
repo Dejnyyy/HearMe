@@ -14,6 +14,11 @@ const Vote: React.FC = () => {
   const storageKey = 'lastVotedDate';
 
   useEffect(() => {
+    const storedVotes = localStorage.getItem('votes');
+    if (storedVotes) {
+      setVotes(parseInt(storedVotes, 10));
+    }
+  
     // check if there is a selectedSong in the query params
     const { selectedSong } = router.query;
     if (selectedSong) {
@@ -48,28 +53,32 @@ const Vote: React.FC = () => {
     // the selected song data
     console.log('Selected Song:', clickedSong);
   };
+  const [votes, setVotes] = useState(0);
 
   const handleVote = () => {
     // check if the user voted today
     const lastVotedDate = localStorage.getItem(storageKey);
     const currentDate = new Date().toLocaleDateString();
+  
     // user can vote today
     if (lastVotedDate !== currentDate) {
-      
       // update the last voted date in localStorage
       localStorage.setItem(storageKey, currentDate);
       // store the selected song in localStorage
       localStorage.setItem('selectedSong', JSON.stringify(selectedSong));
-
+  
       // go to profile page with the selected song data as a query parameter
       router.push({
         pathname: '/profile',
         query: { selectedSong: JSON.stringify(selectedSong) },
       });
-
+  
       // update last vote date in localStorage
       localStorage.setItem(storageKey, currentDate);
-
+  
+      // increment votes using setVotes
+      setVotes((prevVotes) => prevVotes + 1);
+  
       toast.success('Thank you for your vote!', {
         className: "toast-message",
         position: 'top-right',
@@ -94,7 +103,7 @@ const Vote: React.FC = () => {
       });
     }
   };
-
+  
   return (
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
