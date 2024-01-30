@@ -1,0 +1,74 @@
+// SearchAbums.tsx
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { searchSpotifyAlbums, getAccessToken } from '../../utils/spotifyApi'; // Correct import for searchSpotifyAlbums
+import { env } from "~/env.mjs";
+
+interface SearchFormProps {
+  onAlbumClick: (selectedAlbum: any) => void;
+}
+
+const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
+  const { data: session } = useSession();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
+
+  const handleSearch = async () => {
+    try {
+      if (searchQuery.length > 1) {
+        console.log(session?.user);
+        let accessToken = await getAccessToken();
+        console.log("Query: ", searchQuery);
+        if (accessToken) {
+          const result = await searchSpotifyAlbums(searchQuery, accessToken); // Correct function call
+          setSearchResults(result.albums.items);
+        } else {
+          console.log("no access token");
+        }
+      } else {
+        console.log("too short search query");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAlbumClick = (album: any) => {
+    setSelectedAlbum(album); // Update the selected album state
+    localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));
+    onAlbumClick(album); // Pass the selected album to the parent component
+  };
+
+  return (
+    <div>
+      <input
+        className="rounded-md text-black py-1 m-3 pl-2"
+        type="text"
+        placeholder='Find your album...'
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
+
+      {searchResults.map((album) => (
+        <li
+          className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500'
+          key={album.id}
+          onClick={() => handleAlbumClick(album)}
+        >
+          <img
+            src={album.images[2]?.url || 'default-image-url'}
+            alt={`Image for ${album.name}`}
+            className='album-image w-20 h-auto'
+          />
+          <div className='mx-2'>
+            <strong className='w-auto'>{album.name}</strong>
+          </div>
+        </li>
+      ))}
+    </div>
+  );
+};
+
+export default SearchAlbums;
