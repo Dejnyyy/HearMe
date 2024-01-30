@@ -12,8 +12,6 @@ const Vote: React.FC = () => {
   const router = useRouter();
 
   const storageKey = 'lastVotedDate';
-  const initialVotes = parseInt(localStorage.getItem('votes') || '0', 10);
- 
   
   useEffect(() => {
   

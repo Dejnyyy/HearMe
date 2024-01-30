@@ -90,7 +90,7 @@ const FaveArtist: React.FC = () => {
           ) : lastVotedArtist ? (
             <div>
               <h2>Favourite Artist:</h2>
-              <div className="border rounded-md p-3 flex items-center">
+              <div className="border rounded-md p-3 flex items-center w-auto">
                 <img
                   src={lastVotedArtist.images[2]?.url || 'default-image-url'}
                   alt={`Image for ${lastVotedArtist.name}`}
