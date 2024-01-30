@@ -1,17 +1,13 @@
 // FaveAlbum.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './FaveArtist.module.css';
-import SearchAlbums from '../SearchAlbums'; // Update the import for the SearchAlbums component
+import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/router';
 
 const FaveAlbum: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [lastSelectedAlbum, setLastSelectedAlbum] = useState<any | null>(null);
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
-  const [votedAlbum, setVotedAlbum] = useState<any | null>(null); // New state for the voted album
-
-  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -41,25 +37,6 @@ const FaveAlbum: React.FC = () => {
   };
 
   const handleVoteClick = () => {
-    // Check if the user has already voted today
-    const lastVoteDate = localStorage.getItem('lastVoteDate - Album');
-    const currentDate = new Date().toDateString();
-    router.push('/');
-
-    if (lastVoteDate === currentDate) {
-      toast.error('You can only vote once a day.', {
-        className: 'toast-message',
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-
     if (!selectedAlbum) {
       toast.error('Please select an album before voting.', {
         className: 'toast-message',
@@ -75,12 +52,8 @@ const FaveAlbum: React.FC = () => {
     }
 
     console.log('Vote clicked for:', selectedAlbum);
-    // Update the last vote date in local storage
-    localStorage.setItem('lastVoteDate - Album', currentDate);
-    // Set voted album and clear selected album
-    setVotedAlbum(selectedAlbum);
-    setSelectedAlbum(null);
-    // Update the last voted album in local storage
+    // Set selected album and update last selected album in local storage
+    setLastSelectedAlbum(selectedAlbum);
     localStorage.setItem('lastSelectedAlbum', JSON.stringify(selectedAlbum));
 
     setIsOpen(false);
@@ -135,17 +108,6 @@ const FaveAlbum: React.FC = () => {
       {isOpen && (
         <div className="absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchAlbums onAlbumClick={handleAlbumClick} />
-        </div>
-      )}
-
-      {selectedAlbum && (
-        <div className="absolute top-0 left">
-          <button
-            className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
-            onClick={handleVoteClick}
-          >
-            Vote
-          </button>
         </div>
       )}
     </div>
