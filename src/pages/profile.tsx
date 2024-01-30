@@ -7,6 +7,7 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react'; 
 import FaveArtist from './components/FaveArtist';
 import SearchArtists from './components/SearchArtists';
+import FaveAlbum from './components/FaveAlbum';
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -57,11 +58,16 @@ const Profile: React.FC = () => {
           </div>
           
           <div className="rounded-md  py-1 text-center cursor-pointer p-10"><span>Votes: {/*votes*/}</span> - <span>First Vote</span></div>
-          <div className="rounded-md  py-1 text-center cursor-pointer my-auto">Favourite Album</div>
+          <div className="rounded-md  py-1 text-center cursor-pointer my-auto">
+            <div>
+              <FaveAlbum />
+            </div>
+          </div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote - {}</h1>
         </div>
+
         {selectedSong && (
   <div className="my-2 border-white border rounded-md p-4 flex items-center">
     <img
