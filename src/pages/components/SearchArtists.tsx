@@ -11,7 +11,9 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
+
 
   const handleSearch = async () => {
     try {
@@ -33,9 +35,11 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
     }
   };
 
-  const handleArtistClick = (clickedArtist: any) => {
-    setSelectedArtist(clickedArtist);
-    onArtistClick(clickedArtist);
+  
+const handleArtistClick = (artist: any) => {
+    setSelectedArtist(artist); // Update the selected artist state
+    localStorage.setItem('lastVotedArtist', JSON.stringify(artist));
+    onArtistClick(artist); // Pass the selected artist to the parent component
   };
 
   return (

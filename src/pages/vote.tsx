@@ -12,12 +12,10 @@ const Vote: React.FC = () => {
   const router = useRouter();
 
   const storageKey = 'lastVotedDate';
-
+  const initialVotes = parseInt(localStorage.getItem('votes') || '0', 10);
+ 
+  
   useEffect(() => {
-    const storedVotes = localStorage.getItem('votes');
-    if (storedVotes) {
-      setVotes(parseInt(storedVotes, 10));
-    }
   
     // check if there is a selectedSong in the query params
     const { selectedSong } = router.query;
@@ -53,10 +51,9 @@ const Vote: React.FC = () => {
     // the selected song data
     console.log('Selected Song:', clickedSong);
   };
-  const [votes, setVotes] = useState(0);
 
   const handleVote = () => {
-    // check if the user voted today
+    
     const lastVotedDate = localStorage.getItem(storageKey);
     const currentDate = new Date().toLocaleDateString();
   
@@ -75,9 +72,6 @@ const Vote: React.FC = () => {
   
       // update last vote date in localStorage
       localStorage.setItem(storageKey, currentDate);
-  
-      // increment votes using setVotes
-      setVotes((prevVotes) => prevVotes + 1);
   
       toast.success('Thank you for your vote!', {
         className: "toast-message",
