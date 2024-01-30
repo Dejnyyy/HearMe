@@ -38,7 +38,7 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   
 const handleArtistClick = (artist: any) => {
     setSelectedArtist(artist); // Update the selected artist state
-    localStorage.setItem('lastVotedArtist', JSON.stringify(artist));
+    localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
     onArtistClick(artist); // Pass the selected artist to the parent component
   };
 

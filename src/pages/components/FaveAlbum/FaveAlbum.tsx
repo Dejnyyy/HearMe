@@ -20,13 +20,6 @@ const FaveAlbum: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    // Save selected album to localStorage when selectedAlbum changes
-    if (selectedAlbum) {
-      localStorage.setItem('selectedAlbum', JSON.stringify(selectedAlbum));
-    }
-  }, [selectedAlbum]);
-
   const toggleSearch = () => {
     setIsOpen(!isOpen);
   };
@@ -34,40 +27,6 @@ const FaveAlbum: React.FC = () => {
   const handleAlbumClick = (album: any) => {
     console.log('Selected Album:', album);
     setSelectedAlbum(album);
-  };
-
-  const handleVoteClick = () => {
-    if (!selectedAlbum) {
-      toast.error('Please select an album before voting.', {
-        className: 'toast-message',
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-
-    console.log('Vote clicked for:', selectedAlbum);
-    // Set selected album and update last selected album in local storage
-    setLastSelectedAlbum(selectedAlbum);
-    localStorage.setItem('lastSelectedAlbum', JSON.stringify(selectedAlbum));
-
-    setIsOpen(false);
-
-    toast.success('Thank you for your vote!', {
-      className: 'toast-message',
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
   };
 
   return (
