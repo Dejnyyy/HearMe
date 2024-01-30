@@ -13,8 +13,8 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
-  const storageKey = 'lastVotedDate';
-  const lastVotedDate = localStorage.getItem(storageKey);
+  
+  
   
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
@@ -60,7 +60,7 @@ const Profile: React.FC = () => {
           <div className="rounded-md  py-1 text-center cursor-pointer my-auto">Favourite Album</div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVotedDate}</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote - {}</h1>
         </div>
         {selectedSong && (
   <div className="my-2 border-white border rounded-md p-4 flex items-center">
