@@ -27,7 +27,6 @@ const FaveArtist: React.FC = () => {
     console.log('Selected Artist:', artist);
     setSelectedArtist(artist);
 
-    // Update local storage with the newly selected artist
     localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
   };
 
