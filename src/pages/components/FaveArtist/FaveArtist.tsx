@@ -35,7 +35,7 @@ const FaveArtist: React.FC = () => {
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
         {selectedArtist ? (
           <div>
-            <h2>Selected Artist:</h2>
+            <h2>Favourite Artist:</h2>
             <div className="border rounded-md p-3 flex items-center">
               <img
                 src={selectedArtist.images[2]?.url || 'default-image-url'}
