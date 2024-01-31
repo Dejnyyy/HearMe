@@ -1,4 +1,3 @@
-// FaveArtist.tsx
 import React, { useState, useEffect } from 'react';
 import styles from './FaveArtist.module.css';
 import SearchArtists from '../SearchArtists';
@@ -24,12 +23,27 @@ const FaveArtist: React.FC = () => {
   };
 
   const handleArtistClick = (artist: any) => {
+    if (selectedArtist && selectedArtist.id === artist.id) {
+      // If the clicked artist is the same as the currently selected artist, do nothing
+      return;
+    }
+  
     console.log('Selected Artist:', artist);
     setSelectedArtist(artist);
-
     localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
+  
+    // Show a success toast notification
+    toast.success(`Favorite artist set to ${artist.name}`, {
+      className: "toast-message",
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
-
   return (
     <div>
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>

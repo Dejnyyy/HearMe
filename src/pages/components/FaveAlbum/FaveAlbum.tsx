@@ -25,8 +25,26 @@ const FaveAlbum: React.FC = () => {
   };
 
   const handleAlbumClick = (album: any) => {
+    if (selectedAlbum && selectedAlbum.id === album.id) {
+      // If the clicked artist is the same as the currently selected artist, do nothing
+      return;
+    }
+  
     console.log('Selected Album:', album);
     setSelectedAlbum(album);
+    localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));
+  
+    // Show a success toast notification
+    toast.success(`Favorite album set to ${album.name}`, {
+      className: "toast-message",
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -34,7 +52,7 @@ const FaveAlbum: React.FC = () => {
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
         {selectedAlbum ? (
           <div>
-            <h2>Selected Album:</h2>
+            <h2>Favourite Album:</h2>
             <div className="border rounded-md p-3 flex items-center">
               <img
                 src={selectedAlbum.images[2]?.url || 'default-image-url'}
