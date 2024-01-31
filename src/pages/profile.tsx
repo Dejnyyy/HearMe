@@ -14,6 +14,7 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const lastVote = localStorage.getItem('lastVotedDate');
   
   
   
@@ -65,7 +66,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Last Vote - {}</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote}</h1>
         </div>
 
         {selectedSong && (
