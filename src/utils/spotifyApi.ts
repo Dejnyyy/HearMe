@@ -28,9 +28,11 @@ export const searchSpotifySongs = async (query: string, accessToken: string) => 
 export const searchSpotifyArtists = async (query: string, accessToken: string) => {
   return searchSpotify(query, accessToken, 'artist');
 };
+
 export const searchSpotifyAlbums = async (query: string, accessToken: string) => {
   return searchSpotify(query, accessToken, 'album');
 };
+
 async function getAccessToken(): Promise<string> {
   try {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
