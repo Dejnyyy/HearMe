@@ -16,8 +16,6 @@ const Profile: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const lastVote = localStorage.getItem('lastVotedDate');
   
-  
-  
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
