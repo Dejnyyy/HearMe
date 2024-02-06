@@ -1,12 +1,10 @@
 // Profile.tsx component
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react'; 
 import FaveArtist from './components/FaveArtist';
-import SearchArtists from './components/SearchArtists';
 import FaveAlbum from './components/FaveAlbum';
 
 const Profile: React.FC = () => {
