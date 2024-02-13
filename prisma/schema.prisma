@@ -9,6 +9,7 @@ generator client {
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
+    // url = "mysql://dejny:x4Qt4es125uz@db.bagros.eu:8100/dejnytest"
   relationMode = "prisma"
 }
 

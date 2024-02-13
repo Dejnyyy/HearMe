@@ -8,6 +8,8 @@ import { api } from "~/utils/api";
 import { PrismaClient } from '@prisma/client';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
+import { getAllUsers } from "~/db/UserService";
+
 /*const prisma = new PrismaClient()
 
 async function main() {
@@ -25,9 +27,14 @@ main()
   })
 */
 
+const handleGetAllUsers = () => {
+  getAllUsers(); // Call your function here
+};
+
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
   const { data: sessionData } = useSession();
+
 
   return (
     <>
@@ -73,6 +80,7 @@ function AuthShowcase() {
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}
       </button>
+      <button onClick={handleGetAllUsers}>Get Users</button>
     </div>
   );
 }
