@@ -1,14 +1,12 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
 
 import { api } from "~/utils/api";
 //planetscale
 import { PrismaClient } from '@prisma/client';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { useRouter } from 'next/router';
-import { getAllUsers } from "~/db/UserService";
+
 
 /*const prisma = new PrismaClient()
 
@@ -27,9 +25,7 @@ main()
   })
 */
 
-const handleGetAllUsers = () => {
-  getAllUsers(); // Call your function here
-};
+
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
@@ -80,7 +76,6 @@ function AuthShowcase() {
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}
       </button>
-      <button onClick={handleGetAllUsers}>Get Users</button>
-    </div>
+  </div>
   );
 }
