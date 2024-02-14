@@ -1,11 +1,11 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-
+import HamburgerMenu from "./components/HamburgerMenu";
 import { api } from "~/utils/api";
+
 //planetscale
 import { PrismaClient } from '@prisma/client';
-import HamburgerMenu from "./components/HamburgerMenu";
-import { useRouter } from 'next/router';
+
 
 
 /*const prisma = new PrismaClient()
