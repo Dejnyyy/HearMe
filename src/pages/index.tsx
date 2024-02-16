@@ -3,9 +3,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { api } from "~/utils/api";
-
+import { NajdiUsery } from "~/actions/users";
 //planetscale
 import { PrismaClient } from '@prisma/client';
+
 
 // const prisma = new PrismaClient()
 
@@ -21,6 +22,12 @@ import { PrismaClient } from '@prisma/client';
 //     await prisma.$disconnect()
 //     process.exit(1)
 //   })
+
+async function example() {
+  // const users = await NajdiUsery();
+  console.log("Home");
+  // console.log(users);
+}
 
 
 
@@ -42,6 +49,7 @@ export default function Home() {
       {sessionData && <HamburgerMenu />}
       {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
       <AuthShowcase />
+      <button onClick={example} className="bg-white">Hello</button>
       </main>
     </>
   );
