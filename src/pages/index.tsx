@@ -1,3 +1,4 @@
+import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
@@ -6,24 +7,21 @@ import { api } from "~/utils/api";
 //planetscale
 import { PrismaClient } from '@prisma/client';
 
+// const prisma = new PrismaClient()
 
+// async function main() {
+// }
 
-/*const prisma = new PrismaClient()
+// main()
+//   .then(async () => {
+//     await prisma.$disconnect()
+//   })
+//   .catch(async (e) => {
+//     console.error(e)
+//     await prisma.$disconnect()
+//     process.exit(1)
+//   })
 
-async function main() {
-  // ... you will write your Prisma Client queries here
-}
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-*/
 
 
 
@@ -31,7 +29,7 @@ export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
   const { data: sessionData } = useSession();
 
-
+ 
   return (
     <>
       <Head>
@@ -49,25 +47,16 @@ export default function Home() {
   );
 }
 
+
 function AuthShowcase() {
   const { data: sessionData } = useSession();
- 
-  const { data: secretMessage } = api.post.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
+
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
         {sessionData && 
         <div>
-          {/* <Image
-             className="rounded-3xl m-auto border border-white "
-             src={sessionData.user?.image ?? ""}
-             alt={"pfp of user" + sessionData.user?.name}
-             width={250}
-             height={250}
-          /> */}
+          {/*pokud prihlasen, ukaze se: */}
         </div>
         }
       <button
@@ -76,6 +65,7 @@ function AuthShowcase() {
       >
         {sessionData ? "Sign out" : "Sign in via Spotify"}
       </button>
+   
   </div>
   );
 }
