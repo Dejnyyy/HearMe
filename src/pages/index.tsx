@@ -3,7 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { api } from "~/utils/api";
-import { NajdiUsery } from "~/actions/users";
+import Usersnajdi from "./components/najdiUsery";
 //planetscale
 import { PrismaClient } from '@prisma/client';
 
@@ -23,15 +23,6 @@ import { PrismaClient } from '@prisma/client';
 //     process.exit(1)
 //   })
 
-async function example() {
-  // const users = await NajdiUsery();
-  console.log("Home");
-  // console.log(users);
-}
-
-
-
-
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
   const { data: sessionData } = useSession();
@@ -48,17 +39,15 @@ export default function Home() {
       <img src="favicon.png" className="w-64 my-2 absolute top-10"></img>
       {sessionData && <HamburgerMenu />}
       {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
-      <AuthShowcase />
-      <button onClick={example} className="bg-white">Hello</button>
+      <AuthShowcase /> 
+      {/* <Usersnajdi /> */}
       </main>
     </>
   );
 }
 
-
 function AuthShowcase() {
   const { data: sessionData } = useSession();
-
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
