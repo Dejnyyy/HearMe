@@ -3,10 +3,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { api } from "~/utils/api";
-import Usersnajdi from "./components/najdiUsery";
 //planetscale
 import { PrismaClient } from '@prisma/client';
-
+import { db } from 'lib/prisma';
 
 // const prisma = new PrismaClient()
 
@@ -21,7 +20,7 @@ import { PrismaClient } from '@prisma/client';
 //     console.error(e)
 //     await prisma.$disconnect()
 //     process.exit(1)
-//   })
+//   })export const getStaticProps: GetStaticProps = async () => {
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
@@ -40,7 +39,6 @@ export default function Home() {
       {sessionData && <HamburgerMenu />}
       {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
       <AuthShowcase /> 
-      {/* <Usersnajdi /> */}
       </main>
     </>
   );
