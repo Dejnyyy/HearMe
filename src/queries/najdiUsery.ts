@@ -1,3 +1,4 @@
+//src/queries/najdiUsery.ts
 import { PrismaClient } from '@prisma/client';
 import { db } from 'lib/prisma';
 import { GetStaticProps } from 'next';
