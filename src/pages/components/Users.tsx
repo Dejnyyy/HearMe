@@ -10,7 +10,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList }) => { // Update the pr
     return (
       <div>
         <h1>User List</h1>
-        <ul>
+        <ul className='text-white font-mono  mb-5 text-lg'>
           {userList.map(user => (
             <li key={user.id}>{user.name}</li>
           ))}

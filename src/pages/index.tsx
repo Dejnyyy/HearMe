@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 
 const Home: React.FC<{ userList: User[] }> = ({ userList }) => {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
+
   const { data: sessionData } = useSession();
 
   return (
