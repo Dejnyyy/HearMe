@@ -8,23 +8,6 @@ import { GetStaticProps } from 'next';
 import UsersPage from "./components/Users";
 import { User } from '@prisma/client';
 
-export const getStaticProps: GetStaticProps = async () => {
-  try {
-    const users = await db.user.findMany();
-    
-    // Convert date objects to ISO strings, handling possible null or undefined values
-    const formattedUsers = users.map(user => ({
-      ...user,
-      emailVerified: user.emailVerified ? user.emailVerified.toISOString() : null
-    }));
-    
-    return { props: { userList: formattedUsers } };
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    return { props: { userList: [] } };
-  }
-};
-
 
 const Home: React.FC<{ userList: User[] }> = ({ userList }) => {
 
@@ -41,7 +24,7 @@ const Home: React.FC<{ userList: User[] }> = ({ userList }) => {
         <img src="favicon.png" className="w-64 my-2 absolute top-10" alt="Logo"></img>
         {sessionData && <HamburgerMenu />}
         {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
-        <UsersPage userList={userList} />
+        
         <AuthShowcase />
       </main>
     </>

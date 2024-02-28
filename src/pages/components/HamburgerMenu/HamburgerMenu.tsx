@@ -51,6 +51,11 @@ const HamburgerMenu: React.FC = () => {
                 <p className="text-white font-mono font-semibold ml-2 text-lg">Vote</p>
               </Link>
             </li>
+            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+              <Link href="/uzivatele">
+                <p className="text-white font-mono font-semibold ml-2 text-lg">Users</p>
+              </Link>
+            </li>
           </ul>
         </div>
       )}
