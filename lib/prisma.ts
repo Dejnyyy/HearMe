@@ -18,7 +18,7 @@ export default prisma;
 
 
 // import { PrismaClient } from "@prisma/client";
-
+//lib/prisma.ts
 declare global {
      var prisma: PrismaClient | undefined;
  }
