@@ -24,7 +24,6 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    
     if (storedSelectedSong) {
       // Use JSON.parse to convert the string to an object
       setSelectedSong(JSON.parse(storedSelectedSong as string));
