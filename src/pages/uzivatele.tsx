@@ -32,7 +32,7 @@ const Uzivatele: React.FC<{ userList: User[] }> = ({ userList }) => {
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        {sessionData && <HamburgerMenu />}
+        <HamburgerMenu />
         <UsersPage userList={userList} />
       </main>
     </>

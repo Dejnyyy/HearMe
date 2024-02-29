@@ -39,10 +39,9 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) => {
 
             </li>
             <button
-                className=' ml-8 m-auto border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
+                className='ml-8 m-auto border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
                 onClick={() => handleDeleteUser(user.id)}
-            >
-                    x
+            >x
                 </button>
                 </div>
             </>
