@@ -25,15 +25,13 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 };
 
-
 const Uzivatele: React.FC<{ userList: User[] }> = ({ userList }) => {
-  const { data: sessionData } = useSession();
 
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
         <HamburgerMenu />
-        <UsersPage userList={userList} />
+        <UsersPage userList={userList} onDeleteUser={() => {}} />
       </main>
     </>
   );
