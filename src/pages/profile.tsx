@@ -24,6 +24,7 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
+    // Check if there's a selectedSong in the query params
     if (storedSelectedSong) {
       // Use JSON.parse to convert the string to an object
       setSelectedSong(JSON.parse(storedSelectedSong as string));
