@@ -9,6 +9,7 @@ generator client {
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
     // url = "mysql://dejny:x4Qt4es125uz@db.bagros.eu:8100/dejnytest"
   relationMode = "prisma"
 }
@@ -63,6 +64,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+     votes     Vote[]
 }
 
 model VerificationToken {
@@ -71,4 +73,12 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+model Vote {
+  id          Int      @id @default(autoincrement())
+  userId      String      // foreign key
+  user        User     @relation(fields: [userId], references: [id])
+  song        String   // Nazev songy
+  voteType    String   // Typ hlasu (+ nebo -)
+  createdAt   DateTime @default(now())
 }

@@ -4,6 +4,7 @@ import { db } from 'lib/prisma';
 import { GetStaticProps } from 'next';
 import UsersPage from "./components/Users";
 import { User } from '@prisma/client';
+import HamburgerMenu from "./components/HamburgerMenu";
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
@@ -31,6 +32,7 @@ const Uzivatele: React.FC<{ userList: User[] }> = ({ userList }) => {
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
         <UsersPage userList={userList} onDeleteUser={handleDeleteUser} />
+        <HamburgerMenu />
       </main>
     </>
   );
