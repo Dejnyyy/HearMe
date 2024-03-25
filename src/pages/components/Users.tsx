@@ -25,7 +25,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
 
   return (
     <div>
-      <h1>User List</h1>
+      <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
       <ul className='text-white font-mono mb-5 text-lg'>
         {userList.map(user => (
           <div className='flex m-8' key={user.id}>

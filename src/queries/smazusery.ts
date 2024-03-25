@@ -31,7 +31,7 @@ const SmazUsery: React.FC<SmazUseryProps> = ({ userList: initialUserList, onDele
       console.error('Error deleting user:', error);
     }
   };
-  // Render nothing here as SmazUsery is not rendering anything
+ 
   return null;
 };
 
