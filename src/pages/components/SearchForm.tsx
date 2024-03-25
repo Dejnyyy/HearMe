@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { searchSpotifySongs, getAccessToken } from '../../utils/spotifyApi';
-import { env } from "~/env.mjs";
 
 interface SearchFormProps {
   onSongClick: (selectedSong: any) => void;
@@ -40,6 +39,11 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
       console.log(error);
     }
   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handleSongClick = (clickedSong: any) => {
     setSelectedSong(clickedSong);
@@ -47,16 +51,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   };
 
   return (
-    <div>
+    <div className="">
       <input
         className="rounded-md text-black py-1 m-3 pl-2"
         type="text"
         placeholder='Search for a song...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
-
 
       {searchResults.map((song) => (
         <li

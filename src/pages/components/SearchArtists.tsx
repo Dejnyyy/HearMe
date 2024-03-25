@@ -35,7 +35,11 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
     }
   };
 
-  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 const handleArtistClick = (artist: any) => {
     setSelectedArtist(artist); // Update the selected artist state
     localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
@@ -50,6 +54,7 @@ const handleArtistClick = (artist: any) => {
         placeholder='Find your artist...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
 

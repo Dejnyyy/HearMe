@@ -10,11 +10,9 @@ const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const router = useRouter();
-
   const storageKey = 'lastVotedDate';
   
   useEffect(() => {
-  
     // check if there is a selectedSong in the query params
     const { selectedSong } = router.query;
     if (selectedSong) {
@@ -32,16 +30,10 @@ const Vote: React.FC = () => {
     }
   }, [router.query]);
 
-  const handleSearch = (results: any[]) => {
-    setSearchResults(results);
-  };
-
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
-    } else {
-      return 'Unknown Artist';
-    }
+    } else {  return 'Unknown Artist';}
   };
 
   const handleSongClick = (clickedSong: any) => {
@@ -105,7 +97,6 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
-       
         <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchForm onSongClick={handleSongClick} />
         </div>
@@ -126,13 +117,9 @@ const Vote: React.FC = () => {
             </div>
           </div>
         )}
-
         <button
-          className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"
-          onClick={handleVote}
-          disabled={!selectedSong} 
-        >
-          Vote
+          className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"onClick={handleVote}disabled={!selectedSong} 
+        >Vote
         </button>
       </main>
     </div>

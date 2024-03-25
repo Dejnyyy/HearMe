@@ -7,21 +7,10 @@ interface UsersPageProps {
   onDeleteUser: (userId: string) => void;
 }
 
+
+
 const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDeleteUser }) => {
   const [userList, setUserList] = useState<User[]>(initialUserList);
-
-  const handleDeleteUser = async (userId: string) => {
-    try {
-      // Update the user list after deletion
-      const updatedUserList = userList.filter(user => user.id !== userId);
-      setUserList(updatedUserList);
-
-      // Call the onDeleteUser function to inform parent components about the deletion
-      onDeleteUser(userId);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
-  };
 
   return (
     <div>
@@ -34,7 +23,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             </li>
             <button
               className='ml-8 m-auto border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
-              onClick={() => handleDeleteUser(user.id)}>
+            onClick={() => onDeleteUser(user.id)}>
               x
             </button>
           </div>

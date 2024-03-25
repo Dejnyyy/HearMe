@@ -1,17 +1,13 @@
-//src/queries/smazusery.ts
-import React, { useState } from 'react';
+// src/queries/smazusery.ts
 import { db } from 'lib/prisma';
 import { User } from '@prisma/client';
 
 interface SmazUseryProps {
   userList: User[];
-  onDeleteUser: (userId: string) => void;
 }
 
-const SmazUsery: React.FC<SmazUseryProps> = ({ userList: initialUserList, onDeleteUser }) => {
-  const [userList, setUserList] = useState<User[]>(initialUserList);
-
-  const handleDeleteUser = async (userId: string) => {
+export const SmazUsery = ({ userList: initialUserList }: SmazUseryProps) => {
+  const deleteUser = async (userId: string) => {
     try {
       // Delete user from the database
       await db.user.delete({
@@ -20,19 +16,17 @@ const SmazUsery: React.FC<SmazUseryProps> = ({ userList: initialUserList, onDele
         },
       });
 
-      // Update the user list after deletion
-      const updatedUserList = userList.filter(user => user.id !== userId);
-      setUserList(updatedUserList);
-      
-      // Call onDeleteUser to inform the parent component about the deletion
-      onDeleteUser(userId);
-      handleDeleteUser(userId);
+      // Return the ID of the deleted user
+      return userId;
     } catch (error) {
       console.error('Error deleting user:', error);
+      throw error; // Rethrow the error for handling elsewhere
     }
   };
- 
-  return null;
+
+  return {
+    deleteUser,
+  };
 };
 
 export default SmazUsery;

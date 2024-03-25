@@ -33,6 +33,11 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
       console.log(error);
     }
   };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const handleAlbumClick = (album: any) => {
     setSelectedAlbum(album); // Update the selected album state
@@ -48,6 +53,7 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
         placeholder='Find your album...'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
 
