@@ -5,6 +5,8 @@ import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
+import { db } from 'lib/prisma';
+
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -19,14 +21,6 @@ const Vote: React.FC = () => {
       setSelectedSong(JSON.parse(selectedSong as string));
          // store the song in localStorage
          localStorage.setItem('selectedSong', selectedSong as string);
-    }
-
-    const lastVotedDate = localStorage.getItem(storageKey);
-    const currentDate = new Date().toLocaleDateString();
-
-    if (lastVotedDate === currentDate) {
-      // user has already voted today, disable voting
-      setSelectedSong(null);
     }
   }, [router.query]);
 
@@ -53,13 +47,11 @@ const Vote: React.FC = () => {
       localStorage.setItem(storageKey, currentDate);
       // store the selected song in localStorage
       localStorage.setItem('selectedSong', JSON.stringify(selectedSong));
-  
       // go to profile page with the selected song data as a query parameter
       router.push({
         pathname: '/profile',
         query: { selectedSong: JSON.stringify(selectedSong) },
       });
-  
       // update last vote date in localStorage
       localStorage.setItem(storageKey, currentDate);
   

@@ -80,5 +80,6 @@ model Vote {
   user        User     @relation(fields: [userId], references: [id])
   song        String   // Nazev songy
   voteType    String   // Typ hlasu (+ nebo -)
+  Artist      String   // Jmeno umelce
   createdAt   DateTime @default(now())
 }
