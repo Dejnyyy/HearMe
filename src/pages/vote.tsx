@@ -109,12 +109,12 @@ const Vote: React.FC = () => {
             </div>
             </div><div className='mx-auto'>
             <button
-          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+          className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
           onClick={handleVote}
         >Vote +
         </button>
         <button
-          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+          className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
           onClick={handleVote}
         >Vote -
         </button>
