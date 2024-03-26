@@ -93,6 +93,7 @@ const Vote: React.FC = () => {
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
+        
           <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
             <div className="my-2 p-4 border-white border rounded-md flex items-center">
@@ -107,12 +108,12 @@ const Vote: React.FC = () => {
               <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
             </div>
             </div>
-          </div>
-        )}
-        <button
-          className="rounded-full bg-white px-10 py-3 font-mono font-semibold   text-black no-underline transition hover:bg-white/50"onClick={handleVote}disabled={!selectedSong} 
+            <button
+          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"onClick={handleVote}
         >Vote
         </button>
+        </div>
+        )}
       </main>
     </div>
   );
