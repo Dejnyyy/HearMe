@@ -21,23 +21,39 @@ const Calendar: React.FC = () => {
     fetchVotes();
   }, []);
 
+  // Funkce pro formátování data
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleString('cz-CS', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    return formattedDate.replace(',', ', '); // Přidání mezer po čárce
+  };
+
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg cursor-pointer font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg  font-mono font-semibold">
         <section>
-          <div>
-            <h1>Calendar</h1>
+          <div className='text-center'>
+            <h1 >Calendar</h1>
           </div>
           <div>
             <h2>Votes:</h2>
             <ul>
               {votes.map((vote, index) => (
-                <li key={index} className='flex flex-row'>
-                  <p>{vote.song} </p>
-                  <p>{vote.voteType}</p>
-                  <p>Artist: {vote.artist}</p>
-                </li>
+                <div key={index} className="border-white border rounded-md px-4 py-2">
+                  <li className=''>
+                    <p>{formatDate(vote.createdAt)}</p>
+                    <p>Song: {vote.song}</p>
+                    <p>+/-: {vote.voteType}</p>
+                    <p>Artist: {vote.artist}</p>
+                  </li>
+                </div>
               ))}
             </ul>
           </div>
