@@ -1,42 +1,48 @@
-import React, { useState } from "react"; // Import useState from 'react'
-import { db } from 'lib/prisma';
-import { GetStaticProps } from 'next';
-import UsersPage from "./components/Users";
+import React, { useState, useEffect } from "react";
 import { User } from '@prisma/client';
+import UsersPage from "./components/Users";
 import HamburgerMenu from "./components/HamburgerMenu";
-import { publicProcedure } from "~/server/api/trpc";
 
-export const getStaticProps: GetStaticProps = async () => {
-    try {
-        const users = await db.user.findMany();
-       
-        const formattedUsers = users.map(user => ({
-            ...user,
-            emailVerified: user.emailVerified ? user.emailVerified.toISOString() : null
-        }));
-        return { props: { userList: formattedUsers } };
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        return { props: { userList: [] } };
-    }
-};
+const Uzivatele: React.FC = () => {
+    const [users, setUsers] = useState<User[]>([]);
 
-const Uzivatele: React.FC<{ userList: User[] }> = ({ userList }) => {
-    // Declare and initialize the userList state
-    const [users, setUsers] = useState<User[]>(userList);
+    useEffect(() => {
+        // Call API route to fetch users when component mounts
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('/api/najdiusery'); // Zde je cesta k novému koncovému bodu pro načítání uživatelů
+                if (response.ok) {
+                    const fetchedUsers = await response.json();
+                    setUsers(fetchedUsers);
+                } else {
+                    console.error('Failed to fetch users:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []); // Effect runs only once when component mounts
 
     const handleDeleteUser = async (userId: string) => {
         try {
-            // Delete user from the database
-            await db.user.delete({
-                where: {
-                    id: userId
-                }
+            // Call API route to delete user
+            const response = await fetch('/api/deleteUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
             });
-            // After successful deletion, you may want to update the user list displayed
-            // For simplicity, you can refetch the user list, but in a real application, you might want to update the state directly
-            const updatedUsers = await db.user.findMany();
-            setUsers(updatedUsers); // Update the userList state with the updatedUsers
+
+            if (response.ok) {
+                const { deletedUserId } = await response.json();
+                // Update state after successful deletion
+                setUsers(prevUsers => prevUsers.filter(user => user.id !== deletedUserId));
+            } else {
+                console.error('Failed to delete user:', response.statusText);
+            }
         } catch (error) {
             console.error('Error deleting user:', error);
         }
