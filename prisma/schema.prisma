@@ -64,7 +64,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
-     votes     Vote[]
+    votes     Vote[]
 }
 
 model VerificationToken {
@@ -80,6 +80,6 @@ model Vote {
   user        User     @relation(fields: [userId], references: [id])
   song        String   // Nazev songy
   voteType    String   // Typ hlasu (+ nebo -)
-  Artist      String   // Jmeno umelce
+  artist      String   // Jmeno umelce
   createdAt   DateTime @default(now())
 }
