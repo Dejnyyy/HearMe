@@ -3,7 +3,7 @@ module.exports = {
       return [
         {
           source: '/api/vote',
-          destination: 'http://localhost:3000/vote',
+          destination: 'http://localhost:3001/vote',
         },
       ]
     },

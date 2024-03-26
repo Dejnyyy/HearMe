@@ -11,6 +11,8 @@ const Vote: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const router = useRouter();
   const storageKey = 'lastVotedDate';
+  const [userId, setUserId] = useState<string>('');
+
   
   useEffect(() => {
     // check if there is a selectedSong in the query params
@@ -19,6 +21,10 @@ const Vote: React.FC = () => {
       setSelectedSong(JSON.parse(selectedSong as string));
       // store the song in localStorage
       localStorage.setItem('selectedSong', selectedSong as string);
+    }
+    const userIdFromLocalStorage = localStorage.getItem('userId');
+    if (userIdFromLocalStorage) {
+      setUserId(userIdFromLocalStorage);
     }
   }, [router.query]);
 
@@ -39,20 +45,13 @@ const Vote: React.FC = () => {
   const handleVote = async (voteType: string) => {
     
     try {
-      console.log('Data being sent:', {
-        userId: 'clu10fgci0000ew5ho4hfij2r', // Replace with actual user ID
-        song: selectedSong?.name || '',
-        voteType,
-        artist: getArtistsNames(selectedSong)
-      });
-      
       const response = await fetch('/api/vote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: 'clu10fgci0000ew5ho4hfij2r', // Replace with actual user ID
+          userId:userId, 
           song: selectedSong?.name || '',
           voteType,
           artist: getArtistsNames(selectedSong)
