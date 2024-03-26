@@ -107,11 +107,18 @@ const Vote: React.FC = () => {
               <br />
               <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
             </div>
-            </div>
+            </div><div className='mx-auto'>
             <button
-          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"onClick={handleVote}
-        >Vote
+          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+          onClick={handleVote}
+        >Vote +
         </button>
+        <button
+          className="rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+          onClick={handleVote}
+        >Vote -
+        </button>
+        </div>
         </div>
         )}
       </main>
