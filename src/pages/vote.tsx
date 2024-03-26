@@ -5,8 +5,6 @@ import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
-import { db } from 'lib/prisma';
-
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -19,15 +17,17 @@ const Vote: React.FC = () => {
     const { selectedSong } = router.query;
     if (selectedSong) {
       setSelectedSong(JSON.parse(selectedSong as string));
-         // store the song in localStorage
-         localStorage.setItem('selectedSong', selectedSong as string);
+      // store the song in localStorage
+      localStorage.setItem('selectedSong', selectedSong as string);
     }
   }, [router.query]);
 
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
-    } else {  return 'Unknown Artist';}
+    } else {
+      return 'Unknown Artist';
+    }
   };
 
   const handleSongClick = (clickedSong: any) => {
@@ -36,38 +36,59 @@ const Vote: React.FC = () => {
     console.log('Selected Song:', clickedSong);
   };
 
-  const handleVote = () => {
+  const handleVote = async (voteType: string) => {
     
-    const lastVotedDate = localStorage.getItem(storageKey);
-    const currentDate = new Date().toLocaleDateString();
-  
-    // user can vote today
-    if (lastVotedDate !== currentDate) {
-      // update the last voted date in localStorage
-      localStorage.setItem(storageKey, currentDate);
-      // store the selected song in localStorage
-      localStorage.setItem('selectedSong', JSON.stringify(selectedSong));
-      // go to profile page with the selected song data as a query parameter
-      router.push({
-        pathname: '/profile',
-        query: { selectedSong: JSON.stringify(selectedSong) },
+    try {
+      console.log('Data being sent:', {
+        userId: 'clu10fgci0000ew5ho4hfij2r', // Replace with actual user ID
+        song: selectedSong?.name || '',
+        voteType,
+        artist: getArtistsNames(selectedSong)
       });
-      // update last vote date in localStorage
-      localStorage.setItem(storageKey, currentDate);
-  
-      toast.success('Thank you for your vote!', {
-        className: "toast-message",
-        position: 'top-right',
-        autoClose: 3000, // 3s
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      // user has already voted today
-      toast.error('You can only vote once a day.', {
+      
+      const response = await fetch('/api/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: 'clu10fgci0000ew5ho4hfij2r', // Replace with actual user ID
+          song: selectedSong?.name || '',
+          voteType,
+          artist: getArtistsNames(selectedSong)
+        })
+      })
+      
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Vote successful:', data);
+        toast.success('Thank you for your vote!', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        console.error('Vote failed:', response.statusText);
+        toast.error('Vote failed: ' + response.statusText, {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.log('Vote failed:', (error as Error).message);
+      toast.error('Vote failed: ' + (error as Error).message, {
         className: "toast-message",
         position: 'top-right',
         autoClose: 3000,
@@ -93,33 +114,33 @@ const Vote: React.FC = () => {
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
-        
           <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
             <div className="my-2 p-4 border-white border rounded-md flex items-center">
-            <img
-              src={selectedSong.album.images[2]?.url || 'default-image-url'}
-              alt={`Album cover for ${selectedSong.name}`}
-              className='song-image mb-1'
-            />
-            <div className='mx-2'>
-              <strong>{selectedSong.name}</strong>
-              <br />
-              <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
+              <img
+                src={selectedSong.album.images[2]?.url || 'default-image-url'}
+                alt={`Album cover for ${selectedSong.name}`}
+                className='song-image mb-1'
+              />
+              <div className='mx-2'>
+                <strong>{selectedSong.name}</strong>
+                <br />
+                <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
+              </div>
             </div>
-            </div><div className='mx-auto'>
-            <button
-          className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
-          onClick={handleVote}
-        >Vote +
-        </button>
-        <button
-          className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
-          onClick={handleVote}
-        >Vote -
-        </button>
-        </div>
-        </div>
+            <div className='mx-auto'>
+              <button
+                className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+                onClick={() => handleVote('+')}
+              >Vote +
+              </button>
+              <button
+                className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+                onClick={() => handleVote('-')}
+              >Vote -
+              </button>
+            </div>
+          </div>
         )}
       </main>
     </div>
