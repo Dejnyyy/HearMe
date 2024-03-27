@@ -2,10 +2,6 @@ import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
-import { api } from "~/utils/api";
-import { db } from 'lib/prisma';
-import { GetStaticProps } from 'next';
-import UsersPage from "./components/Users";
 import { User } from '@prisma/client';
 
 
@@ -31,9 +27,10 @@ const Home: React.FC<{ userList: User[] }> = ({ userList }) => {
   );
 };
 
-function AuthShowcase() {
+export function AuthShowcase() {
   const { data: sessionData } = useSession();
-
+ // Získání userID z aktuální relace
+  const userID = sessionData?.user?.id;
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       {sessionData &&
