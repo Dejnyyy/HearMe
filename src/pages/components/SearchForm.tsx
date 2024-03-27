@@ -64,7 +64,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
 
       {searchResults.map((song) => (
         <li
-          className='list-none px-2 flex items-center m-2 cursor-pointer rounded hover:bg-gray-500'
+          className='list-none px-2 py-2 flex items-center m-2 cursor-pointer rounded-lg hover:bg-gray-500'
           key={song.id}
           onClick={() => handleSongClick(song)}
         >

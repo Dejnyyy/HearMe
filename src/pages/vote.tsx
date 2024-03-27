@@ -102,20 +102,20 @@ const Vote: React.FC = () => {
   
   return (
     <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg font-mono font-semibold">
         <HamburgerMenu />
         <section>
           <div>
             <h1>Vote</h1>
           </div>
         </section>
-        <div className="w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
+        <div className="w-1/4 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800" >
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
           <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
-            <div className="my-2 p-4 border-white border rounded-md flex items-center">
+            <div className="my-2 p-4  rounded-xl bg-zinc-800 flex items-center">
               <img
                 src={selectedSong.album.images[2]?.url || 'default-image-url'}
                 alt={`Album cover for ${selectedSong.name}`}
