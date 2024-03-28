@@ -12,9 +12,7 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
-  
-  const lastVote = localStorage.getItem('lastVotedDate');
-  
+
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
@@ -42,7 +40,7 @@ const Profile: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white bg-black items-center justify-center text-lg  font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white bg-gray-950 items-center justify-center text-lg  font-mono font-semibold">
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
@@ -63,7 +61,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote}</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote - {/*lastVote*/}</h1>
         </div>
 
         {selectedSong && (
