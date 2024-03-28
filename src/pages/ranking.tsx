@@ -6,7 +6,7 @@ const Ranking: React.FC = () => {
 	return (
 		<div>
 			<HamburgerMenu />
-			<main className="flex min-h-screen flex-col text-white items-center justify-center bg-black text-lg  font-mono font-semibold">
+			<main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg  font-mono font-semibold">
 				<section>
 					<div>
 						<h1>Ranking</h1>
