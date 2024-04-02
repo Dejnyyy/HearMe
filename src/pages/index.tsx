@@ -5,7 +5,7 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import { User } from '@prisma/client';
 
 
-const Home: React.FC<{ userList: User[] }> = ({ userList }) => {
+const Home: React.FC<{ userList: User[] }> = () => {
 
   const { data: sessionData } = useSession();
 
