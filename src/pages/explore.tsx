@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<any[]>([]);
+  const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -34,19 +35,38 @@ const Explore: React.FC = () => {
     return formattedDate.replace(',', ', '); // Přidání mezer po čárce
   };
 
+  // Sort votes by date
+  const sortedVotes = [...votes].sort((a, b) => {
+    if (sortByDateDesc) {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    } else {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+  });
+
+  // Toggle sorting order
+  const toggleSortingOrder = () => {
+    setSortByDateDesc(!sortByDateDesc);
+  };
+
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg  font-mono font-semibold">
-        <section>
-          <div className='text-center'>
+      <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg  font-mono font-semibold">
+        <section className="flex justify-end mt-10 mr-10">
+          <div className=''>
+            <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>Order by Date</button>
+          </div>
+        </section>
+        <section className='justify-center items-center'>
+          <div className='text-center justify-center'>
             <h1>Explore</h1>
           </div>
-          <div>
-            <h2>Votes:</h2>
+          <div className='justify-center items-center '>
+            <h2 className='text-center'>Votes:</h2>
             <ul>
-              {votes.map((vote, index) => (
-                <div key={index} className="border-white border rounded-md px-4 py-2">
+              {sortedVotes.map((vote, index) => (
+                <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2">
                   <li className=''>
                     <p>{formatDate(vote.createdAt)}</p>
                     <p>Song: {vote.song}</p>

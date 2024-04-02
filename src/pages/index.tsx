@@ -20,7 +20,6 @@ const Home: React.FC<{ userList: User[] }> = () => {
         <img src="favicon.png" className="w-64 my-2 absolute top-10" alt="Logo"></img>
         {sessionData && <HamburgerMenu />}
         {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
-        
         <AuthShowcase />
       </main>
     </>
