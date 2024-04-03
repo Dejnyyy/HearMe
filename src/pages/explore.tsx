@@ -49,13 +49,16 @@ const Explore: React.FC = () => {
     setSortByDateDesc(!sortByDateDesc);
   };
 
+  // Determine text for sorting button
+  const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
+
   return (
     <div>
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg  font-mono font-semibold">
         <section className="flex justify-end mt-10 mr-10">
           <div className=''>
-            <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>Order by Date</button>
+            <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date ({sortingButtonText})</button>
           </div>
         </section>
         <section className='justify-center items-center'>
