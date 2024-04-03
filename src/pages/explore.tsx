@@ -4,6 +4,7 @@ import HamburgerMenu from './components/HamburgerMenu';
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<any[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -49,13 +50,18 @@ const Explore: React.FC = () => {
     setSortByDateDesc(!sortByDateDesc);
   };
 
+  // Toggle expanded view for an item
+  const toggleExpanded = (index: number) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   // Determine text for sorting button
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
 
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg  font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg font-mono font-semibold">
         <section className="flex justify-end mt-10 mr-10">
           <div className=''>
             <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date ({sortingButtonText})</button>
@@ -69,12 +75,16 @@ const Explore: React.FC = () => {
             <h2 className='text-center'>Votes:</h2>
             <ul>
               {sortedVotes.map((vote, index) => (
-                <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2">
-                  <li className=''>
+                <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                  <li className='cursor-pointer'>
                     <p>{formatDate(vote.createdAt)}</p>
                     <p>Song: {vote.song}</p>
-                    <p>+/-: {vote.voteType}</p>
-                    <p>Artist: {vote.artist}</p>
+                    {expandedIndex === index && (
+                      <>
+                        <p>+/-: {vote.voteType}</p>
+                        <p>Artist: {vote.artist}</p>
+                      </>
+                    )}
                   </li>
                 </div>
               ))}
