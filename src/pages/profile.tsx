@@ -1,9 +1,8 @@
-// Profile.tsx component
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
-import { useEffect, useState } from 'react'; 
+import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
 
@@ -12,6 +11,7 @@ const Profile: React.FC = () => {
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const [lastVote, setLastVote] = useState<string | null>(null);
 
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
@@ -22,21 +22,35 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    // Check if there's a selectedSong in the query params
     if (storedSelectedSong) {
-      // Use JSON.parse to convert the string to an object
       setSelectedSong(JSON.parse(storedSelectedSong as string));
-      // Store the selectedSong data in localStorage)
       localStorage.setItem('selectedSong', storedSelectedSong as string);
     } else {
-      // If there's no selectedSong in the query params, try to retrieve it from localStorage
       const localStorageSelectedSong = localStorage.getItem('selectedSong');
       if (localStorageSelectedSong) {
         setSelectedSong(JSON.parse(localStorageSelectedSong));
       }
     }
-    }, [storedSelectedSong, sessionData]);
-  
+
+    // Fetch votes
+    const fetchVotes = async () => {
+      try {
+        const response = await fetch('/api/getVotes');
+        if (!response.ok) throw new Error('Failed to fetch votes');
+        const votes = await response.json();
+        // Assuming your vote objects have a 'createdAt' or similar timestamp
+        if (votes.length > 0) {
+          const lastVote = votes[votes.length - 1]; // Assuming the last vote is the most recent one
+          setLastVote(`${new Date(lastVote.createdAt).toLocaleDateString()}`);
+        }
+      } catch (error) {
+        console.error('Error fetching votes:', error);
+      }
+    };
+
+    fetchVotes();
+  }, [storedSelectedSong, sessionData]);
+
   return (
     <div>
       <HamburgerMenu />
@@ -44,7 +58,6 @@ const Profile: React.FC = () => {
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
-            
             <AuthShowcase />
           </div>
         </section>
@@ -52,7 +65,6 @@ const Profile: React.FC = () => {
           <div>
             <FaveArtist />
           </div>
-          
           <div className="rounded-md  py-1 text-center cursor-pointer p-10"><span>Votes: {/*votes*/}</span> - <span>First Vote</span></div>
           <div className="rounded-md  py-1 text-center cursor-pointer my-auto">
             <div>
@@ -61,7 +73,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Last Vote - {/*lastVote*/}</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote || 'No votes yet'}</h1>
         </div>
 
         {selectedSong && (
