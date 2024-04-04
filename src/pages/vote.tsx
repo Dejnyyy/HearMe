@@ -41,24 +41,22 @@ const Vote: React.FC = () => {
     // the selected song data
     console.log('Selected Song:', clickedSong);
   };
-
   const handleVote = async (voteType: string) => {
-    // Example placeholder for obtaining an image URL; replace with actual upload logic
-    const imageUrl = selectedSong?.imageUrl || 'default-image-url';
+    const imageUrl = selectedSong.album.images[2]?.url || 'default-image-url';
   
     try {
       const response = await fetch('/api/vote', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
           song: selectedSong?.name || '',
           voteType,
           artist: getArtistsNames(selectedSong),
-          imageUrl 
-        })
+          imageUrl, // Sending the image URL to the backend
+        }),
       })
   
       if (response.ok) {

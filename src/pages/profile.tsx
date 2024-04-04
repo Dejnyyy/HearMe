@@ -115,6 +115,7 @@ const Profile: React.FC = () => {
         </div>
         <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote || 'No votes yet'}</h1>
+          
         </div>
 
         {selectedSong && (
