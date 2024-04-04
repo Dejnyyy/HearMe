@@ -1,20 +1,22 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+// pages/api/vote.ts
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../server/db';
 
 const prisma = db;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { userId, song, voteType, artist } = req.body;
+    const { userId, song, voteType, artist, imageUrl } = req.body; // Add imageUrl to the destructuring
 
     try {
-      console.log('Creating vote:', { userId, song, voteType, artist });
+      console.log('Creating vote:', { userId, song, voteType, artist, imageUrl });
       const vote = await prisma.vote.create({
         data: {
           userId,
           song,
           voteType,
-          artist
+          artist,
+          imageUrl // Store imageUrl in your vote record
         }
       });
       res.json(vote);

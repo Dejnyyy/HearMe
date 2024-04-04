@@ -42,9 +42,10 @@ const Vote: React.FC = () => {
     console.log('Selected Song:', clickedSong);
   };
 
- 
- const handleVote = async (voteType: string) => {
-    
+  const handleVote = async (voteType: string) => {
+    // Example placeholder for obtaining an image URL; replace with actual upload logic
+    const imageUrl = selectedSong?.imageUrl || 'default-image-url';
+  
     try {
       const response = await fetch('/api/vote', {
         method: 'POST',
@@ -52,13 +53,14 @@ const Vote: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId:userId, 
+          userId,
           song: selectedSong?.name || '',
           voteType,
-          artist: getArtistsNames(selectedSong)
+          artist: getArtistsNames(selectedSong),
+          imageUrl 
         })
-      })      
-
+      })
+  
       if (response.ok) {
         const data = await response.json();
         console.log('Vote successful:', data);

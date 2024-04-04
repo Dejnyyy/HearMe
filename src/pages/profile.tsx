@@ -12,7 +12,19 @@ const Profile: React.FC = () => {
   const { selectedSong: storedSelectedSong } = router.query;
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const [lastVote, setLastVote] = useState<string | null>(null);
+  const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
+  const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
 
+  const handleFavoriteArtistChange = (newArtist: string) => {
+    setFavoriteArtist(newArtist);
+    updateFavorites(newArtist, favoriteAlbum);
+  };
+  
+  const handleFavoriteAlbumChange = (newAlbum: string) => {
+    setFavoriteAlbum(newAlbum);
+    updateFavorites(favoriteArtist, newAlbum);
+  };
+  
   const getArtistsNames = (track: any): string => {
     if (track.artists && track.artists.length > 0) {
       return track.artists.map((artist: any) => artist.name).join(', ');
@@ -20,7 +32,36 @@ const Profile: React.FC = () => {
       return 'Unknown Artist';
     }
   };
-
+  const updateFavorites = async (favoriteArtist: string, favoriteAlbum: string) => {
+    if (!sessionData) {
+      console.log('User must be logged in to update favorites');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/updateFavorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: sessionData.user.id, // You get the ID from the session
+          favoriteArtist,
+          favoriteAlbum,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update favorites');
+      }
+  
+      const data = await response.json();
+      console.log('Favorites updated:', data);
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
+  };
+  
   useEffect(() => {
     if (storedSelectedSong) {
       setSelectedSong(JSON.parse(storedSelectedSong as string));

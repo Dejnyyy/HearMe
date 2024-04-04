@@ -61,6 +61,8 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    favoriteAlbum String?   // Optional field for favorite album
+    favoriteArtist String?  // Optional field for favorite artist
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -81,5 +83,6 @@ model Vote {
   song        String   // Nazev songy
   voteType    String   // Typ hlasu (+ nebo -)
   artist      String   // Jmeno umelce
+  imageUrl    String?
   createdAt   DateTime @default(now())
 }
