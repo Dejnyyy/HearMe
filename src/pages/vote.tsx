@@ -42,7 +42,8 @@ const Vote: React.FC = () => {
     console.log('Selected Song:', clickedSong);
   };
 
-  const handleVote = async (voteType: string) => {
+ 
+ const handleVote = async (voteType: string) => {
     
     try {
       const response = await fetch('/api/vote', {
@@ -56,8 +57,7 @@ const Vote: React.FC = () => {
           voteType,
           artist: getArtistsNames(selectedSong)
         })
-      })
-      
+      })      
 
       if (response.ok) {
         const data = await response.json();
