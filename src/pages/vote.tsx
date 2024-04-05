@@ -109,7 +109,7 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
-        <div className="w-1/4 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800" >
+        <div className=" w-5/6 sm:w-2/3 lg:w-1/2 xl:w-1/4 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800" >
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
