@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 
+interface Vote {
+  createdAt: string;
+  song: string;
+  artist: string;
+  voteType: string;
+  imageUrl: string; // Assuming this field exists
+}
+
+
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<any[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
@@ -74,12 +83,17 @@ const Explore: React.FC = () => {
               {sortedVotes.map((vote, index) => (
                 <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
+                    <div className="flex flex-row">
+                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto my-2" />
+                    <p className='text-start my-auto'>Song: {vote.song}</p>
+                    </div>
                     <p>{formatDate(vote.createdAt)}</p>
-                    <p>Song: {vote.song}</p>
+                    
                     {expandedIndex === index && (
                       <>
                         <p>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
+                        <p>Voted: {vote.userId}</p>
                       </>
                     )}
                   </li>
