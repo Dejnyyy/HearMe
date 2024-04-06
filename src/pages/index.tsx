@@ -4,10 +4,9 @@ import Head from "next/head";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { User } from '@prisma/client';
 
-
 const Home: React.FC<{ userList: User[] }> = () => {
-
   const { data: sessionData } = useSession();
+  const userID = sessionData?.user?.id; // Extract userID here
 
   return (
     <>
@@ -20,16 +19,22 @@ const Home: React.FC<{ userList: User[] }> = () => {
         <img src="favicon.png" className="w-64 my-2 absolute top-10" alt="Logo"></img>
         {sessionData && <HamburgerMenu />}
         {sessionData && <div className="text-white font-mono font-semibold mb-5 text-lg">Hello, <span className="underline cursor-pointer">{sessionData.user?.name}</span>   welcome to <span className="text-yellow-300">HearMe</span></div>}
-        <AuthShowcase />
+        <AuthShowcase userID={userID} />
       </main>
     </>
   );
 };
 
-export function AuthShowcase() {
+// Modify AuthShowcase to accept userID as a prop
+interface AuthShowcaseProps {
+  userID?: string;
+}
+
+export const AuthShowcase: React.FC<AuthShowcaseProps> = ({ userID }) => {
   const { data: sessionData } = useSession();
- // Získání userID z aktuální relace
-  const userID = sessionData?.user?.id;
+  console.log(sessionData);
+  console.log(userID);
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       {sessionData &&
@@ -45,6 +50,6 @@ export function AuthShowcase() {
       </button>
     </div>
   );
-}
+};
 
 export default Home;
