@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 
 const Calendar: React.FC = () => {
   const [votes, setVotes] = useState<any[]>([]);
+  const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchVotes = async () => {
       try {
-        const response = await fetch('/api/getVotes');
+        const response = await fetch('/api/getMyVotes');
         if (!response.ok) {
           throw new Error('Failed to fetch votes');
         }
@@ -34,24 +36,52 @@ const Calendar: React.FC = () => {
     return formattedDate.replace(',', ', '); // Přidání mezer po čárce
   };
 
+  // Sort votes by date
+  const sortedVotes = [...votes].sort((a, b) => {
+    if (sortByDateDesc) {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    } else {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+  });
+  // Toggle sorting order
+  const toggleSortingOrder = () => {
+    setSortByDateDesc(!sortByDateDesc);
+  };
+  // Toggle expanded view for an item
+  const toggleExpanded = (index: number) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+  // Determine text for sorting button
+  const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
+
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg  font-mono font-semibold">
-        <section>
-          <div className='text-center'>
-            <h1 >Calendar</h1>
+      <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg font-mono font-semibold">
+        <section className="flex justify-end mt-10 mr-10">
+          <div className=''>
+            <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
           </div>
-          <div>
-            <h2>Votes:</h2>
+        </section>
+        <section className='justify-center items-center'>
+          <div className='text-center justify-center'>
+            <h1>Calendar</h1>
+          </div>
+          <div className='justify-center items-center '>
+            <h2 className='text-center'>My Votes:</h2>
             <ul>
-              {votes.map((vote, index) => (
-                <div key={index} className="border-white border rounded-md px-4 py-2">
-                  <li className=''>
+              {sortedVotes.map((vote, index) => (
+                <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                  <li className='cursor-pointer'>
                     <p>{formatDate(vote.createdAt)}</p>
                     <p>Song: {vote.song}</p>
-                    <p>+/-: {vote.voteType}</p>
-                    <p>Artist: {vote.artist}</p>
+                    {expandedIndex === index && (
+                      <>
+                        <p>+/-: {vote.voteType}</p>
+                        <p>Artist: {vote.artist}</p>
+                      </>
+                    )}
                   </li>
                 </div>
               ))}

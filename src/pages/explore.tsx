@@ -69,7 +69,7 @@ const Explore: React.FC = () => {
             <h1>Explore</h1>
           </div>
           <div className='justify-center items-center '>
-            <h2 className='text-center'>Votes:</h2>
+            <h2 className='text-center'>All Votes:</h2>
             <ul>
               {sortedVotes.map((vote, index) => (
                 <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
