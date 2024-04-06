@@ -1,30 +1,25 @@
-// pages/vote.tsx
+ // pages/vote.tsx
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
+import { useSession } from "next-auth/react"; // Import useSession
 
 const Vote: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const router = useRouter();
-  const storageKey = 'lastVotedDate';
-  const [userId, setUserId] = useState<string>('');
+  const { data: session, status } = useSession(); // Use the useSession hook to get session data
+  const isUserLoggedIn = status === "authenticated"; // Check if the user is logged in
+  const userId = session?.user?.id || ''; // Directly use userId from session
 
-  
   useEffect(() => {
-    // check if there is a selectedSong in the query params
     const { selectedSong } = router.query;
     if (selectedSong) {
       setSelectedSong(JSON.parse(selectedSong as string));
-      // store the song in localStorage
       localStorage.setItem('selectedSong', selectedSong as string);
-    }
-    const userIdFromLocalStorage = localStorage.getItem('userId');
-    if (userIdFromLocalStorage) {
-      setUserId(userIdFromLocalStorage);
     }
   }, [router.query]);
 
@@ -38,10 +33,18 @@ const Vote: React.FC = () => {
 
   const handleSongClick = (clickedSong: any) => {
     setSelectedSong(clickedSong);
-    // the selected song data
     console.log('Selected Song:', clickedSong);
   };
+
   const handleVote = async (voteType: string) => {
+    if (!isUserLoggedIn) {
+      toast.error('You need to be logged in to vote.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
+
     const imageUrl = selectedSong.album.images[2]?.url || 'default-image-url';
   
     try {
@@ -55,9 +58,9 @@ const Vote: React.FC = () => {
           song: selectedSong?.name || '',
           voteType,
           artist: getArtistsNames(selectedSong),
-          imageUrl, // Sending the image URL to the backend
+          imageUrl,
         }),
-      })
+      });
   
       if (response.ok) {
         const data = await response.json();
@@ -101,6 +104,7 @@ const Vote: React.FC = () => {
   };
   
   return (
+  
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg font-mono font-semibold">
         <HamburgerMenu />
