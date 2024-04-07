@@ -83,11 +83,10 @@ const Explore: React.FC = () => {
                 <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                   <p>{formatDate(vote.createdAt)}</p>
-                    <div className="flex flex-row justify-start items-start text-start">
-                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto my-2" />
-                    <p className='text-center my-auto'>Song: {vote.song}</p>
+                    <div className="flex flex-row ">
+                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                    <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
                     </div>
-                    
                     
                     {expandedIndex === index && (
                       <>
