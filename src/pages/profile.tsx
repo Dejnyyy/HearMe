@@ -14,6 +14,7 @@ const Profile: React.FC = () => {
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
   const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
+  const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
@@ -32,6 +33,7 @@ const Profile: React.FC = () => {
       return 'Unknown Artist';
     }
   };
+
   const updateFavorites = async (favoriteArtist: string, favoriteAlbum: string) => {
     if (!sessionData) {
       console.log('User must be logged in to update favorites');
@@ -45,7 +47,7 @@ const Profile: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: sessionData.user.id, // You get the ID from the session
+          userId: sessionData.user.id,
           favoriteArtist,
           favoriteAlbum,
         }),
@@ -61,7 +63,7 @@ const Profile: React.FC = () => {
       console.error('Error updating favorites:', error);
     }
   };
-  
+
   useEffect(() => {
     if (storedSelectedSong) {
       setSelectedSong(JSON.parse(storedSelectedSong as string));
@@ -73,15 +75,14 @@ const Profile: React.FC = () => {
       }
     }
 
-    // Fetch votes
     const fetchVotes = async () => {
       try {
-        const response = await fetch('/api/getVotes');
+        const response = await fetch('/api/getMyVotes');
         if (!response.ok) throw new Error('Failed to fetch votes');
         const votes = await response.json();
-        // Assuming your vote objects have a 'createdAt' or similar timestamp
+        setVoteCount(votes.length); // Update vote count state
         if (votes.length > 0) {
-          const lastVote = votes[votes.length - 1]; // Assuming the last vote is the most recent one
+          const lastVote = votes[votes.length - 1];
           setLastVote(`${new Date(lastVote.createdAt).toLocaleDateString()}`);
         }
       } catch (error) {
@@ -106,32 +107,33 @@ const Profile: React.FC = () => {
           <div>
             <FaveArtist />
           </div>
-          <div className="rounded-md  py-1 text-center cursor-pointer p-10"><span>Votes: {/*votes*/}</span> - <span>First Vote</span></div>
-          <div className="rounded-md  py-1 text-center cursor-pointer my-auto">
+          <div className="rounded-md py-1 text-center cursor-pointer p-10">
+            <span>Votes: {voteCount}</span> - <span>First Vote</span>
+          </div>
+          <div className="rounded-md py-1 text-center cursor-pointer my-auto">
             <div>
               <FaveAlbum />
             </div>
           </div>
         </div>
-        <div className=" w-3/12 h-12 bg-stone-50 rounded-full my-5">
+        <div className="w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote || 'No votes yet'}</h1>
-          
         </div>
 
         {selectedSong && (
-  <div className="my-2 border-white border rounded-md p-4 flex items-center">
-    <img
-      src={selectedSong.album.images[2]?.url || 'default-image-url'}
-      alt={`Album cover for ${selectedSong.name}`}
-      className='song-image mb-1'
-    />
-    <div className='mx-2'>
-      <strong className='w-auto'>{selectedSong.name}</strong>
-      <br />
-      <span className='text-gray-400 w-auto'>{getArtistsNames(selectedSong)}</span>
-    </div>
-  </div>
-)}
+          <div className="my-2 border-white border rounded-md p-4 flex items-center">
+            <img
+              src={selectedSong.album.images[2]?.url || 'default-image-url'}
+              alt={`Album cover for ${selectedSong.name}`}
+              className='song-image mb-1'
+            />
+            <div className='mx-2'>
+              <strong className='w-auto'>{selectedSong.name}</strong>
+              <br />
+              <span className='text-gray-400 w-auto'>{getArtistsNames(selectedSong)}</span>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
@@ -142,7 +144,6 @@ function AuthShowcase() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white"></p>
       {sessionData && 
       <div>
         <Image
