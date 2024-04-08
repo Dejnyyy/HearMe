@@ -7,13 +7,13 @@ interface Vote {
   song: string;
   artist: string;
   voteType: string;
-  imageUrl: string; // Assuming this field exists
+  imageUrl: string;
 }
 
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<any[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);// state to track expanded index
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -32,7 +32,7 @@ const Explore: React.FC = () => {
     fetchVotes();
   }, []);
 
-  // Funkce pro formátování data
+  // Function to formate Date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const formattedDate = date.toLocaleString('cz-CS', {
@@ -42,7 +42,7 @@ const Explore: React.FC = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
-    return formattedDate.replace(',', ', '); // Přidání mezer po čárce
+    return formattedDate.replace(',', ', ');
   };
 
   // Sort votes by date
