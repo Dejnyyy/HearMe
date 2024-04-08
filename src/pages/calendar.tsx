@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import { useSession } from "next-auth/react";
-
+import Link from 'next/link';
 
 const Calendar: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -75,13 +75,13 @@ const Calendar: React.FC = () => {
           <div className='justify-center items-center '>
             <h2 className='text-center'>My Votes:</h2>
             <ul>
-              {sortedVotes.map((vote, index) => (
+              {sortedVotes.map((vote:any, index:any) => (
                 <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <p>{formatDate(vote.createdAt)}</p>
                     <div className='flex flex-row'>
                     <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
-                    <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
+                    <Link className='my-auto' href={""}><p className='ml-4 text-start my-auto'>Song: {vote.song}</p></Link>
                     </div>
                       {expandedIndex === index && (
                       <>
