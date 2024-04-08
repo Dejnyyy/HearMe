@@ -79,12 +79,15 @@ const Calendar: React.FC = () => {
                 <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <p>{formatDate(vote.createdAt)}</p>
-                    <p>Song: {vote.song}</p>
-                    {expandedIndex === index && (
+                    <div className='flex flex-row'>
+                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                    <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
+                    </div>
+                      {expandedIndex === index && (
                       <>
                         <p>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
-                        <p>Voted: {sessionData?.user.name}</p>
+                        <p>Voted by: {sessionData?.user.name}</p>
                       </>
                     )}
                   </li>
