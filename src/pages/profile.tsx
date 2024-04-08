@@ -6,6 +6,14 @@ import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
 
+type LastVoteDetails = {
+  date: string;
+  song: string;
+  artist: string;
+  imageUrl: string | null;
+} | null;
+
+
 const Profile: React.FC = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -16,23 +24,17 @@ const Profile: React.FC = () => {
   const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
   const [firstVote, setFirstVote] = useState<string | null>(null);
   const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
+  const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
+
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
-    updateFavorites(newArtist, favoriteAlbum);
+    updateFavorites(newArtist, favoriteAlbum || '');
   };
   
   const handleFavoriteAlbumChange = (newAlbum: string) => {
     setFavoriteAlbum(newAlbum);
-    updateFavorites(favoriteArtist, newAlbum);
-  };
-  
-  const getArtistsNames = (track: any): string => {
-    if (track.artists && track.artists.length > 0) {
-      return track.artists.map((artist: any) => artist.name).join(', ');
-    } else {
-      return 'Unknown Artist';
-    }
+    updateFavorites(favoriteArtist || '', newAlbum);
   };
 
   const updateFavorites = async (favoriteArtist: string, favoriteAlbum: string) => {
@@ -75,6 +77,7 @@ const Profile: React.FC = () => {
         setSelectedSong(JSON.parse(localStorageSelectedSong));
       }
     }
+
     const fetchFirstVote = async () => {
       try {
         const response = await fetch('/api/getMyFirstVote?first=true');
@@ -85,6 +88,7 @@ const Profile: React.FC = () => {
         console.error('Error fetching the first vote:', error);
       }
     };
+
     const fetchVotes = async () => {
       try {
         const response = await fetch('/api/getMyVotes');
@@ -99,8 +103,25 @@ const Profile: React.FC = () => {
         console.error('Error fetching votes:', error);
       }
     };
+    const fetchLastVote = async () => {
+      try {
+        const response = await fetch('/api/getMyLastVote?last=true');
+        if (!response.ok) throw new Error('Failed to fetch the last vote');
+        const vote = await response.json();
+        setLastVoteDetails({
+          date: new Date(vote.createdAt).toLocaleDateString(),
+          song: vote.song,
+          artist: vote.artist,
+          imageUrl: vote.imageUrl || 'path/to/default-image.png', // Replace with your default image path
+        });
+      } catch (error) {
+        console.error('Error fetching the last vote:', error);
+      }
+    };
+    
     if (sessionData) {
       fetchFirstVote();
+      fetchLastVote();
     }
     fetchVotes();
   }, [storedSelectedSong, sessionData]);
@@ -119,8 +140,10 @@ const Profile: React.FC = () => {
           <div>
             <FaveArtist />
           </div>
-          <div className="rounded-md py-1 text-center p-10">
-            <span>Votes: {voteCount}</span> - <span>First Vote: {firstVote || 'No votes yet'}</span>
+          <div className="rounded-md py-1 text-center ">
+            <span>Votes: {voteCount}</span>
+            <br />
+            <span>First Vote: {firstVote || 'No votes yet'}</span>
           </div>
           <div className="rounded-md py-1 text-center cursor-pointer my-auto">
             <div>
@@ -132,17 +155,17 @@ const Profile: React.FC = () => {
           <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote || 'No votes yet'}</h1>
         </div>
 
-        {selectedSong && (
+        {lastVoteDetails && (
             <div className="bg-gray-800 rounded-2xl p-3 flex items-center">
             <img
-              src={selectedSong.album.images[2]?.url || 'default-image-url'}
+              src={lastVoteDetails.imageUrl || 'default-image-url'}
               alt={`Album cover for ${selectedSong.name}`}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>
-              <strong className='w-auto'>{selectedSong.name}</strong>
+              <strong className='w-auto'>{lastVoteDetails.song}</strong>
               <br />
-              <span className='text-gray-400 w-auto'>{getArtistsNames(selectedSong)}</span>
+              <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>
           </div>
         )}
