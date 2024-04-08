@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './FaveArtist.module.css';
 import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
+import JSON from 'json5';
 
 const FaveAlbum: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +68,7 @@ const FaveAlbum: React.FC = () => {
         ) : lastSelectedAlbum ? (
           <div>
             <h2>Favourite Album:</h2>
-            <div className="bg-gray-800 rounded-2xl p-3 flex items-center">
+            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
               <img
                 src={lastSelectedAlbum.images[2]?.url || 'default-image-url'}
                 alt={`Image for ${lastSelectedAlbum.name}`}

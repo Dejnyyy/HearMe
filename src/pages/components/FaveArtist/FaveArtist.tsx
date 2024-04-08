@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './FaveArtist.module.css';
 import SearchArtists from '../SearchArtists';
 import { toast } from 'react-toastify';
+import JSON from 'json5';
 
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,14 +51,14 @@ const FaveArtist: React.FC = () => {
         {selectedArtist ? (
           <div>
             <h2>Favourite Artist:</h2>
-            <div className="bg-gray-800 rounded-2xl p-3 flex items-center">
+            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
               <img
                 src={selectedArtist.images[2]?.url || 'default-image-url'}
                 alt={`Image for ${selectedArtist.name}`}
-                className="artist-image w-16 h-auto ml-2 rounded-xl"
+                className="artist-image w-16 h-auto ml-2 rounded-lg"
               />
               <div className="ml-2">
-                <strong>{selectedArtist.name}</strong>
+                <strong className=''>{selectedArtist.name}</strong>
               </div>
             </div>
           </div>

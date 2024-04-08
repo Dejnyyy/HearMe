@@ -67,18 +67,18 @@ const Calendar: React.FC = () => {
       <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg font-mono font-semibold">
         <section className="flex justify-end mt-10 mr-10">
           <div className=''>
-            <button className='border border-white px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
+            <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
           </div>
         </section>
         <section className='justify-center items-center'>
           <div className='text-center justify-center'>
-            <h1>Calendar</h1>
+            <h1 className='text-5xl'>Calendar</h1>
           </div>
           <div className='justify-center items-center '>
-            <h2 className='text-center'>My Votes:</h2>
+            <h2 className='text-center text-xl'>My Votes:</h2>
             <ul>
               {sortedVotes.map((vote:any, index:any) => (
-                <div key={index} className="border-white border mx-auto w-1/2 xl:w-1/4 rounded-md px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                <div key={index} className="bg-gray-700 mx-auto w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <p>{formatDate(vote.createdAt)}</p>
                     <div className='flex flex-row'>
