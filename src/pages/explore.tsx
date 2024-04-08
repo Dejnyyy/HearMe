@@ -47,7 +47,7 @@ const Explore: React.FC = () => {
   };
 
   // Sort votes by date
-  const sortedVotes = [...votes].sort((a, b) => {
+  const sortedVotes = [...votes].sort((a:any, b:any) => {
     if (sortByDateDesc) {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     } else {

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
 import Error from 'next/error';
+import JSON from 'json5';
 
 
 type LastVoteDetails = {

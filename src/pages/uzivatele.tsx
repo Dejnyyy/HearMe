@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { User } from '@prisma/client';
 import UsersPage from "./components/Users";
 import HamburgerMenu from "./components/HamburgerMenu";
+import JSON from 'json5';
 
 const Uzivatele: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -39,7 +40,7 @@ const Uzivatele: React.FC = () => {
             if (response.ok) {
                 const { deletedUserId } = await response.json();
                 // Update state after successful deletion
-                setUsers(prevUsers => prevUsers.filter(user => user.id !== deletedUserId));
+                setUsers(prevUsers => prevUsers.filter((user: User) => user.id !== deletedUserId));
             } else {
                 console.error('Failed to delete user:', response.statusText);
             }
