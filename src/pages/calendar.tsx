@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
+import Error from 'next/error';
+
 
 const Calendar: React.FC = () => {
   const { data: sessionData } = useSession();

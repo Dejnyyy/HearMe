@@ -5,6 +5,8 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
+import Error from 'next/error';
+
 
 type LastVoteDetails = {
   date: string;

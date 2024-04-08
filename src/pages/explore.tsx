@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import Link from 'next/link';
+import Error from 'next/error';
 
 interface Vote {
   createdAt: string;
