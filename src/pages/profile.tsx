@@ -121,12 +121,12 @@ const Profile: React.FC = () => {
         </div>
 
         {selectedSong && (
-          <div className="my-2 border-white border rounded-md p-4 flex items-center">
+            <div className="bg-gray-800 rounded-2xl p-3 flex items-center">
             <img
               src={selectedSong.album.images[2]?.url || 'default-image-url'}
               alt={`Album cover for ${selectedSong.name}`}
-              className='song-image mb-1'
-            />
+              className="artist-image w-16 h-auto ml-2 rounded-xl"
+              />
             <div className='mx-2'>
               <strong className='w-auto'>{selectedSong.name}</strong>
               <br />

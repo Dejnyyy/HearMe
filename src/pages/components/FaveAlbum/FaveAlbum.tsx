@@ -67,11 +67,11 @@ const FaveAlbum: React.FC = () => {
         ) : lastSelectedAlbum ? (
           <div>
             <h2>Favourite Album:</h2>
-            <div className="border rounded-md p-3 flex items-center w-auto">
+            <div className="bg-gray-800 rounded-2xl p-3 flex items-center">
               <img
                 src={lastSelectedAlbum.images[2]?.url || 'default-image-url'}
                 alt={`Image for ${lastSelectedAlbum.name}`}
-                className="album-image w-20 h-auto"
+                className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
               <div className="ml-2">
                 <strong>{lastSelectedAlbum.name}</strong>
