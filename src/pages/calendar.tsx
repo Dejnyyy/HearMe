@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
+import { useSession } from "next-auth/react";
+
 
 const Calendar: React.FC = () => {
+  const { data: sessionData } = useSession();
   const [votes, setVotes] = useState<any[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -10,6 +13,7 @@ const Calendar: React.FC = () => {
     const fetchVotes = async () => {
       try {
         const response = await fetch('/api/getMyVotes');
+        
         if (!response.ok) {
           throw new Error('Failed to fetch votes');
         }
@@ -80,6 +84,7 @@ const Calendar: React.FC = () => {
                       <>
                         <p>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
+                        <p>Voted: {sessionData?.user.name}</p>
                       </>
                     )}
                   </li>
