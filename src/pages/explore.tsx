@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image'; // Import Image from next/image
 import HamburgerMenu from './components/HamburgerMenu';
 
 // Updated Vote interface to be used
@@ -8,10 +7,12 @@ interface Vote {
   song: string;
   artist: string;
   voteType: string;
-  imageUrl: string;
-  userId?: string; // Assuming userId might be optional
+  imageUrl?: string;
+  userId: string;
 }
-
+interface VoteWithUserName extends Vote {
+  userName?: string;
+}
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]); // Use Vote[] instead of any[]
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // No change needed
@@ -22,17 +23,22 @@ const Explore: React.FC = () => {
       try {
         const response = await fetch('/api/getVotes');
         if (!response.ok) {
-          console.log('Failed to fetch votes');
-          return; // Exit early if response is not ok
+          console.log('Votes fetch failed');
         }
-        const votesData: Vote[] = await response.json(); // Assume the response fits the Vote[] shape
-        setVotes(votesData);
+        const votesData: Vote[] = await response.json();
+        const votesWithUserNames = await Promise.all(
+          votesData.map(async (vote:Vote) => ({
+            ...vote,
+            userName: await fetchUserName(vote.userId),
+          }))
+        );
+        setVotes(votesWithUserNames);
       } catch (error) {
         console.error('Error fetching votes:', error);
       }
     };
-
-    fetchVotes().catch((error) => console.error('Failed to fetch votes:', error)); // Handle potential async errors
+  
+    fetchVotes().catch((error) => console.error('Failed to fetch votes:', error));
   }, []);
 
   // Function to formate Date
@@ -63,6 +69,19 @@ const Explore: React.FC = () => {
   // Toggle expanded view for an item
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
+  };
+  const fetchUserName = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
+      if (!res.ok) {
+        console.log('User fetch failed');
+      }
+      const userData = await res.json();
+      return userData.name;
+    } catch (error) {
+      console.error('fetchUserName error:', error);
+      return 'Unknown'; // Return 'Unknown' or handle accordingly
+    }
   };
   // Determine text for sorting button
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
@@ -101,7 +120,7 @@ const Explore: React.FC = () => {
                       <>
                         <p>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
-                        <p>Voted: {vote.userId? vote.userId:"unknow"}</p>
+                        <p>Voted by: {vote.userName? vote.userName:"unknow"}</p>
                       </>
                     )}
                   </li>
