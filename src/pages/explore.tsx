@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image'; // Import Image from next/image
 import HamburgerMenu from './components/HamburgerMenu';
 
+// Updated Vote interface to be used
 interface Vote {
   createdAt: string;
   song: string;
   artist: string;
   voteType: string;
   imageUrl: string;
+  userId?: string; // Assuming userId might be optional
 }
 
 const Explore: React.FC = () => {
-  const [votes, setVotes] = useState<any[]>([]);
-  const [sortByDateDesc, setSortByDateDesc] = useState(true); // State to track sorting order
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);// state to track expanded index
+  const [votes, setVotes] = useState<Vote[]>([]); // Use Vote[] instead of any[]
+  const [sortByDateDesc, setSortByDateDesc] = useState(true); // No change needed
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // No change needed
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -20,15 +23,16 @@ const Explore: React.FC = () => {
         const response = await fetch('/api/getVotes');
         if (!response.ok) {
           console.log('Failed to fetch votes');
+          return; // Exit early if response is not ok
         }
-        const votesData = await response.json();
+        const votesData: Vote[] = await response.json(); // Assume the response fits the Vote[] shape
         setVotes(votesData);
       } catch (error) {
         console.error('Error fetching votes:', error);
       }
     };
 
-    fetchVotes();
+    fetchVotes().catch((error) => console.error('Failed to fetch votes:', error)); // Handle potential async errors
   }, []);
 
   // Function to formate Date
@@ -45,7 +49,7 @@ const Explore: React.FC = () => {
   };
 
   // Sort votes by date
-  const sortedVotes = [...votes].sort((a:any, b:any) => {
+  const sortedVotes = [...votes].sort((a, b) => {
     if (sortByDateDesc) {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     } else {
