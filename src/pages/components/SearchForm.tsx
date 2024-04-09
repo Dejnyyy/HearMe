@@ -48,6 +48,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   const handleSongClick = (clickedSong: any) => {
     setSelectedSong(clickedSong);
     onSongClick(clickedSong);
+    
   };
 
   return (

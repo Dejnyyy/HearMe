@@ -87,7 +87,12 @@ const Explore: React.FC = () => {
                   <p>{formatDate(vote.createdAt)}</p>
                     <div className="flex flex-row ">
                     <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
-                    <Link className='my-auto' href={""}><p className='ml-4 text-start my-auto'>Song: {vote.song}</p></Link>
+                    <Link 
+          href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className='ml-4 text-start my-auto'
+        ><p className='ml-4 text-start my-auto'>Song: {vote.song}</p></Link>
                     </div>
                     
                     {expandedIndex === index && (
