@@ -10,9 +10,7 @@ interface Vote {
   imageUrl?: string;
   userId: string;
 }
-interface VoteWithUserName extends Vote {
-  userName?: string;
-}
+
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]); // Use Vote[] instead of any[]
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // No change needed
