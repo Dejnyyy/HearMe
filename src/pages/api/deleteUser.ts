@@ -1,11 +1,13 @@
 // pages/api/deleteUser.ts
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { SmazUsery } from 'src/server/api/smazusery';
-
+interface RequestBody {
+    userId: string; // Adjust the type as necessary
+  }
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 if (req.method === 'POST') {
     try {
-        const { userId } = req.body;
+        const { userId } = req.body as RequestBody;
 
         // Call deleteUser function from smazusery.ts
         const smazUsery = new SmazUsery({ userList: [] }); // Provide the required argument

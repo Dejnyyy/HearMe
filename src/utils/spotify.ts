@@ -1,4 +1,5 @@
-import type { OAuthConfig, OAuthUserConfig } from "."
+import { Record } from "@prisma/client/runtime/library";
+import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers/oauth";
 
 export interface SpotifyImage {
   url: string
@@ -21,7 +22,7 @@ export default function Spotify<P extends SpotifyProfile>(
       "https://accounts.spotify.com/authorize?scope=user-read-email",
     token: "https://accounts.spotify.com/api/token",
     userinfo: "https://api.spotify.com/v1/me",
-    profile(profile) {
+    profile(profile:any) {
       return {
         id: profile.id,
         name: profile.display_name,

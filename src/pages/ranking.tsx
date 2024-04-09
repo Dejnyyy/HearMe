@@ -1,5 +1,4 @@
 // pages/ranking.tsx
-import Link from 'next/link';
 import HamburgerMenu from "./components/HamburgerMenu";
 
 const Ranking: React.FC = () => {

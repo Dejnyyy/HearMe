@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import { useSession } from "next-auth/react";
-import Link from 'next/link';
-import Error from 'next/error';
 
 
 const Calendar: React.FC = () => {
@@ -15,9 +13,8 @@ const Calendar: React.FC = () => {
     const fetchVotes = async () => {
       try {
         const response = await fetch('/api/getMyVotes');
-        
         if (!response.ok) {
-          throw new Error('Failed to fetch votes');
+         console.log('Failed to fetch votes');
         }
         const votesData = await response.json();
         setVotes(votesData);
@@ -83,7 +80,12 @@ const Calendar: React.FC = () => {
                     <p>{formatDate(vote.createdAt)}</p>
                     <div className='flex flex-row'>
                     <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
-                    <Link className='my-auto' href={""}><p className='ml-4 text-start my-auto'>Song: {vote.song}</p></Link>
+                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className='ml-4 text-start my-auto'>
+                          <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
+                    </a>
                     </div>
                       {expandedIndex === index && (
                       <>

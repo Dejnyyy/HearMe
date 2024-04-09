@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
-import Link from 'next/link';
-import Error from 'next/error';
 
 interface Vote {
   createdAt: string;
@@ -21,7 +19,7 @@ const Explore: React.FC = () => {
       try {
         const response = await fetch('/api/getVotes');
         if (!response.ok) {
-          throw new Error('Failed to fetch votes');
+          console.log('Failed to fetch votes');
         }
         const votesData = await response.json();
         setVotes(votesData);
@@ -87,12 +85,12 @@ const Explore: React.FC = () => {
                   <p>{formatDate(vote.createdAt)}</p>
                     <div className="flex flex-row ">
                     <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
-                    <Link 
-          href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className='ml-4 text-start my-auto'
-        ><p className='ml-4 text-start my-auto'>Song: {vote.song}</p></Link>
+                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className='ml-4 text-start my-auto'>
+                            <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
+                    </a>
                     </div>
                     
                     {expandedIndex === index && (

@@ -5,7 +5,6 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
-import Error from 'next/error';
 import JSON from 'json5';
 
 
@@ -60,7 +59,7 @@ const Profile: React.FC = () => {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to update favorites');
+        console.log('Failed to update favorites');
       }
   
       const data = await response.json();
@@ -84,7 +83,7 @@ const Profile: React.FC = () => {
     const fetchFirstVote = async () => {
       try {
         const response = await fetch('/api/getMyFirstVote?first=true');
-        if (!response.ok) throw new Error('Failed to fetch the first vote');
+        if (!response.ok) console.log('Failed to fetch the first vote');
         const vote = await response.json();
         setFirstVote(`${new Date(vote.createdAt).toLocaleDateString()}`);
       } catch (error) {
@@ -95,7 +94,7 @@ const Profile: React.FC = () => {
     const fetchVotes = async () => {
       try {
         const response = await fetch('/api/getMyVotes');
-        if (!response.ok) throw new Error('Failed to fetch votes');
+        if (!response.ok) console.log('Failed to fetch votes');
         const votes = await response.json();
         setVoteCount(votes.length); // Update vote count state
         if (votes.length > 0) {
@@ -109,7 +108,7 @@ const Profile: React.FC = () => {
     const fetchLastVote = async () => {
       try {
         const response = await fetch('/api/getMyLastVote?last=true');
-        if (!response.ok) throw new Error('Failed to fetch the last vote');
+        if (!response.ok) console.log('Failed to fetch the last vote');
         const vote = await response.json();
         setLastVoteDetails({
           date: new Date(vote.createdAt).toLocaleDateString(),
@@ -162,7 +161,7 @@ const Profile: React.FC = () => {
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
             <img
               src={lastVoteDetails.imageUrl || 'default-image-url'}
-              alt={`Album cover for ${selectedSong.name}`}
+              alt={`Album cover for ${selectedSong?.name || 'a song'}`}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>
