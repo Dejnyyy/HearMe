@@ -1,62 +1,77 @@
- // pages/vote.tsx
 import { useRouter } from 'next/router';
+import Image from 'next/image'; // Import Image from next/image for optimization
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
 import { useSession } from "next-auth/react"; // Import useSession
 
+interface Artist {
+  name: string;
+}
+
+interface Image {
+  url: string;
+}
+
+interface Album {
+  images: Image[];
+}
+
+interface Song {
+  name: string;
+  artists: Artist[];
+  album: Album;
+}
+
 const Vote: React.FC = () => {
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const router = useRouter();
-  const { data: session, status } = useSession(); // Use the useSession hook to get session data
-  const isUserLoggedIn = status === "authenticated"; // Check if the user is logged in
-  const userId = session?.user?.id || ''; // Directly use userId from session
+  const { data: session, status } = useSession();
+  const isUserLoggedIn = status === "authenticated";
+  const userId = session?.user?.id ?? ''; // Use nullish coalescing operator
 
   useEffect(() => {
-    const { selectedSong } = router.query;
-    if (selectedSong) {
-      setSelectedSong(JSON.parse(selectedSong as string));
-      localStorage.setItem('selectedSong', selectedSong as string);
+    const { selectedSong: querySong } = router.query;
+    if (typeof querySong === 'string') {
+      setSelectedSong(JSON.parse(querySong));
+      localStorage.setItem('selectedSong', querySong);
     }
   }, [router.query]);
 
-  const getArtistsNames = (track: any): string => {
-    if (track.artists && track.artists.length > 0) {
-      return track.artists.map((artist: any) => artist.name).join(', ');
-    } else {
-      return 'Unknown Artist';
-    }
+  const getArtistsNames = (track: Song): string => {
+    return track.artists && track.artists.length > 0
+      ? track.artists.map((artist) => artist.name).join(', ')
+      : 'Unknown Artist';
   };
 
-  const handleSongClick = (clickedSong: any) => {
+  const handleSongClick = (clickedSong: Song) => {
     setSelectedSong(clickedSong);
     console.log('Selected Song:', clickedSong);
   };
 
   const handleVote = async (voteType: string) => {
     if (!isUserLoggedIn) {
-      toast.error('You need to be logged in to vote.', {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      toast.error('You need to be logged in to vote.');
       return;
     }
-
-    const imageUrl = selectedSong.album.images[2]?.url || 'default-image-url';
+  
+    if (!selectedSong) {
+      toast.error('No song selected.');
+      return;
+    }
+  
+    const imageUrl = selectedSong.album.images[2]?.url ?? 'default-image-url';
   
     try {
       const response = await fetch('/api/vote', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId,
-          song: selectedSong?.name || '',
+          song: selectedSong.name, // It's safe to directly access since we check for null above
           voteType,
-          artist: getArtistsNames(selectedSong),
+          artist: getArtistsNames(selectedSong), // Now always a Song object
           imageUrl,
         }),
       });
@@ -103,7 +118,6 @@ const Vote: React.FC = () => {
   };
   
   return (
-  
     <div>
       <main className="flex min-h-screen flex-col text-white items-center justify-center bg-gray-950 text-lg font-mono font-semibold">
         <HamburgerMenu />
@@ -112,16 +126,18 @@ const Vote: React.FC = () => {
             <h1>Vote</h1>
           </div>
         </section>
-        <div className=" w-5/6 sm:w-2/3 lg:w-1/2 xl:w-1/4 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800" >
+        <div className="w-5/6 sm:w-2/3 lg:w-1/2 xl:w-1/4 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800">
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
           <div className="my-2 rounded-md p-4">
             <h2>Selected Song</h2>
-            <div className="my-2 p-4  rounded-xl bg-zinc-800 flex items-center">
-              <img
-                src={selectedSong.album.images[2]?.url || 'default-image-url'}
+            <div className="my-2 p-4 rounded-xl bg-zinc-800 flex items-center">
+              <Image
+                src={selectedSong.album.images[2]?.url ?? 'default-image-url'}
                 alt={`Album cover for ${selectedSong.name}`}
+                width={50} // Specify width
+                height={50} // Specify height
                 className='song-image mb-1'
               />
               <div className='mx-2'>
@@ -132,14 +148,14 @@ const Vote: React.FC = () => {
             </div>
             <div className='mx-auto'>
               <button
-                className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+                className="rounded-full  px-10 py-3 mx-6 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
                 onClick={() => handleVote('+')}
-              >Vote +
+              >Vote
               </button>
               <button
-                className="rounded-full bg-white px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
+                className="rounded-full bg-red-500 px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
                 onClick={() => handleVote('-')}
-              >Vote -
+              >Vote
               </button>
             </div>
           </div>

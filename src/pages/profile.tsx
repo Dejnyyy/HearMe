@@ -29,12 +29,12 @@ const Profile: React.FC = () => {
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
-    updateFavorites(newArtist, favoriteAlbum || '');
+    updateFavorites(newArtist, favoriteAlbum ?? '');
   };
   
   const handleFavoriteAlbumChange = (newAlbum: string) => {
     setFavoriteAlbum(newAlbum);
-    updateFavorites(favoriteArtist || '', newAlbum);
+    updateFavorites(favoriteArtist ?? '', newAlbum);
   };
 
   const updateFavorites = async (favoriteArtist: string, favoriteAlbum: string) => {
@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
 
     const fetchVotes = async () => {
       try {
-        const response = await fetch('/api/getMyVotes');
+        const response = await fetch('/api/getMyVotes')
         if (!response.ok) console.log('Failed to fetch votes');
         const votes = await response.json();
         setVoteCount(votes.length); // Update vote count state
@@ -112,7 +112,7 @@ const Profile: React.FC = () => {
           date: new Date(vote.createdAt).toLocaleDateString(),
           song: vote.song,
           artist: vote.artist,
-          imageUrl: vote.imageUrl || 'path/to/default-image.png', // Replace with your default image path
+          imageUrl: vote.imageUrl ?? 'path/to/default-image.png', // Replace with your default image path
         });
       } catch (error) {
         console.error('Error fetching the last vote:', error);
@@ -123,7 +123,7 @@ const Profile: React.FC = () => {
       fetchFirstVote();
       fetchLastVote();
     }
-    fetchVotes();
+    void fetchVotes();
   }, [storedSelectedSong, sessionData]);
 
   return (
@@ -143,7 +143,7 @@ const Profile: React.FC = () => {
           <div className="rounded-md py-1 text-center ">
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
             <br  />
-            <span className='bg-gray-700 px-4 py-2 rounded-lg'>First Vote: {firstVote || 'No votes yet'}</span>
+            <span className='bg-gray-700 px-4 py-2 rounded-lg'>First Vote: {firstVote ?? 'No votes yet'}</span>
           </div>
           <div className="rounded-md py-1 text-center cursor-pointer my-auto">
             <div>
@@ -152,14 +152,14 @@ const Profile: React.FC = () => {
           </div>
         </div>
         <div className="w-3/12 h-12 bg-stone-50 rounded-full my-5">
-          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote || 'No votes yet'}</h1>
+          <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote ?? 'No votes yet'}</h1>
         </div>
 
         {lastVoteDetails && (
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
             <img
-              src={lastVoteDetails.imageUrl || 'default-image-url'}
-              alt={`Album cover for ${selectedSong?.name || 'a song'}`}
+              src={lastVoteDetails.imageUrl ?? 'default-image-url'}
+              alt={`Album cover for ${selectedSong?.name ?? 'a song'}`}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>
