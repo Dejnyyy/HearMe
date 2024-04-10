@@ -5,8 +5,6 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import { useEffect, useState } from 'react';
 import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
-import JSON from 'json5';
-
 
 type LastVoteDetails = {
   date: string;

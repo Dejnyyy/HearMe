@@ -1,5 +1,4 @@
  // pages/vote.tsx
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
@@ -89,8 +88,8 @@ const Vote: React.FC = () => {
         });
       }
     } catch (error) {
-      console.log('Vote failed:', (error as Error).message);
-      toast.error('Vote failed: ' + (error as Error).message, {
+      console.log('Vote failed:', (error as Error));
+      toast.error('Vote failed: ' + (error as Error), {
         className: "toast-message",
         position: 'top-right',
         autoClose: 3000,

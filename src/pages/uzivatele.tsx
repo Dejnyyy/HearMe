@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { User } from '@prisma/client';
 import UsersPage from "./components/Users";
 import HamburgerMenu from "./components/HamburgerMenu";
-import JSON from 'json5';
 
 const Uzivatele: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);

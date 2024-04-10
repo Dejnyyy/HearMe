@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
-
+import  Error from 'next/error';
 // Updated Vote interface to be used
 interface Vote {
   createdAt: string;
@@ -36,7 +36,7 @@ const Explore: React.FC = () => {
       }
     };
   
-    fetchVotes().catch((error) => console.error('Failed to fetch votes:', error));
+    fetchVotes().catch((error:Error) => console.error('Failed to fetch votes:', error));
   }, []);
 
   // Function to formate Date
