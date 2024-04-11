@@ -167,7 +167,7 @@ const Profile: React.FC = () => {
                           target="_blank" 
                           rel="noopener noreferrer" 
                           className='text-start'>
-                          <p className='text-start'>Song: {lastVoteDetails.song}</p>
+                          <p className='text-start'>{lastVoteDetails.song}</p>
             </a>  
               <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>
