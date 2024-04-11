@@ -87,6 +87,7 @@ const Explore: React.FC = () => {
 
   return (
     <div>
+     
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg font-mono font-semibold">
         <section className="flex justify-end mt-10 mr-10">
@@ -117,7 +118,7 @@ const Explore: React.FC = () => {
                     
                     {expandedIndex === index && (
                       <>
-                        <p>+/-: {vote.voteType}</p>
+                        <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
                         <p>Voted by: {vote.userName? vote.userName:"unknow"}</p>
                       </>

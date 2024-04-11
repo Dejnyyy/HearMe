@@ -35,4 +35,11 @@
     font-size: 20px;
     padding: 30px 20px;
   }
+  .vote-positive {
+    color: yellow;
+  }
+  
+  .vote-negative {
+    color: red;
+  }
   
