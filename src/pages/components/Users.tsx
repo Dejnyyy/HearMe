@@ -34,14 +34,14 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             </li>
             {sessionData?.user.id !== user.id && (
               <button
-                className='ml-2 border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300'
+                className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300'
                 onClick={() => onAddFriend(user.id)}>
                 +
               </button>
             )}
             {isLoggedInUserAdmin && user.isAdmin !== true && (
               <button
-                className='ml-2 border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
+                className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
                 onClick={() => onDeleteUser(user.id)}>
                 x
               </button>

@@ -163,8 +163,12 @@ const Profile: React.FC = () => {
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>
-              <strong className='w-auto'>{lastVoteDetails.song}</strong>
-              <br />
+            <a href={`https://open.spotify.com/search/${encodeURIComponent(lastVoteDetails.song)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className='text-start'>
+                          <p className='text-start'>Song: {lastVoteDetails.song}</p>
+            </a>  
               <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>
           </div>
