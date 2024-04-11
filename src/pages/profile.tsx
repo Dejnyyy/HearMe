@@ -29,12 +29,10 @@ const Profile: React.FC = () => {
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
-    updateFavorites(newArtist, favoriteAlbum ?? '');
   };
   
   const handleFavoriteAlbumChange = (newAlbum: string) => {
     setFavoriteAlbum(newAlbum);
-    updateFavorites(favoriteArtist ?? '', newAlbum);
   };
 
   const updateFavorites = async (favoriteArtist: string, favoriteAlbum: string) => {
@@ -164,10 +162,10 @@ const Profile: React.FC = () => {
               />
             <div className='mx-2'>
             <a href={`https://open.spotify.com/search/${encodeURIComponent(lastVoteDetails.song)}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className='text-start'>
-                          <p className='text-start'>{lastVoteDetails.song}</p>
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className='text-start'>
+                <p className='text-start'>{lastVoteDetails.song}</p>
             </a>  
               <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>

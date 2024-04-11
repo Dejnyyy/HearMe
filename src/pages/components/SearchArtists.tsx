@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { searchSpotifyArtists, getAccessToken } from '../../utils/spotifyApi'; // Correct import for searchSpotifyArtists
-import { env } from "~/env.mjs";
 
 interface SearchFormProps {
   onArtistClick: (selectedArtist: any) => void;
@@ -40,11 +39,33 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
       handleSearch();
     }
   };
-const handleArtistClick = (artist: any) => {
-    setSelectedArtist(artist); // Update the selected artist state
-    localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
-    onArtistClick(artist); // Pass the selected artist to the parent
-  };
+  const handleArtistClick = async (artist: any) => {
+    setSelectedArtist(artist);
+    const userId = session?.user.id;
+
+    try {
+      const response = await fetch('/api/updateFavArtist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          artistName: artist.name,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Favorite artist updated:', data);
+        onArtistClick(artist);
+      } else {
+        console.error('Failed to update favorite artist:', data.error);
+      }
+    } catch (error) {
+      console.error('Error updating favorite artist:', error);
+    }
+};
 
   return (
     <div>
