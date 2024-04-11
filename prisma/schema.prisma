@@ -60,9 +60,10 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
-    image         String?
+    image         String? 
     favoriteAlbum String?   // Optional field for favorite album
     favoriteArtist String?  // Optional field for favorite artist
+    isAdmin       Boolean   @default(false)
     accounts      Account[]
     sessions      Session[]
     posts         Post[]

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
+import { useSession } from "next-auth/react";
 
 interface UsersPageProps {
   userList: User[];
@@ -8,25 +9,43 @@ interface UsersPageProps {
 
 const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDeleteUser }) => {
   const [userList, setUserList] = useState<User[]>(initialUserList);
+  const { data: sessionData } = useSession();
+  
+  
 
   useEffect(() => {
     setUserList(initialUserList);
   }, [initialUserList]);
-
+  
+  // Function to handle the add friend logic
+  const onAddFriend = (userId: string) => {
+    // Implement the logic to add a friend here
+    console.log(`Add friend with ID: ${userId}`);
+  };
+  
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
       <ul className='text-white font-mono mb-5 text-lg'>
         {userList && userList.map(user => (
-          <div className='flex m-8' key={user.id}>
-            <li className=''>
-              {user.name} {user.emailVerified && <span className='text-green-500'>(verified)</span>} 
+          <div className='flex items-center m-8' key={user.id}>
+            <li className='flex-1'>
+              {user.name}  
             </li>
-            <button
-              className='ml-8 m-auto border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
-              onClick={() => onDeleteUser(user.id)}>
-              x
-            </button>
+            {sessionData?.user.id !== user.id && (
+              <button
+                className='ml-2 border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300'
+                onClick={() => onAddFriend(user.id)}>
+                +
+              </button>
+            )}
+            {user.isAdmin !== true && (
+              <button
+                className='ml-2 border h-7 px-2 bg-white text-black rounded-md font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
+                onClick={() => onDeleteUser(user.id)}>
+                x
+              </button>
+            )}
           </div>
         ))}
       </ul>
