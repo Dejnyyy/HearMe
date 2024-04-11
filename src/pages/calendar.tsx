@@ -89,7 +89,7 @@ const Calendar: React.FC = () => {
                     </div>
                       {expandedIndex === index && (
                       <>
-                        <p>+/-: {vote.voteType}</p>
+                        <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
                         <p>Voted by: {sessionData?.user.name}</p>
                       </>

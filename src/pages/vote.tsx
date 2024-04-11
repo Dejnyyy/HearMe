@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import Image from 'next/image'; // Import Image from next/image for optimization
+import Image from 'next/image';
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
-import { useSession } from "next-auth/react"; // Import useSession
+import { useSession } from "next-auth/react";
 
 interface Artist {
   name: string;
@@ -148,7 +148,7 @@ const Vote: React.FC = () => {
             </div>
             <div className='mx-auto'>
               <button
-                className="rounded-full  px-10 py-3 mx-6 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                className="rounded-full  px-10 py-3 mx-6 bg-yellow-500 font-mono font-semibold text-black no-underline transition hover:bg-yellow-700"
                 onClick={() => handleVote('+')}
               >Vote
               </button>
