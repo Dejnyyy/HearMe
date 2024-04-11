@@ -39,11 +39,34 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
     }
   };
 
-  const handleAlbumClick = (album: any) => {
-    setSelectedAlbum(album); // Update the selected album state
-    localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));
-    onAlbumClick(album); // Pass the selected album to the parent component
-  };
+  const handleAlbumClick = async (album: any) => {
+    setSelectedAlbum(album);
+    const userId = session?.user.id;
+
+    try {
+      const response = await fetch('/api/updateFavAlbum', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          albumName: album.name,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Favorite album updated:', data);
+        onAlbumClick(album);
+      } else {
+        console.error('Failed to update favorite album:', data.error);
+      }
+    } catch (error) {
+      console.error('Error updating favorite album:', error);
+    }
+};
+
 
   return (
     <div>
