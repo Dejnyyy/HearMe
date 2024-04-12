@@ -67,7 +67,6 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
     }
 };
 
-
   return (
     <div>
       <input
