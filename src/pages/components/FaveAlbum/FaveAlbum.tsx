@@ -1,6 +1,6 @@
 // FaveAlbum.tsx
 import React, { useState, useEffect } from 'react';
-import styles from './FaveArtist.module.css';
+import styles from './FaveAlbum.module.css';
 import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
@@ -11,6 +11,21 @@ const FaveAlbum: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
 
   useEffect(() => {
+  // const fetchFavoriteAlbum = async () => {
+  //     try {
+  //       const response = await fetch('/api/getFavouriteAlbum'); // Nahradit skutečnou cestou k vašemu API
+  //       if (!response.ok) {
+  //         throw console.log('Network response was not ok');
+  //       }
+  //       const albumData = await response.json();
+  //       setLastSelectedAlbum(albumData.favoriteAlbum);
+  //     } catch (error) {
+  //       console.error('Error fetching favorite album from database:', error);
+  //     }
+  //   };
+
+  //   fetchFavoriteAlbum();
+  // }, []);
     try {
       const storedLastSelectedAlbum = localStorage.getItem('lastSelectedAlbum');
       if (storedLastSelectedAlbum) {
@@ -30,7 +45,6 @@ const FaveAlbum: React.FC = () => {
       // If the clicked artist is the same as the currently selected artist, do nothing
       return;
     }
-  
     console.log('Selected Album:', album);
     setSelectedAlbum(album);
     localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));

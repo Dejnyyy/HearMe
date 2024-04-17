@@ -44,6 +44,22 @@ const Profile: React.FC = () => {
         setSelectedSong(JSON.parse(localStorageSelectedSong));
       }
     }
+    
+      const fetchFavorites = async () => {
+        if (sessionData?.user?.id) {  // Předpokládám, že userId je dostupné jako `id` v `sessionData.user`
+          try {
+            const responseArtist = await fetch("/api/getFavourites");
+            if (!responseArtist.ok) console.log('Failed to fetch favorites');
+            
+            const favouritesData = await responseArtist.json();
+            setFavoriteArtist(favouritesData.artist);
+            setFavoriteAlbum(favouritesData.album);
+            console.log("Fetched Favorites:", favouritesData);
+          } catch (error) {
+            console.error('Error fetching favorite details:', error);
+          }
+        }
+      }
 
     const fetchFirstVote = async () => {
       try {
@@ -89,6 +105,7 @@ const Profile: React.FC = () => {
     if (sessionData) {
       fetchFirstVote();
       fetchLastVote();
+      fetchFavorites();
       console.log("firstVote:", firstVote);
       console.log("lastVote:", lastVote);
     }
@@ -135,8 +152,8 @@ const Profile: React.FC = () => {
             <a href={`https://open.spotify.com/search/${encodeURIComponent(lastVoteDetails.song)}`} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className='text-start'>
-                <p className='text-start'>{lastVoteDetails.song}</p>
+                className='text-start '>
+                <p className='text-start hover:underline'>{lastVoteDetails.song}</p>
             </a>  
               <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>
