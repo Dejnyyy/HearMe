@@ -112,7 +112,7 @@ const Explore: React.FC = () => {
                           target="_blank" 
                           rel="noopener noreferrer" 
                           className='ml-4 text-start my-auto'>
-                            <p className='ml-4 text-start my-auto'>Song: {vote.song}</p>
+                            <p className='ml-4 text-start my-auto hover:underline'>Song: {vote.song}</p>
                     </a>
                     </div>
                     
