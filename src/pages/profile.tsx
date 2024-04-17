@@ -23,7 +23,16 @@ const Profile: React.FC = () => {
   const [firstVote, setFirstVote] = useState<string | null>(null);
   const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
   const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
+  const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
+  const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
 
+  const handleFavoriteArtistChange = (newArtist: string) => {
+    setFavoriteArtist(newArtist);
+  };
+  
+  const handleFavoriteAlbumChange = (newAlbum: string) => {
+    setFavoriteAlbum(newAlbum);
+  };
 
   useEffect(() => {
     if (storedSelectedSong) {
@@ -80,6 +89,8 @@ const Profile: React.FC = () => {
     if (sessionData) {
       fetchFirstVote();
       fetchLastVote();
+      console.log("firstVote:", firstVote);
+      console.log("lastVote:", lastVote);
     }
     void fetchVotes();
   }, [storedSelectedSong, sessionData]);
@@ -94,7 +105,7 @@ const Profile: React.FC = () => {
             <AuthShowcase />
           </div>
         </section>
-        <div className="grid gap-x-60 my-5 mx-5 grid-cols-3">
+        <div className="grid gap-x-60 my-5 mx-5  grid-cols-1 md:grid-cols-3">
           <div>
             <FaveArtist />
           </div>
