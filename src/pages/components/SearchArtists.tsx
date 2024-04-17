@@ -10,7 +10,6 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
 
 
@@ -52,6 +51,7 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
         body: JSON.stringify({
           userId,
           artistName: artist.name,
+          favArtImg: artist.images[2]?.url,
         }),
       });
 

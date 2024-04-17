@@ -3,12 +3,12 @@ import {db} from 'lib/prisma';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { userId, artistName } = req.body;
+    const { userId, artistName, favArtImg } = req.body;
 
     try {
       const user = await db.user.update({
         where: { id: userId },
-        data: { favoriteArtist: artistName },
+        data: { favoriteArtist: artistName, favArtImg: favArtImg},
       });
 
       res.json(user);
