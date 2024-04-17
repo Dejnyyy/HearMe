@@ -7,10 +7,9 @@ const Uzivatele: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        // Call API route to fetch users when component mounts
         const fetchUsers = async () => {
             try {
-                const response = await fetch('/api/najdiusery'); // Zde je cesta k novému koncovému bodu pro načítání uživatelů
+                const response = await fetch('/api/najdiusery');
                 if (response.ok) {
                     const fetchedUsers = await response.json();
                     setUsers(fetchedUsers);
@@ -22,7 +21,7 @@ const Uzivatele: React.FC = () => {
             }
         };
 
-        fetchUsers();
+     fetchUsers();
     }, []); // Effect runs only once when component mounts
 
     const handleDeleteUser = async (userId: string) => {

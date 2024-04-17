@@ -102,7 +102,7 @@ const Explore: React.FC = () => {
           <div className='justify-center items-center '>
             <h2 className='text-center text-xl'>All Votes:</h2>
             <ul>
-              {sortedVotes.map((vote: any, index:any) => (
+              {sortedVotes.map((vote: any, index:number) => (
                 <div key={index} className="bg-gray-700 mx-auto w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                   <p>{formatDate(vote.createdAt)}</p>
