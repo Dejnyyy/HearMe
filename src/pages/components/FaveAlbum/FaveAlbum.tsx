@@ -65,28 +65,14 @@ const FaveAlbum: React.FC = () => {
   return (
     <div>
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
-        {selectedAlbum ? (
-          <div>
-            <h2>Favourite Album:</h2>
-            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
-              <img
-                src={selectedAlbum.images[2]?.url || 'default-image-url'}
-                alt={`Image for ${selectedAlbum.name}`}
-                className="album-image w-16 h-auto ml-2 rounded-lg"
-              />
-              <div className="ml-2">
-                <strong>{selectedAlbum.name}</strong>
-              </div>
-            </div>
-          </div>
-        ) : lastSelectedAlbum ? (
+        { lastSelectedAlbum ? (
           <div>
             <h2>Favourite Album:</h2>
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
               <img
                 src={lastSelectedAlbum.images[2]?.url || 'default-image-url'}
                 alt={`Image for ${lastSelectedAlbum.name}`}
-                className="artist-image w-16 h-auto ml-2 rounded-xl"
+                className="artist-image w-16 ml-2 rounded-xl"
               />
               <div className="ml-2">
                 <strong>{lastSelectedAlbum.name}</strong>

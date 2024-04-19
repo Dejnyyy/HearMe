@@ -55,7 +55,7 @@ const FaveArtist: React.FC = () => {
               <img
                 src={selectedArtist.images[2]?.url || 'default-image-url'}
                 alt={`Image for ${selectedArtist.name}`}
-                className="artist-image w-16 h-auto ml-2 rounded-lg"
+                className="artist-image w-16 ml-2 rounded-lg"
               />
               <div className="ml-2">
                 <strong className=''>{selectedArtist.name}</strong>
