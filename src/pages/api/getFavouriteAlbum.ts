@@ -13,6 +13,7 @@ export default async function handler(req:NextApiRequest, res:NextApiResponse) {
       where: { id: session.user.id },
       select: {
         favoriteAlbum: true,
+        favAlbImg : true,
       },
     });
     res.status(200).json(user);
