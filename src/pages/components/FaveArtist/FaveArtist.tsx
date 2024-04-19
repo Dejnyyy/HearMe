@@ -7,16 +7,31 @@ import JSON from 'json5';
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
+  const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(null);
+  const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<any | null>(null);
+
+
 
   useEffect(() => {
-    try {
-      const storedLastSelectedArtist = localStorage.getItem('lastSelectedArtist');
-      if (storedLastSelectedArtist) {
-        setSelectedArtist(JSON.parse(storedLastSelectedArtist));
+    const fetchFavoriteArtist = async () => {
+      try {
+        const response = await fetch('/api/getFavouriteArtist'); // Nahradit skutečnou cestou k vašemu API
+       
+        if (!response.ok) {
+          throw console.log('Network response was not ok');
+        }
+        const artistData = await response.json();
+        console.log(artistData.favoriteArtist);
+        console.log(artistData.favArtImg);
+        setLastSelectedArtistImg(artistData.favArtImg);
+        setLastSelectedArtist(artistData.favoriteArtist);
+      } catch (error) {
+        console.error('Error fetching favorite album from database:', error);
       }
-    } catch (error) {
-      console.error('Error accessing localStorage:', error);
-    }
+      return 
+    };
+
+    fetchFavoriteArtist();
   }, []);
 
   const toggleSearch = () => {
@@ -48,17 +63,17 @@ const FaveArtist: React.FC = () => {
   return (
     <div>
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
-        {selectedArtist ? (
+        { selectedLastArtist ? (
           <div>
             <h2>Favourite Artist:</h2>
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
               <img
-                src={selectedArtist.images[2]?.url || 'default-image-url'}
-                alt={`Image for ${selectedArtist.name}`}
+                src={selectedLastArtistImg || 'default-image-url'}
+                alt={`Image for ${selectedLastArtist}`}
                 className="artist-image w-16 ml-2 rounded-lg"
               />
               <div className="ml-2">
-                <strong className=''>{selectedArtist.name}</strong>
+                <strong className=''>{selectedLastArtist}</strong>
               </div>
             </div>
           </div>
