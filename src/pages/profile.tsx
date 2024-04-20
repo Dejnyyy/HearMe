@@ -13,7 +13,6 @@ type LastVoteDetails = {
   imageUrl: string | null;
 } | null;
 
-
 const Profile: React.FC = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -79,7 +78,7 @@ const Profile: React.FC = () => {
           date: new Date(vote.createdAt).toLocaleDateString(),
           song: vote.song,
           artist: vote.artist,
-          imageUrl: vote.imageUrl ?? 'path/to/default-image.png', // Replace with your default image path
+          imageUrl: vote.imageUrl ?? 'path/to/default-image.png',
         });
       } catch (error) {
         console.error('Error fetching the last vote:', error);

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import styles from './FaveArtist.module.css';
 import SearchArtists from '../SearchArtists';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
@@ -13,7 +12,7 @@ const FaveArtist: React.FC = () => {
   useEffect(() => {
     const fetchFavoriteArtist = async () => {
       try {
-        const response = await fetch('/api/getFavouriteArtist'); // Nahradit skutečnou cestou k vašemu API
+        const response = await fetch('/api/getFavouriteArtist');
        
         if (!response.ok) {
           throw console.log('Network response was not ok');

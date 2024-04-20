@@ -10,7 +10,7 @@ interface SearchFormProps {
 
 const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
   const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState<any>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
 

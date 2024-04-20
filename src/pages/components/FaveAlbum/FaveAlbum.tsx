@@ -1,6 +1,5 @@
 // FaveAlbum.tsx
 import React, { useState, useEffect } from 'react';
-import styles from './FaveAlbum.module.css';
 import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
@@ -14,7 +13,7 @@ const FaveAlbum: React.FC = () => {
   useEffect(() => {
   const fetchFavoriteAlbum = async () => {
       try {
-        const response = await fetch('/api/getFavouriteAlbum'); // Nahradit skutečnou cestou k vašemu API
+        const response = await fetch('/api/getFavouriteAlbum');
        
         if (!response.ok) {
           throw console.log('Network response was not ok');

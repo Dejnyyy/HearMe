@@ -8,7 +8,7 @@ interface SearchFormProps {
 
 const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState<any>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
 
