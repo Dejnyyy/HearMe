@@ -1,7 +1,6 @@
 //schema.prisma
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -66,6 +65,8 @@ model User {
     favoriteArtist String?  // field for favorite artist
     favArtImg     String?   // field for favorite artist image
     isAdmin       Boolean   @default(false)
+     friendRequestsSent     FriendRequest[] @relation("friendRequestsSent")
+    friendRequestsReceived FriendRequest[] @relation("friendRequestsReceived")
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
@@ -88,4 +89,17 @@ model Vote {
   artist      String   // Jmeno umelce
   imageUrl    String?
   createdAt   DateTime @default(now())
+}
+model FriendRequest {
+    id          Int      @id @default(autoincrement())
+    senderId    String   // ID of the user who sent the friend request
+    receiverId  String   // ID of the user who received the friend request
+    status      String   // Can be 'pending', 'accepted', or 'declined'
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    sender      User @relation("friendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
+    receiver    User @relation("friendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+    @@unique([senderId, receiverId])
 }
