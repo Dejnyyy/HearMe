@@ -7,7 +7,7 @@ import FaveArtist from './components/FaveArtist';
 import FaveAlbum from './components/FaveAlbum';
 
 type LastVoteDetails = {
-  date: string;
+  date: Date | string;
   song: string;
   artist: string;
   imageUrl: string | null;
@@ -17,21 +17,11 @@ const Profile: React.FC = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
   const { selectedSong: storedSelectedSong } = router.query;
-  const [selectedSong, setSelectedSong] = useState<any | null>(null);
+  const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [firstVote, setFirstVote] = useState<string | null>(null);
   const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
   const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
-  const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
-  const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
-
-  const handleFavoriteArtistChange = (newArtist: string) => {
-    setFavoriteArtist(newArtist);
-  };
-  
-  const handleFavoriteAlbumChange = (newAlbum: string) => {
-    setFavoriteAlbum(newAlbum);
-  };
 
   useEffect(() => {
     if (storedSelectedSong) {
@@ -86,8 +76,8 @@ const Profile: React.FC = () => {
     };
     
     if (sessionData) {
-      fetchFirstVote();
-      fetchLastVote();
+       fetchFirstVote();
+       fetchLastVote();
       console.log("firstVote:", firstVote);
       console.log("lastVote:", lastVote);
     }
@@ -127,7 +117,7 @@ const Profile: React.FC = () => {
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
             <img
               src={lastVoteDetails.imageUrl ?? 'default-image-url'}
-              alt={`Album cover for ${selectedSong?.name ?? 'a song'}`}
+              alt={'Album cover for selectedSong'}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>

@@ -29,7 +29,7 @@ const Vote: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const isUserLoggedIn = status === "authenticated";
-  const userId = session?.user?.id ?? ''; // Use nullish coalescing operator
+  const userId = session?.user?.id ?? '';
 
   useEffect(() => {
     const { selectedSong: querySong } = router.query;
@@ -69,9 +69,9 @@ const Vote: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId,
-          song: selectedSong.name, // It's safe to directly access since we check for null above
+          song: selectedSong.name,
           voteType,
-          artist: getArtistsNames(selectedSong), // Now always a Song object
+          artist: getArtistsNames(selectedSong),
           imageUrl,
         }),
       });
@@ -104,7 +104,7 @@ const Vote: React.FC = () => {
       }
     } catch (error) {
       console.log('Vote failed:', (error as Error));
-      toast.error('Vote failed: ' + (error as Error), {
+      toast.error('Vote failed', {
         className: "toast-message",
         position: 'top-right',
         autoClose: 3000,

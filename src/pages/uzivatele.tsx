@@ -21,7 +21,7 @@ const Uzivatele: React.FC = () => {
             }
         };
 
-     fetchUsers();
+       fetchUsers();
     }, []); // Effect runs only once when component mounts
 
     const handleDeleteUser = async (userId: string) => {
