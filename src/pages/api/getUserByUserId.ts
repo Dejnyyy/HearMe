@@ -14,8 +14,19 @@ const findUser = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const user = await db.user.findUnique({
       where: {
-        id: String(userId), // Ensure the id is a string, as expected by your schema
-      },
+        id: String(userId),// Ensure the id is a string, as expected by your schema
+       }, 
+       select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true, // Selecting the image field
+        favoriteAlbum: true,
+        favAlbImg: true,
+        favoriteArtist: true,
+        favArtImg: true,
+        isAdmin: true
+      }
     });
 
     if (user) {

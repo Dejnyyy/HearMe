@@ -22,7 +22,16 @@ const Profile: React.FC = () => {
   const [firstVote, setFirstVote] = useState<string | null>(null);
   const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
   const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
+  const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
+  const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
 
+  const handleFavoriteArtistChange = (newArtist: string) => {
+    setFavoriteArtist(newArtist);
+  };
+  
+  const handleFavoriteAlbumChange = (newAlbum: string) => {
+    setFavoriteAlbum(newAlbum);
+  };
   useEffect(() => {
     if (storedSelectedSong) {
       setSelectedSong(JSON.parse(storedSelectedSong as string));

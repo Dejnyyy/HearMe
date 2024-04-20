@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import SearchArtists from '../SearchArtists';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
+import styles from './FaveArtist.module.css';
 
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
+
   const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(null);
+  
   const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<any | null>(null);
 
   useEffect(() => {

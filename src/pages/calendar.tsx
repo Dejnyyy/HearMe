@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import { useSession } from "next-auth/react";
+import Image from 'next/image';
 
 
 const Calendar: React.FC = () => {
@@ -55,7 +56,6 @@ const Calendar: React.FC = () => {
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
-  // Determine text for sorting button
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
 
   return (
@@ -77,7 +77,14 @@ const Calendar: React.FC = () => {
               {sortedVotes.map((vote:any, index:any) => (
                 <div key={index} className="bg-gray-700 mx-auto w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
-                    <p>{formatDate(vote.createdAt)}</p>
+                  <div className='flex flex-row'>
+                      <Image src={sessionData?.user.image || ''}
+                      alt='profile picture'
+                      width={50}height={30} 
+                      className="rounded-full w-12 h-12" />
+                      <p className='my-auto ml-4'>{sessionData?.user.name}</p>
+                  </div>
+                  
                     <div className='flex flex-row'>
                     <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
                     <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
@@ -91,7 +98,7 @@ const Calendar: React.FC = () => {
                       <>
                         <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
                         <p>Artist: {vote.artist}</p>
-                        <p>Voted by: {sessionData?.user.name}</p>
+                        <p className=''>{formatDate(vote.createdAt)}</p>
                       </>
                     )}
                   </li>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import  Error from 'next/error';
-
+import Image from 'next/image';
 // Updated Vote interface to be used
 interface Vote {
   createdAt: string;
@@ -25,20 +25,21 @@ const Explore: React.FC = () => {
           console.log('Votes fetch failed');
         }
         const votesData: Vote[] = await response.json();
-        const votesWithUserNames = await Promise.all(
-          votesData.map(async (vote:Vote) => ({
+        const votesWithUserDetails = await Promise.all(
+          votesData.map(async (vote: Vote) => ({
             ...vote,
-            userName: await fetchUserName(vote.userId),
+            ...await fetchUserDetails(vote.userId),
           }))
         );
-        setVotes(votesWithUserNames);
+        setVotes(votesWithUserDetails);
       } catch (error) {
         console.error('Error fetching votes:', error);
       }
     };
   
-    fetchVotes().catch((error:Error) => console.error('Failed to fetch votes:', error));
+    fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
   }, []);
+  
 
   // Function to formate Date
   const formatDate = (dateString: string) => {
@@ -69,19 +70,21 @@ const Explore: React.FC = () => {
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
-  const fetchUserName = async (userId: string) => {
-    try {
-      const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
-      if (!res.ok) {
-        console.log('User fetch failed');
-      }
-      const userData = await res.json();
-      return userData.name;
-    } catch (error) {
-      console.error('fetchUserName error:', error);
-      return 'Unknown'; // Return 'Unknown' or handle accordingly
+  const fetchUserDetails = async (userId: string) => {
+  try {
+    const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
+    if (!res.ok) {
+      console.log('User fetch failed');
+      return { name: 'Unknown', image: '/default-profile.png' }; // Use a default image if fetch fails
     }
-  };
+    const userData = await res.json();
+    return { name: userData.name, image: userData.image };
+  } catch (error) {
+    console.error('fetchUserDetails error:', error);
+    return { name: 'Unknown', image: '/default-profile.png' }; // Provide a fallback name and image
+  }
+};
+
   // Determine text for sorting button
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
 
@@ -102,31 +105,41 @@ const Explore: React.FC = () => {
           <div className='justify-center items-center '>
             <h2 className='text-center text-xl'>All Votes:</h2>
             <ul>
-              {sortedVotes.map((vote: any, index:number) => (
+              {sortedVotes.map((vote, index) => (
                 <div key={index} className="bg-gray-700 mx-auto w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
-                  <p>{formatDate(vote.createdAt)}</p>
-                    <div className="flex flex-row ">
-                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                    <div className='flex flex-row'>
+                      <Image 
+                        src={vote.image || '/default-profile.png'} // Use the user image or a default
+                        alt='Profile Picture'
+                        width={50}
+                        height={50}
+                        className="rounded-full w-12 h-12"
+                      />
+                      <p className='my-auto ml-4'>{vote.name}</p>
+                  </div>
+                   
+                  <div className="flex flex-row">
+                      <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
                     <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className='ml-4 text-start my-auto'>
-                            <p className='ml-4 text-start my-auto hover:underline'>Song: {vote.song}</p>
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className='ml-4 text-start my-auto'>
+                       <p className='ml-4 text-start my-auto hover:underline'>Song: {vote.song}</p>
                     </a>
-                    </div>
-                    
-                    {expandedIndex === index && (
-                      <>
-                        <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
-                        <p>Artist: {vote.artist}</p>
-                        <p>Voted by: {vote.userName? vote.userName:"unknow"}</p>
-                      </>
-                    )}
-                  </li>
-                </div>
-              ))}
-            </ul>
+                  </div>
+          {expandedIndex === index && (
+          <>
+            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
+            <p>Artist: {vote.artist}</p>
+            <p>{formatDate(vote.createdAt)}</p>
+          </>
+        )}
+      </li>
+    </div>
+  ))}
+</ul>
+
           </div>
         </section>
       </main>

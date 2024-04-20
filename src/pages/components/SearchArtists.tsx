@@ -41,7 +41,6 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   const handleArtistClick = async (artist: any) => {
     setSelectedArtist(artist);
     const userId = session?.user.id;
-
     try {
       const response = await fetch('/api/updateFavArtist', {
         method: 'POST',

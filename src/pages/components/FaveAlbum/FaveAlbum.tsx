@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
+import styles from './FaveAlbum.module.css';
 
 const FaveAlbum: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
