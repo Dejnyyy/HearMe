@@ -8,7 +8,7 @@ interface SearchFormProps {
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   const { data: session } = useSession();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState<any>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedSong, setSelectedSong] = useState<any | null>(null);
 
@@ -72,7 +72,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
           <img
             src={song.album.images[2]?.url || 'default-image-url'}
             alt={`Album cover for ${song.name}`}
-            className='song-image'
+            className='song-image rounded-lg'
           />
           <div className='mx-2'>
             <strong className='w-auto'>{song.name}</strong>

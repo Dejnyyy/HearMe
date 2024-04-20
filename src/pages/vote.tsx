@@ -136,9 +136,9 @@ const Vote: React.FC = () => {
               <Image
                 src={selectedSong.album.images[2]?.url ?? 'default-image-url'}
                 alt={`Album cover for ${selectedSong.name}`}
-                width={50} // Specify width
-                height={50} // Specify height
-                className='song-image mb-1'
+                width={70}
+                height={70} 
+                className='song-image mb-1 rounded-lg'
               />
               <div className='mx-2'>
                 <strong>{selectedSong.name}</strong>
