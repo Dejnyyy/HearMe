@@ -10,8 +10,6 @@ const FaveArtist: React.FC = () => {
   const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(null);
   const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<any | null>(null);
 
-
-
   useEffect(() => {
     const fetchFavoriteArtist = async () => {
       try {

@@ -45,22 +45,6 @@ const Profile: React.FC = () => {
       }
     }
     
-      const fetchFavorites = async () => {
-        if (sessionData?.user?.id) {  // Předpokládám, že userId je dostupné jako `id` v `sessionData.user`
-          try {
-            const responseArtist = await fetch("/api/getFavourites");
-            if (!responseArtist.ok) console.log('Failed to fetch favorites');
-            
-            const favouritesData = await responseArtist.json();
-            setFavoriteArtist(favouritesData.artist);
-            setFavoriteAlbum(favouritesData.album);
-            console.log("Fetched Favorites:", favouritesData);
-          } catch (error) {
-            console.error('Error fetching favorite details:', error);
-          }
-        }
-      }
-
     const fetchFirstVote = async () => {
       try {
         const response = await fetch('/api/getMyFirstVote?first=true');
@@ -105,7 +89,6 @@ const Profile: React.FC = () => {
     if (sessionData) {
       fetchFirstVote();
       fetchLastVote();
-      fetchFavorites();
       console.log("firstVote:", firstVote);
       console.log("lastVote:", lastVote);
     }
