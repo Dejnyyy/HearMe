@@ -10,40 +10,82 @@ interface UsersPageProps {
 
 interface ExtendedUser extends User {
   requestPending: boolean;
+  isRequestReceived: boolean;
 }
 
 const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDeleteUser }) => {
   const { data: sessionData } = useSession();
   const [userList, setUserList] = useState<ExtendedUser[]>(initialUserList.map(user => ({
     ...user,
-    requestPending: false
+    requestPending: false,
+    isRequestReceived: false
   })));
   
+  
   useEffect(() => {
-    const fetchPendingRequests = async () => {
+    const fetchFriendRequests = async () => {
       if (sessionData?.user?.id) {
         try {
-          const response = await fetch(`/api/viewPendingRequests?userId=${sessionData.user.id}`);
-          if (response.ok) {
-            const pendingRequests = await response.json();
-            const updatedUserList = initialUserList.map(user => ({
-              ...user,
-              requestPending: pendingRequests.some(req=> req.receiverId === user.id)
-            }));
-            setUserList(updatedUserList);
-          }
+          const responses = await Promise.all([
+            fetch(`/api/viewPendingRequests?userId=${sessionData.user.id}`),
+            fetch(`/api/viewFriendRequests?userId=${sessionData.user.id}`)
+          ]);
+
+          const [sentRequests, receivedRequests] = await Promise.all(responses.map(res => res.json()));
+
+          const updatedUserList = initialUserList.map(user => ({
+            ...user,
+            requestPending: sentRequests.some(req => req.receiverId === user.id),
+            isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
+          }));
+          setUserList(updatedUserList);
         } catch (error) {
-          console.error('Failed to fetch pending friend requests:', error);
+          console.error('Failed to fetch friend requests:', error);
         }
       }
     };
 
-    fetchPendingRequests();
+    fetchFriendRequests();
   }, [initialUserList, sessionData]);
   
   // Determine if the logged-in user is an admin
   const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
-
+  const acceptFriendRequest = async (senderId: string) => {
+    try {
+      const response = await fetch('/api/acceptFriendRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ friendRequestId: senderId })
+      });
+  
+      if (!response.ok) console.log('Failed to accept friend request');
+      console.log('Friend request accepted successfully');
+      // Optionally update the userList here to reflect changes
+    } catch (error) {
+      console.error('Error accepting friend request:', error);
+    }
+  };
+  
+  const rejectFriendRequest = async (senderId: string) => {
+    try {
+      const response = await fetch('/api/declineFriendRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ friendRequestId: senderId })
+      });
+  
+      if (!response.ok) console.log('Failed to decline friend request');
+      console.log('Friend request declined successfully');
+      // Optionally update the userList here to reflect changes
+    } catch (error) {
+      console.error('Error declining friend request:', error);
+    }
+  };
+  
   // Function to handle the add friend logic
   const onAddFriend = async (userId: string) => {
     console.log(`Add friend with ID: ${userId}`); 
@@ -75,28 +117,53 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
       <ul className='text-white font-mono mb-5 text-lg'>
-        {userList.map(user => (console.log(user.requestPending),
-          <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>
-              {user.name}
-            </li>
-            {sessionData?.user.id !== user.id && (
-              <button
-                className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300'
-                onClick={() => onAddFriend(user.id)}
-                disabled={user.requestPending}>
-                {user.requestPending ? 'Pending' : 'Add'}
-              </button>
-            )}
-            {isLoggedInUserAdmin && user.isAdmin !== true && (
-              <button
-                className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:border-gray-300'
-                onClick={() => onDeleteUser(user.id)}>
-                Delete
-              </button>
-            )}
-          </div>
-        ))}
+      {userList.map(user => (
+  <div className='flex items-center m-8' key={user.id}>
+    <li className='flex-1'>
+      {user.name}
+    </li>
+    {sessionData?.user.id !== user.id && (
+      <>
+        {user.isRequestReceived && (
+          <>
+            <button
+              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
+              onClick={() => acceptFriendRequest(user.id)}>
+              Accept
+            </button>
+            <button
+              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
+              onClick={() => rejectFriendRequest(user.id)}>
+              Reject
+            </button>
+          </>
+        )}
+        {user.requestPending && !user.isRequestReceived && (
+          <button
+            disabled
+            className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
+            Pending
+          </button>
+        )}
+        {!user.requestPending && !user.isRequestReceived && (
+          <button
+            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 hover:bg-black font-mono font-semibold'
+            onClick={() => onAddFriend(user.id)}>
+            Add
+          </button>
+        )}
+      </>
+    )}
+    {isLoggedInUserAdmin && user.isAdmin !== true && (
+      <button
+        className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:text-red-500'
+        onClick={() => onDeleteUser(user.id)}>
+        Delete
+      </button>
+    )}
+  </div>
+))}
+
       </ul>
     </div>
   );
