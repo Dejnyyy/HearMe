@@ -59,7 +59,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ friendRequestId: senderId, receiverId: sessionData?.user.id})
+        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
       });
   
       if (response.ok) {
