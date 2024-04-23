@@ -103,3 +103,12 @@ model FriendRequest {
 
     @@unique([senderId, receiverId])
 }
+model Friendship {
+    id          Int      @id @default(autoincrement())
+    userId      String
+    friendId    String
+    createdAt   DateTime @default(now())
+
+    @@unique([userId, friendId])
+}
+

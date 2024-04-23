@@ -6,9 +6,11 @@ export default async function handler(
     res: NextApiResponse) {
     if (req.method === 'POST') {
     const { friendRequestId } = req.body;
+    const {receiverId} = req.body;
+    console.log(req.body);
     try {
       const acceptFriendRequest = await db.friendRequest.update({
-        where: { id: friendRequestId },
+        where: { senderId: friendRequestId, receiverId: receiverId},
         data: { status: 'accepted' }
       });
 
@@ -21,7 +23,7 @@ export default async function handler(
       
       res.status(200).json(addFriend);
     } catch (error) {
-      res.status(500).json({ error: "Failed to accept friend request." });
+      res.status(500).json({ error: "Failed to accept friend request."});
     }
   } else {
     res.setHeader('Allow', ['POST']);

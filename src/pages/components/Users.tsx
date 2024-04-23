@@ -11,6 +11,7 @@ interface UsersPageProps {
 interface ExtendedUser extends User {
   requestPending: boolean;
   isRequestReceived: boolean;
+  isFriend: boolean;
 }
 
 const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDeleteUser }) => {
@@ -18,9 +19,11 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
   const [userList, setUserList] = useState<ExtendedUser[]>(initialUserList.map(user => ({
     ...user,
     requestPending: false,
-    isRequestReceived: false
+    isRequestReceived: false,
+    isFriend: false 
   })));
   
+  const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
   
   useEffect(() => {
     const fetchFriendRequests = async () => {
@@ -49,7 +52,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
   }, [initialUserList, sessionData]);
   
   // Determine if the logged-in user is an admin
-  const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
   const acceptFriendRequest = async (senderId: string) => {
     try {
       const response = await fetch('/api/acceptFriendRequest', {
@@ -57,12 +59,17 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ friendRequestId: senderId })
+        body: JSON.stringify({ friendRequestId: senderId, receiverId: sessionData?.user.id})
       });
   
-      if (!response.ok) console.log('Failed to accept friend request');
-      console.log('Friend request accepted successfully');
-      // Optionally update the userList here to reflect changes
+      if (response.ok) {
+        console.log('Friend request accepted successfully');
+        setUserList(prev => prev.map(user => 
+          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
+        ));
+      } else {
+        console.log('Failed to accept friend request');
+      }
     } catch (error) {
       console.error('Error accepting friend request:', error);
     }
@@ -70,21 +77,26 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
   
   const rejectFriendRequest = async (senderId: string) => {
     try {
-      const response = await fetch('/api/declineFriendRequest', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ friendRequestId: senderId })
-      });
-  
-      if (!response.ok) console.log('Failed to decline friend request');
-      console.log('Friend request declined successfully');
-      // Optionally update the userList here to reflect changes
+        const response = await fetch('/api/declineFriendRequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ friendRequestId: senderId })
+        });
+
+        if (response.ok) {
+            console.log('Friend request declined successfully');
+            setUserList(prev => prev.map(user =>
+                user.id === senderId ? { ...user, isRequestReceived: false } : user
+            ));
+        } else {
+            console.log('Failed to decline friend request');
+        }
     } catch (error) {
-      console.error('Error declining friend request:', error);
+        console.error('Error declining friend request:', error);
     }
-  };
+};
   
   // Function to handle the add friend logic
   const onAddFriend = async (userId: string) => {
@@ -124,6 +136,11 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     </li>
     {sessionData?.user.id !== user.id && (
       <>
+       {user.isFriend && (
+          <button disabled className='ml-2 border px-8 bg-green-200 text-green-700 rounded-xl font-mono font-semibold'>
+            Friends
+          </button>
+        )}
         {user.isRequestReceived && (
           <>
             <button
