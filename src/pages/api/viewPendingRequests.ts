@@ -1,5 +1,6 @@
 import { db } from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
+//to co posilam ja
 
 export default async function handler(
     req: NextApiRequest,
@@ -21,7 +22,7 @@ export default async function handler(
           receiver: true // This will include details of the receiver in the response
         }
       });
-      console.log("requesty", pendingRequests);
+      console.log("requesty co ja poslal", pendingRequests);
       res.status(200).json(pendingRequests); // Always send a response back
     } catch (error) {
       console.error('Failed to fetch pending friend requests:', error);

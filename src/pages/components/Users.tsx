@@ -45,7 +45,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
           }))
           )
-          console.log("requesty co mi dosly:",receivedRequests);
+          console.log("requesty co mi dosly:",receivedRequests.map(req => req.senderId));
           console.log("requesty co jsem poslal:",sentRequests);
           setUserList(updatedUserList);
         } catch (error) {
@@ -85,9 +85,9 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         }
       }
     };
-   
-    fetchMyFriendships();
     fetchFriendRequests();
+    fetchMyFriendships();
+    
   }, [initialUserList, sessionData]);
   
   // Determine if the logged-in user is an admin
@@ -188,7 +188,14 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
               onClick={() => rejectFriendRequest(user.id)}>
               Reject
             </button>
-          </>
+            </>
+        )}
+        {user.requestPending && !user.isRequestReceived && (
+          <button
+            disabled
+            className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
+             Pending
+          </button>
         )}
         {!user.requestPending && !user.isRequestReceived && !user.isFriend &&(
           <button
@@ -197,13 +204,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             Add
           </button>
         )}  
-        {user.requestPending && !user.isRequestReceived && (
-          <button
-            disabled
-            className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
-             Pending
-          </button>
-        )}
+        
       </>
     )}
     {isLoggedInUserAdmin && user.isAdmin !== true && (

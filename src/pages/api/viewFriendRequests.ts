@@ -8,13 +8,14 @@ export default async function handler(
   if (req.method === 'GET') {
     const { userId } = req.query;
     try {
-      const pendingRequests = await db.friendRequest.findMany({
+      const pendingFriendRequests = await db.friendRequest.findMany({
         where: {
           receiverId: userId,
           status: 'pending'
         }
       });
-      res.status(200).json(pendingRequests);
+      res.status(200).json(pendingFriendRequests);
+      console.log("requesty co mi dosly",pendingFriendRequests)
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch pending friend requests." });
     }
