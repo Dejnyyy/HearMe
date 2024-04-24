@@ -37,7 +37,7 @@ export default async function handler(
       const addFriend = await db.friendship.create({
         data: {
           userId: acceptFriendRequest.senderId, // the person who sent the request
-          friendId: acceptFriendRequest.receiverId // the person who accepted the request (current user)
+          friendId: acceptFriendRequest.receiverId // (current user)
         }
       });
 

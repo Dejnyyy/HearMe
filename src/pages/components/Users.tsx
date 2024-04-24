@@ -47,7 +47,29 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         }
       }
     };
-
+    const fetchMyFriendships = async () => {
+      if (sessionData?.user?.id) {
+        try {
+          const response = await fetch(`/api/findMyFriendships?userId=${sessionData.user.id}`);
+          if (!response.ok) {
+            console.log('Failed to fetch friendships');
+          }
+          const friendships = await response.json(); // Assuming this returns an array of user IDs that are friends
+    
+          // Update user list with friendship status
+          const updatedUserList = initialUserList.map(user => ({
+            ...user,
+            isFriend: friendships.some(friendship => friendship === user.id)
+          }));
+          
+          setUserList(updatedUserList);
+        } catch (error) {
+          console.error('Failed to fetch friendships:', error);
+        }
+      }
+    };
+   
+    fetchMyFriendships();
     fetchFriendRequests();
   }, [initialUserList, sessionData]);
   
@@ -82,8 +104,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ friendRequestId: senderId })
-        });
+            body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
+          });
 
         if (response.ok) {
             console.log('Friend request declined successfully');
@@ -178,6 +200,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         Delete
       </button>
     )}
+   
   </div>
 ))}
 
