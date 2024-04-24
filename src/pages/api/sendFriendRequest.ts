@@ -5,8 +5,12 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { senderId, receiverId } = req.body;
-    try {
+    const senderId = req.body.senderId; 
+    const receiverId = req.body.receiverId;
+    if (!senderId || !receiverId) {
+      return res.status(400).json({ error: "Sender ID and Receiver ID are required." });
+    }    
+        try {
       const newFriendRequest = await db.friendRequest.create({
         data: {
           senderId,

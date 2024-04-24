@@ -39,7 +39,14 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             requestPending: sentRequests.some(req => req.receiverId === user.id),
             isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
           }));
-          console.log(receivedRequests);
+          console.log(initialUserList.map(user => ({
+            ...user,
+            requestPending: sentRequests.some(req => req.receiverId === user.id),
+            isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
+          }))
+          )
+          console.log("requesty co mi dosly:",receivedRequests);
+          console.log("requesty co jsem poslal:",sentRequests);
           setUserList(updatedUserList);
         } catch (error) {
           console.error('Failed to fetch friend requests:', error);
@@ -134,9 +141,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
   const onAddFriend = async (userId: string) => {
     console.log(`Add friend with ID: ${userId}`); 
     console.log(`Logged in user ID: ${sessionData?.user.id}`);
-    
     const senderId = sessionData?.user.id;
-    
   try {
     const response = await fetch('/api/sendFriendRequest', {
       method: 'POST',
@@ -145,7 +150,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
       },
       body: JSON.stringify({ senderId, receiverId: userId })
     });
-
     if (response.ok) {
       console.log('Friend request sent successfully');
     } else {
@@ -186,20 +190,20 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             </button>
           </>
         )}
-        {user.requestPending && !user.isRequestReceived && !user.isFriend && (
-          <button
-            disabled
-            className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
-             Pending
-          </button>
-        )}
-        {!user.requestPending && !user.isRequestReceived && !user.isFriend && (
+        {!user.requestPending && !user.isRequestReceived && !user.isFriend &&(
           <button
             className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
             onClick={() => onAddFriend(user.id)}>
             Add
           </button>
         )}  
+        {user.requestPending && !user.isRequestReceived && (
+          <button
+            disabled
+            className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
+             Pending
+          </button>
+        )}
       </>
     )}
     {isLoggedInUserAdmin && user.isAdmin !== true && (
