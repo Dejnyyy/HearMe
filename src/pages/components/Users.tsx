@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
-import { NextRequest } from 'next/server'; 
 
 interface UsersPageProps {
   userList: User[];
@@ -22,7 +21,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     isRequestReceived: false,
     isFriend: false 
   })));
-  
+
   const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
   
   useEffect(() => {
@@ -33,7 +32,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             fetch(`/api/viewPendingRequests?userId=${sessionData.user.id}`),
             fetch(`/api/viewFriendRequests?userId=${sessionData.user.id}`)
           ]);
-
           const [sentRequests, receivedRequests] = await Promise.all(responses.map(res => res.json()));
 
           const updatedUserList = initialUserList.map(user => ({
@@ -41,6 +39,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             requestPending: sentRequests.some(req => req.receiverId === user.id),
             isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
           }));
+          console.log(receivedRequests);
           setUserList(updatedUserList);
         } catch (error) {
           console.error('Failed to fetch friend requests:', error);
@@ -54,12 +53,23 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
           if (!response.ok) {
             console.log('Failed to fetch friendships');
           }
-          const friendships = await response.json(); // Assuming this returns an array of user IDs that are friends
+          const friendships = await response.json(); // This should return an array of friendship objects
     
           // Update user list with friendship status
+          const friendIds = friendships.reduce((acc, friendship) => {
+            // Add both userId and friendId to the list of friend IDs, excluding the current user's ID
+            if (friendship.userId !== sessionData.user.id) {
+              acc.push(friendship.userId);
+            }
+            if (friendship.friendId !== sessionData.user.id) {
+              acc.push(friendship.friendId);
+            }
+            return acc;
+          }, []);
+    
           const updatedUserList = initialUserList.map(user => ({
             ...user,
-            isFriend: friendships.some(friendship => friendship === user.id)
+            isFriend: friendIds.includes(user.id) // Set isFriend true if user.id is in friendIds
           }));
           
           setUserList(updatedUserList);
@@ -137,7 +147,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     });
 
     if (response.ok) {
-      // You can add more logic here to handle a successful friend request send
       console.log('Friend request sent successfully');
     } else {
       console.log('Failed to send friend request');
@@ -163,7 +172,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             Friends
           </button>
         )}
-        {user.isRequestReceived && (
+        {user.isRequestReceived && !user.isFriend && (
           <>
             <button
               className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
@@ -177,20 +186,20 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             </button>
           </>
         )}
-        {user.requestPending && !user.isRequestReceived && (
+        {user.requestPending && !user.isRequestReceived && !user.isFriend && (
           <button
             disabled
             className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
-            Pending
+             Pending
           </button>
         )}
-        {!user.requestPending && !user.isRequestReceived && (
+        {!user.requestPending && !user.isRequestReceived && !user.isFriend && (
           <button
-            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 hover:bg-black font-mono font-semibold'
+            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
             onClick={() => onAddFriend(user.id)}>
             Add
           </button>
-        )}
+        )}  
       </>
     )}
     {isLoggedInUserAdmin && user.isAdmin !== true && (
@@ -200,10 +209,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         Delete
       </button>
     )}
-   
   </div>
-))}
-
+      ))}
       </ul>
     </div>
   );
