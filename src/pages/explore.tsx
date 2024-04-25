@@ -106,7 +106,7 @@ const Explore: React.FC = () => {
             <h2 className='text-center text-xl'>All Votes:</h2>
             <ul>
               {sortedVotes.map((vote, index) => (
-                <div key={index} className="bg-gray-700 mx-auto w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <div className='flex flex-row'>
                       <Image 
@@ -125,13 +125,13 @@ const Explore: React.FC = () => {
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className='ml-4 text-start my-auto'>
-                       <p className='ml-4 text-start my-auto hover:underline'>Song: {vote.song}</p>
+                       <p className='ml-4 text-start my-auto hover:underline'>{vote.song}</p>
                     </a>
                   </div>
           {expandedIndex === index && (
           <>
-            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
             <p>Artist: {vote.artist}</p>
+            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
             <p>{formatDate(vote.createdAt)}</p>
           </>
         )}
