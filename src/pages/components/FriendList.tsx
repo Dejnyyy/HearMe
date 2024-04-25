@@ -48,6 +48,73 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     fetchUserData();
   }, [initialUserList, sessionData]);
 
+  const acceptFriendRequest = async (senderId: string) => {
+    try {
+      const response = await fetch('/api/acceptFriendRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
+      });
+  
+      if (response.ok) {
+        console.log('Friend request accepted successfully');
+        setUserList(prev => prev.map(user => 
+          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
+        ));
+      } else {
+        console.log('Failed to accept friend request');
+      }
+    } catch (error) {
+      console.error('Error accepting friend request:', error);
+    }
+  };
+  
+  const rejectFriendRequest = async (senderId: string) => {
+    try {
+        const response = await fetch('/api/declineFriendRequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
+          });
+
+        if (response.ok) {
+            console.log('Friend request declined successfully');
+            setUserList(prev => prev.map(user =>
+                user.id === senderId ? { ...user, isRequestReceived: false } : user
+            ));
+        } else {
+            console.log('Failed to decline friend request');
+        }
+    } catch (error) {
+        console.error('Error declining friend request:', error);
+    }
+};
+const onAddFriend = async (userId: string) => {
+    console.log(`Add friend with ID: ${userId}`); 
+    console.log(`Logged in user ID: ${sessionData?.user.id}`);
+    const senderId = sessionData?.user.id;
+  try {
+    const response = await fetch('/api/sendFriendRequest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ senderId, receiverId: userId })
+    });
+    if (response.ok) {
+      console.log('Friend request sent successfully');
+    } else {
+      console.log('Failed to send friend request');
+    }
+  } catch (error) {
+    console.error('Error sending friend request:', error as Error);
+  }
+  };
+  
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
@@ -65,12 +132,26 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           </div>
         ))}
       </ul>
-
       <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
       <ul className='text-white font-mono mb-5 text-lg'>
         {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
           <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>{user.name}</li>
+            <li className='flex-1'>{user.name}
+            
+            {user.isRequestReceived && !user.isFriend && (
+          <>
+            <button
+              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
+              onClick={() => acceptFriendRequest(user.id)}>
+              Accept
+            </button>
+            <button
+              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
+              onClick={() => rejectFriendRequest(user.id)}>
+              Reject
+            </button>
+            </>
+        )}</li>
           </div>
         ))}
       </ul>
@@ -83,6 +164,30 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
             <button disabled className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
               Pending
             </button>
+          </div>
+        ))}
+      </ul>
+      <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
+      <ul className='text-white font-mono mb-5 text-lg'>
+        {userList.map(user => (
+          <div className='flex items-center m-8' key={user.id}>
+            <li className='flex-1'>
+              {user.name}
+            </li>
+            {user.requestPending == false && !user.isRequestReceived&& sessionData?.user.id !== user.id && user.isFriend&&(
+          <button
+            className='ml-2 border px-8  bg-green-200 text-green-700 rounded-xl font-mono font-semibold'
+            disabled>
+            Friends
+          </button> 
+        )} 
+        {user.requestPending == false && !user.isRequestReceived&& sessionData?.user.id !== user.id&& !user.isFriend &&(
+          <button
+            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
+            onClick={() => onAddFriend(user.id)}>
+            Add
+          </button> 
+        )} 
           </div>
         ))}
       </ul>
