@@ -197,14 +197,13 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
              Pending
           </button>
         )}
-        {!user.requestPending && !user.isRequestReceived && !user.isFriend &&(
+        {user.requestPending == false && !user.isRequestReceived && !user.isFriend &&(
           <button
             className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
             onClick={() => onAddFriend(user.id)}>
             Add
-          </button>
+          </button> 
         )}  
-        
       </>
     )}
     {isLoggedInUserAdmin && user.isAdmin !== true && (
