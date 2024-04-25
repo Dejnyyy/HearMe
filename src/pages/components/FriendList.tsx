@@ -118,7 +118,7 @@ const onAddFriend = async (userId: string) => {
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
-      <ul className='text-white font-mono mb-5 text-lg'>
+      <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.isFriend).map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>
@@ -133,7 +133,7 @@ const onAddFriend = async (userId: string) => {
         ))}
       </ul>
       <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
-      <ul className='text-white font-mono mb-5 text-lg'>
+      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>{user.name}
@@ -157,18 +157,18 @@ const onAddFriend = async (userId: string) => {
       </ul>
 
       <h1 className='text-white font-mono font-semibold text-xl'>Sent Requests</h1>
-      <ul className='text-white font-mono mb-5 text-lg'>
+      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.requestPending).map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>{user.name}</li>
-            <button disabled className='ml-2 border px-8 bg-gray-300 text-gray-500 rounded-xl font-mono font-semibold'>
+            <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
               Pending
             </button>
           </div>
         ))}
       </ul>
       <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
-      <ul className='text-white font-mono mb-5 text-lg'>
+      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>
