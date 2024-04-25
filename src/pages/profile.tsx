@@ -103,11 +103,11 @@ const Profile: React.FC = () => {
             <AuthShowcase />
           </div>
         </section>
-        <div className="grid gap-x-60 my-5 mx-5  grid-cols-1 md:grid-cols-3">
+        <div className="grid lg:gap-x-28 xl:gap-x-48 my-5 mx-5  grid-cols-1 lg:grid-cols-3">
           <div>
             <FaveArtist />
           </div>
-          <div className="rounded-md py-1 text-center ">
+          <div className="rounded-md py-1 text-center mt-2">
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
             <br  />
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>First Vote: {firstVote ?? 'No votes yet'}</span>
@@ -118,7 +118,7 @@ const Profile: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="w-3/12 h-12 bg-stone-50 rounded-full my-5">
+        <div className="w-3/4 sm:w-2/3 md:w-1/2 lg:w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote ?? 'No votes yet'}</h1>
         </div>
 
