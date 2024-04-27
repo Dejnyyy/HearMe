@@ -11,3 +11,4 @@ This is a HearMe app.
 ```bash
 npm i
 ```
+- create ".env" file
