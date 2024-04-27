@@ -7,4 +7,7 @@ This is a HearMe app.
 ### How to use?
 - clone this repository
 - navigate to the clonned folder
-- run 
+- run:
+```bash
+npm i
+```
