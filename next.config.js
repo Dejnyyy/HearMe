@@ -1,6 +1,6 @@
 module.exports = {
   images: {
-    domains: ['i.scdn.co'],
+    domains: ['i.scdn.co','platform-lookaside.fbsbx.com'],
   },
     async rewrites() {
       return [
