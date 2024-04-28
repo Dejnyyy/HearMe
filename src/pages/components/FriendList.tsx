@@ -117,8 +117,8 @@ const onAddFriend = async (userId: string) => {
   
   return (
     <div>
-        <div className="grid md:grid-cols-2">
-            <div>
+        <div className="grid lg:grid-cols-2 grid-cols-1">
+        <div className='m-4'>
       <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
       <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.isFriend).map(user => (
@@ -135,7 +135,7 @@ const onAddFriend = async (userId: string) => {
         ))}
       </ul>
       </div>
-      <div>
+      <div className='m-4'>
       <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
@@ -160,7 +160,7 @@ const onAddFriend = async (userId: string) => {
         ))}
       </ul>
       </div>
-      <div>
+      <div className='m-4'>
       <h1 className='text-white font-mono font-semibold text-xl'>Sent Requests</h1>
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.requestPending).map(user => (
@@ -173,7 +173,7 @@ const onAddFriend = async (userId: string) => {
         ))}
       </ul>
       </div>
-      <div>
+      <div className='m-4'>
       <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.map(user => (
