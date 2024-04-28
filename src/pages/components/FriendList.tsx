@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
+import Image from "next/image"
 
 interface UsersPageProps {
   userList: User[];
@@ -10,6 +11,7 @@ interface ExtendedUser extends User {
   requestPending: boolean;
   isRequestReceived: boolean;
   isFriend: boolean;
+  image: string;
 }
 
 const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) => {
@@ -18,7 +20,8 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     ...user,
     requestPending: false,
     isRequestReceived: false,
-    isFriend: false 
+    isFriend: false,
+    image: user.image || '/default-userimage.png'
   })));
 
   useEffect(() => {
@@ -48,6 +51,21 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     fetchUserData();
   }, [initialUserList, sessionData]);
 
+  
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
+      if (!res.ok) {
+        console.log('User fetch failed');
+        return { name: 'Unknown', image: '/default-profile.png' }; // Use a default image if fetch fails
+      }
+      const userData = await res.json();
+      return { name: userData.name, image: userData.image };
+    } catch (error) {
+      console.error('fetchUserDetails error:', error);
+      return { name: 'Unknown', image: '/default-profile.png' }; // Provide a fallback name and image
+    }
+  };
   const acceptFriendRequest = async (senderId: string) => {
     try {
       const response = await fetch('/api/acceptFriendRequest', {
@@ -165,7 +183,15 @@ const onAddFriend = async (userId: string) => {
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.requestPending).map(user => (
           <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>{user.name}</li>
+            <li className='flex-1'>
+            <Image
+                src={user.image || '/default-userimage.png'}
+                alt="Profile picture"
+                width={50}
+                height={50}
+                unoptimized={true} // Use this only if necessary
+                />
+            {user.name}</li>
             <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
               Pending
             </button>
