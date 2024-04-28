@@ -140,8 +140,6 @@ const Explore: React.FC = () => {
   ))}
 </ul>
             </div>
-            
-
           </div>
         </section>
       </main>
