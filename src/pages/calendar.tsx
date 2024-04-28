@@ -61,7 +61,7 @@ const Calendar: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white bg-gray-950 text-lg font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white  text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
         <section className="flex justify-end mt-10 mr-10">
           <div className=''>
             <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
@@ -73,6 +73,7 @@ const Calendar: React.FC = () => {
           </div>
           <div className='justify-center items-center'>
             <h2 className='text-center text-xl'>My Votes:</h2>
+            <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <ul>
               {sortedVotes.map((vote:any, index:any) => (
                 <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
@@ -105,6 +106,8 @@ const Calendar: React.FC = () => {
                 </div>
               ))}
             </ul>
+</div>
+           
           </div>
         </section>
       </main>
