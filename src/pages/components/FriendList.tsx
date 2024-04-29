@@ -184,14 +184,18 @@ const onAddFriend = async (userId: string) => {
         {userList.filter(user => user.requestPending).map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>
-            <Image
+                <div className='flex flex-row'>
+                <Image
                 src={user.image || '/default-userimage.png'}
                 alt="Profile picture"
                 width={50}
                 height={50}
                 unoptimized={true} // Use this only if necessary
                 />
-            {user.name}</li>
+            <p className='my-auto ml-4'>{user.name}</p>
+                </div>
+           
+            </li>
             <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
               Pending
             </button>
