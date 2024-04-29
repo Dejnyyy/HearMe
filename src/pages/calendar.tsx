@@ -79,7 +79,7 @@ const Calendar: React.FC = () => {
                 <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                   <div className='flex flex-row'>
-                      <Image src={sessionData?.user.image || ''}
+                      <Image src={sessionData?.user.image || '/default-userimage.png'}
                       alt='profile picture'
                       width={50}height={30} 
                       className="rounded-full w-12 h-12" />

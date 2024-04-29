@@ -141,8 +141,18 @@ const onAddFriend = async (userId: string) => {
       <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => user.isFriend).map(user => (
           <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>
-              {user.name}
+             <li className='flex-1'>
+                <div className='flex flex-row'>
+                <Image
+                src={user.image || '/default-userimage.png'}
+                alt="Profile picture"
+                width={50}
+                height={50}
+                unoptimized={true} // Use this only if necessary
+                className='rounded-full w-12 h-12'
+                />
+            <p className='my-auto ml-4'>{user.name}</p>
+            </div>
             </li>
             {sessionData?.user.id !== user.id && (
               <button disabled className='ml-2 border px-8 bg-green-200 text-green-700 rounded-xl font-mono font-semibold'>
@@ -158,8 +168,18 @@ const onAddFriend = async (userId: string) => {
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
           <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>{user.name}
-            
+            <li className='flex-1'>
+            <div className='flex flex-row m-auto'>
+                <Image
+                src={user.image || '/default-userimage.png'}
+                alt="Profile picture"
+                width={50}
+                height={50}
+                unoptimized={true} // Use this only if necessary
+                className='rounded-full w-12 h-12'
+                />
+            <p className='my-auto ml-4'>{user.name}</p>
+            </div>
             {user.isRequestReceived && !user.isFriend && (
           <>
             <button
@@ -191,10 +211,10 @@ const onAddFriend = async (userId: string) => {
                 width={50}
                 height={50}
                 unoptimized={true} // Use this only if necessary
+                className='rounded-full w-12 h-12'
                 />
             <p className='my-auto ml-4'>{user.name}</p>
-                </div>
-           
+            </div>
             </li>
             <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
               Pending
@@ -208,16 +228,21 @@ const onAddFriend = async (userId: string) => {
       <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
         {userList.map(user => (
           <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>
-              {user.name}
+           <li className='flex-1'>
+                <div className='flex flex-row'>
+                <Image
+                src={user.image || '/default-userimage.png'}
+                alt="Profile picture"
+                width={50}
+                height={50}
+                unoptimized={true} // Use this only if necessary
+                className='rounded-full w-12 h-12'
+                />
+            <p className='my-auto ml-4'>{user.name}</p>
+                </div>
+           
             </li>
-            {user.requestPending == false && !user.isRequestReceived&& sessionData?.user.id !== user.id && user.isFriend&&(
-          <button
-            className='ml-2 border px-8  bg-green-200 text-green-700 rounded-xl font-mono font-semibold'
-            disabled>
-            Friends
-          </button> 
-        )} 
+            
         {user.requestPending == false && !user.isRequestReceived&& sessionData?.user.id !== user.id&& !user.isFriend &&(
           <button
             className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'

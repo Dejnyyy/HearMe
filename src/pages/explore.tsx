@@ -110,7 +110,7 @@ const Explore: React.FC = () => {
                   <li className='cursor-pointer'>
                     <div className='flex flex-row'>
                       <Image 
-                        src={vote.image || '/default-profile.png'} // Use the user image or a default
+                        src={vote.image || '/default-userimage.png'} // Use the user image or a default
                         alt='Profile Picture'
                         width={50}
                         height={50}
