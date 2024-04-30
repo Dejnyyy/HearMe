@@ -49,7 +49,7 @@ const Uzivatele: React.FC = () => {
 
     return (
         <>
-            <main className="flex min-h-screen bg-gray-950 flex-col items-center justify-center ">
+            <main className="flex min-h-screen flex-col items-center justify-center "style={{background: 'radial-gradient(circle, #777, #000)'}}>
                 <UsersPage userList={users} onDeleteUser={handleDeleteUser} />
                 <HamburgerMenu />
             </main>
