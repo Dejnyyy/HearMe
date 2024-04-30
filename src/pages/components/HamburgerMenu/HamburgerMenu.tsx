@@ -20,7 +20,7 @@ const HamburgerMenu: React.FC = () => {
 
       {isOpen && (
         <div className={`py-4 px-2 rounded-lg fixed left-2 top-10 ${showMenu ? 'show' : ''}`}>
-          <ul className="bg-gray-950 p-1 rounded-md">
+          <ul className=" p-1 rounded-md">
             <li className={[styles.menu, 'py-0.5'].join(' ')}>
               <Link href="/">
                 <p className="text-white font-mono font-semibold ml-2 text-lg">Home</p>

@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white bg-gray-950 items-center justify-center text-lg  font-mono font-semibold">
+      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg  font-mono font-semibold"style={{background: 'radial-gradient(circle, #777, #000)'}}>
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
@@ -153,7 +153,7 @@ function AuthShowcase() {
       {sessionData && 
       <div>
         <Image
-          className="rounded-full w-24 h-24 shadow-white shadow-md"
+          className="rounded-full w-24 h-24 border border-white"
           src={sessionData.user?.image ?? ""}
           alt={"pfp of user" + sessionData.user?.name}
           width={250}
