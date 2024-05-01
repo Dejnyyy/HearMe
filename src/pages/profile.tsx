@@ -108,9 +108,9 @@ const Profile: React.FC = () => {
             <FaveArtist />
           </div>
           <div className="rounded-md py-1 text-center mt-2">
-            <span className='bg-gray-700 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
+            <span className='bg-gray-600 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
             <br  />
-            <span className='bg-gray-700 px-4 py-2 rounded-lg'>First Vote: {firstVote ?? 'No votes yet'}</span>
+            <span className='bg-gray-600 px-4 py-2 rounded-lg'>First Vote: {firstVote ?? 'No votes yet'}</span>
           </div>
           <div className="rounded-md py-1 text-center cursor-pointer my-auto">
             <div>
