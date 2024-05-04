@@ -16,6 +16,7 @@ const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]); // Use Vote[] instead of any[]
   const [sortByDateDesc, setSortByDateDesc] = useState(true); // No change needed
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // No change needed
+  const [ shownType, setShownType] = useState(true); // No change needed
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -66,6 +67,9 @@ const Explore: React.FC = () => {
   const toggleSortingOrder = () => {
     setSortByDateDesc(!sortByDateDesc);
   };
+  const toggleTypeShown = () => {
+    setShownType(!shownType);
+  };
   // Toggle expanded view for an item
   const toggleExpanded = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -87,6 +91,7 @@ const Explore: React.FC = () => {
 
   // Determine text for sorting button
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
+  const feedType = shownType ? "World": "Friends";
 
   return (
     <div>
@@ -95,6 +100,7 @@ const Explore: React.FC = () => {
         <section className="flex justify-end mt-10 mr-10">
           <div className=''>
             <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
+            <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>Showing: {feedType}</button>
           </div>
         </section>
         <section className='justify-center items-center'>
@@ -106,7 +112,7 @@ const Explore: React.FC = () => {
             <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <ul className=''>
               {sortedVotes.map((vote, index) => (
-                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <div className='flex flex-row'>
                       <Image 
