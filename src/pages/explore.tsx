@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
-import  Error from 'next/error';
+import Error from 'next/error';
 import Image from 'next/image';
-// Updated Vote interface to be used
+
 interface Vote {
   createdAt: string;
   song: string;
@@ -13,10 +13,10 @@ interface Vote {
 }
 
 const Explore: React.FC = () => {
-  const [votes, setVotes] = useState<Vote[]>([]); // Use Vote[] instead of any[]
-  const [sortByDateDesc, setSortByDateDesc] = useState(true); // No change needed
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // No change needed
-  const [ shownType, setShownType] = useState(true); // No change needed
+  const [votes, setVotes] = useState<Vote[]>([]);
+  const [sortByDateDesc, setSortByDateDesc] = useState(true);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [shownType, setShownType] = useState(true);
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -40,9 +40,7 @@ const Explore: React.FC = () => {
   
     fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
   }, []);
-  
 
-  // Function to formate Date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const formattedDate = date.toLocaleString('cz-CS', {
@@ -55,50 +53,36 @@ const Explore: React.FC = () => {
     return formattedDate.replace(',', ', ');
   };
 
-  // Sort votes by date
-  const sortedVotes = [...votes].sort((a, b) => {
-    if (sortByDateDesc) {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    } else {
-      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-    }
-  });
-  // Toggle sorting order
-  const toggleSortingOrder = () => {
-    setSortByDateDesc(!sortByDateDesc);
-  };
-  const toggleTypeShown = () => {
-    setShownType(!shownType);
-  };
-  // Toggle expanded view for an item
-  const toggleExpanded = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index);
-  };
-  const fetchUserDetails = async (userId: string) => {
-  try {
-    const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
-    if (!res.ok) {
-      console.log('User fetch failed');
-      return { name: 'Unknown', image: '/default-profile.png' }; // Use a default image if fetch fails
-    }
-    const userData = await res.json();
-    return { name: userData.name, image: userData.image };
-  } catch (error) {
-    console.error('fetchUserDetails error:', error);
-    return { name: 'Unknown', image: '/default-profile.png' }; // Provide a fallback name and image
-  }
-};
+  const sortedVotes = [...votes].sort((a, b) => sortByDateDesc ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  
+  const toggleSortingOrder = () => setSortByDateDesc(!sortByDateDesc);
+  const toggleTypeShown = () => setShownType(!shownType);
+  const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
 
-  // Determine text for sorting button
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
+      if (!res.ok) {
+        console.log('User fetch failed');
+        return { name: 'Unknown', image: '/default-profile.png' };
+      }
+      const userData = await res.json();
+      return { name: userData.name, image: userData.image };
+    } catch (error) {
+      console.error('fetchUserDetails error:', error);
+      return { name: 'Unknown', image: '/default-profile.png' };
+    }
+  };
+
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
-  const feedType = shownType ? "World": "Friends";
+  const feedType = shownType ? "World" : "Friends";
 
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white  text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
+      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
         <section className="flex justify-end mt-10 mr-10">
-          <div className=''>
+          <div>
             <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}> Date {sortingButtonText}</button>
             <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>Showing: {feedType}</button>
           </div>
@@ -109,43 +93,46 @@ const Explore: React.FC = () => {
           </div>
           <div className='justify-center items-center '>
             <h2 className='text-center text-xl'>All Votes:</h2>
-            <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-            <ul className=''>
-              {sortedVotes.map((vote, index) => (
-                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
-                  <li className='cursor-pointer'>
-                    <div className='flex flex-row'>
-                      <Image 
-                        src={vote.image || '/default-userimage.png'} // Use the user image or a default
-                        alt='Profile Picture'
-                        width={50}
-                        height={50}
-                        className="rounded-full w-12 h-12"
-                      />
-                      <p className='my-auto ml-4'>{vote.name}</p>
-                  </div>
-                   
-                  <div className="flex flex-row">
-                      <img src={vote.imageUrl} alt={`Cover for`} className="my-2 rounded-lg ml-1" />
-                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className='ml-4 text-start my-auto'>
-                       <p className='ml-4 text-start my-auto hover:underline'>{vote.song}</p>
-                    </a>
-                  </div>
-          {expandedIndex === index && (
-          <>
-            <p>Artist: {vote.artist}</p>
-            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
-            <p>{formatDate(vote.createdAt)}</p>
-          </>
-        )}
-      </li>
-    </div>
-  ))}
-</ul>
-            </div>
+            {shownType ? (
+              <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+                <ul className=''>
+                  {sortedVotes.map((vote, index) => (
+                    <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                      <li className='cursor-pointer'>
+                        <div className='flex flex-row'>
+                          <Image 
+                            src={vote.image || '/default-userimage.png'} 
+                            alt='Profile Picture'
+                            width={50}
+                            height={50}
+                            className="rounded-full w-12 h-12"
+                          />
+                          <p className='my-auto ml-4'>{vote.name}</p>
+                        </div>
+                        <div className="flex flex-row">
+                          <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                          <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className='ml-4 text-start my-auto'>
+                             <p className='ml-4 text-start my-auto hover:underline'>{vote.song}</p>
+                          </a>
+                        </div>
+                        {expandedIndex === index && (
+                        <>
+                          <p>Artist: {vote.artist}</p>
+                          <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
+                          <p>{formatDate(vote.createdAt)}</p>
+                        </>
+                        )}
+                      </li>
+                    </div>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p className='text-center text-xl mt-10'>No votes to display</p>
+            )}
           </div>
         </section>
       </main>
