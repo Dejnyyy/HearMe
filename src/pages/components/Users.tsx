@@ -90,33 +90,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     
   }, [initialUserList, sessionData]);
   
-  
-   
-  
-  const rejectFriendRequest = async (senderId: string) => {
-    try {
-        const response = await fetch('/api/declineFriendRequest', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
-          });
-
-        if (response.ok) {
-            console.log('Friend request declined successfully');
-            setUserList(prev => prev.map(user =>
-                user.id === senderId ? { ...user, isRequestReceived: false } : user
-            ));
-        } else {
-            console.log('Failed to decline friend request');
-        }
-    } catch (error) {
-        console.error('Error declining friend request:', error);
-    }
-};
-  
-  
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
