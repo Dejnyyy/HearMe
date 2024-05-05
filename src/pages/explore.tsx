@@ -82,10 +82,10 @@ const Explore: React.FC = () => {
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
         <section className="flex justify-end mt-10 mr-10">
-          <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
+          <button className='bg-gray-700 mx-1 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
             Date {sortingButtonText}
           </button>
-          <button className='bg-gray-700 px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
+          <button className='bg-gray-700 mx-1 px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
             Showing: {feedType}
           </button>
         </section>
