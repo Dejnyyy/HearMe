@@ -137,28 +137,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     }
 };
   
-  // Function to handle the add friend logic
-  const onAddFriend = async (userId: string) => {
-    console.log(`Add friend with ID: ${userId}`); 
-    console.log(`Logged in user ID: ${sessionData?.user.id}`);
-    const senderId = sessionData?.user.id;
-  try {
-    const response = await fetch('/api/sendFriendRequest', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ senderId, receiverId: userId })
-    });
-    if (response.ok) {
-      console.log('Friend request sent successfully');
-    } else {
-      console.log('Failed to send friend request');
-    }
-  } catch (error) {
-    console.error('Error sending friend request:', error as Error);
-  }
-  };
   
   return (
     <div>
@@ -169,43 +147,6 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     <li className='flex-1'>
       {user.name}
     </li>
-    {sessionData?.user.id !== user.id && (
-      <>
-       {user.isFriend && (
-          <button disabled className='ml-2 border px-8 bg-green-200 text-green-700 rounded-xl font-mono font-semibold'>
-            Friends
-          </button>
-        )}
-        {user.isRequestReceived && !user.isFriend && (
-          <>
-            <button
-              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
-              onClick={() => acceptFriendRequest(user.id)}>
-              Accept
-            </button>
-            <button
-              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
-              onClick={() => rejectFriendRequest(user.id)}>
-              Reject
-            </button>
-            </>
-        )}
-        {user.requestPending && !user.isRequestReceived && (
-          <button
-            disabled
-            className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
-             Pending
-          </button>
-        )}
-        {user.requestPending == false && !user.isRequestReceived && !user.isFriend &&(
-          <button
-            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
-            onClick={() => onAddFriend(user.id)}>
-            Add
-          </button> 
-        )}  
-      </>
-    )}
     {isLoggedInUserAdmin && user.isAdmin !== true && (
       <button
         className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:text-red-500'
