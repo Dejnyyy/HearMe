@@ -90,29 +90,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     
   }, [initialUserList, sessionData]);
   
-  // Determine if the logged-in user is an admin
-  const acceptFriendRequest = async (senderId: string) => {
-    try {
-      const response = await fetch('/api/acceptFriendRequest', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
-      });
   
-      if (response.ok) {
-        console.log('Friend request accepted successfully');
-        setUserList(prev => prev.map(user => 
-          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
-        ));
-      } else {
-        console.log('Failed to accept friend request');
-      }
-    } catch (error) {
-      console.error('Error accepting friend request:', error);
-    }
-  };
+   
   
   const rejectFriendRequest = async (senderId: string) => {
     try {
