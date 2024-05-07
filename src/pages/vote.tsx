@@ -148,7 +148,7 @@ const Vote: React.FC = () => {
             </div>
             <div className='mx-auto'>
               <button
-                className="rounded-full  px-10 py-3 mx-6 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-yellow-700"
+                className="rounded-full  px-10 py-3 mx-6 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
                 onClick={() => handleVote('+')}
               >Vote
               </button>
