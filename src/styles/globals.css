@@ -24,7 +24,6 @@
     background: white; 
     border-radius: 50px;
   }
-  
   /* najeti na posouvak */
   ::-webkit-scrollbar-thumb:hover {
     background: rgb(130, 130, 130); 
