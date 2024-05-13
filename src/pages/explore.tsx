@@ -130,7 +130,6 @@ const Explore: React.FC = () => {
                     </div>
                     {expandedIndex === index && (
                       <>
-                        <p>Artist: {vote.artist}</p>
                         <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
                         <p>{formatDate(vote.createdAt)}</p>
                       </>
