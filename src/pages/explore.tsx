@@ -81,16 +81,16 @@ const Explore: React.FC = () => {
     <div>
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
-        <section className="flex justify-end mt-10 mr-10">
-          <button className='bg-gray-700 mx-1 px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
+        <section className="flex justify-end mt-12 mr-10 ml-10">
+          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
             Date {sortingButtonText}
           </button>
-          <button className='bg-gray-700 mx-1 px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
+          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
             Showing: {feedType}
           </button>
         </section>
         <section className='justify-center items-center'>
-          <h1 className='text-5xl text-center'>Explore</h1>
+          <h1 className='text-5xl mt-2 text-center'>Explore</h1>
           <h2 className='text-center text-xl'>All {feedType} Votes:</h2>
           <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <ul>
