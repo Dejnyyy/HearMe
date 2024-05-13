@@ -30,10 +30,10 @@ const HamburgerMenu: React.FC = () => {
             <li><Link href="/ranking"><p className="font-mono font-semibold text-lg">Ranking</p></Link></li>
             <li><Link href="/explore"><p className="font-mono font-semibold text-lg">Explore</p></Link></li>
             <li><Link href="/vote"><p className="font-mono font-semibold text-lg">Vote</p></Link></li>
-            {isAdmin && (
-              <li><Link href="/uzivatele"><p className="font-mono font-semibold text-lg">Users</p></Link></li>
-            )}
             <li><Link href="/friends"><p className="font-mono font-semibold text-lg">Friends</p></Link></li>
+            {isAdmin && (
+              <li><Link href="/admin"><p className="font-mono font-semibold text-lg border-t-2">Admin</p></Link></li>
+            )}
           </ul>
         </div>
       )}
