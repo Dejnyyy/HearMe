@@ -19,13 +19,20 @@ declare module "next-auth" {
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      const fullUser = await db.user.findUnique({
+        where: { id: user.id }
+      });
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          isAdmin: fullUser?.isAdmin ?? false, //Pokud prestane fungovat login tak je to tim ze jsem si hral s timto :D
+        },
+      };
+    },
   },
   adapter: PrismaAdapter(db),
   providers: [
