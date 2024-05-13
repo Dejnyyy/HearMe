@@ -108,11 +108,13 @@ const Explore: React.FC = () => {
                       <p className='my-auto ml-4'>{vote.name}</p>
                     </div>
 
-                    <div className="flex flex-row">
-                      <div>
-                      <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                    <div className="sm:flex sm:flex-row">
+                      <div className='mx-auto sm:mx-0 text-center sm:text-center'> 
+                   <img src={vote.imageUrl} alt={`Cover for ${vote.song}`}         
+                      className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
+
                  </div>    
-                  <div className='ml-4 text-start my-auto'>
+                 <div className='ml-4 text-center sm:text-start my-auto'>
                       <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
                           target="_blank" 
                           rel="noopener noreferrer" 
@@ -126,7 +128,6 @@ const Explore: React.FC = () => {
                           <p className='hover:underline text-gray-400'>{vote.artist}</p>
                           </a>
                       </div>
-                     
                     </div>
                     {expandedIndex === index && (
                       <>

@@ -76,7 +76,7 @@ const Calendar: React.FC = () => {
             <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
             <ul>
               {sortedVotes.map((vote:any, index:any) => (
-                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/4 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                   <div className='flex flex-row'>
                       <Image src={sessionData?.user.image || '/default-userimage.png'}
@@ -86,11 +86,14 @@ const Calendar: React.FC = () => {
                       <p className='my-auto ml-4'>{sessionData?.user.name}</p>
                   </div>
                   
-                  <div className="flex flex-row">
-                      <div>
-                      <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                  <div className="sm:flex sm:flex-row">
+                      <div className='mx-auto sm:mx-0 text-center sm:text-center'> 
+                      <Image src={vote.imageUrl} 
+                      alt={`Cover for ${vote.song}`}
+                      width={64}height={64} 
+                      className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
                  </div>    
-                  <div className='ml-4 text-start my-auto'>
+                  <div className='ml-4 text-center sm:text-start my-auto'>
                       <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
                           target="_blank" 
                           rel="noopener noreferrer" 
