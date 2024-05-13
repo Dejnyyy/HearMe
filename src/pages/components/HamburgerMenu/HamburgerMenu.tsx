@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 const HamburgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: sessionData } = useSession();
-  const isAdmin = sessionData?.user?.isAdmin; // Assuming isAdmin is a boolean in the user object
+  const isAdmin = sessionData?.user?.isAdmin;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
