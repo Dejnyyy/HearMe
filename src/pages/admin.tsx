@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import UsersPage from "./components/Users";
 import HamburgerMenu from "./components/HamburgerMenu";
 
-const Uzivatele: React.FC = () => {
+const Admin: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
@@ -56,4 +56,4 @@ const Uzivatele: React.FC = () => {
     );
 };
 
-export default Uzivatele;
+export default Admin;
