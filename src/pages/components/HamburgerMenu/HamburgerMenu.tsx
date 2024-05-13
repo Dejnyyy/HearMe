@@ -1,15 +1,19 @@
 // components/HamburgerMenu.tsx
-import React, { useState, useEffect } from 'react';
-import styles from './HamburgerMenu.module.css';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import styles from './HamburgerMenu.module.css';
 
-const HamburgerMenu: React.FC = () => {
+type Props = {
+  isAdmin: boolean;
+};
+
+const HamburgerMenu: React.FC<Props> = ({ isAdmin }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showMenu] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <div>
       <div className={styles.hamburgerMenu} onClick={toggleMenu}>
@@ -19,46 +23,48 @@ const HamburgerMenu: React.FC = () => {
       </div>
 
       {isOpen && (
-        <div className={`py-4 px-2 rounded-lg fixed left-2 top-10 ${showMenu ? 'show' : ''}`}>
-          <ul className=" p-1 rounded-md">
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+        <div className="py-4 px-2 rounded-lg fixed left-2 top-10 text-white">
+          <ul className="space-y-1">
+            <li>
               <Link href="/">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Home</p>
+               <p className="font-mono font-semibold text-lg">Home</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            <li>
               <Link href="/profile">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Profile</p>
+               <p className="font-mono font-semibold text-lg">Profile</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            <li>
               <Link href="/calendar">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Calendar</p>
+               <p className="font-mono font-semibold text-lg">Calendar</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            <li>
               <Link href="/ranking">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Ranking</p>
+               <p className="font-mono font-semibold text-lg">Ranking</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            <li>
               <Link href="/explore">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Explore</p>
+               <p className="font-mono font-semibold text-lg">Explore</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            <li>
               <Link href="/vote">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Vote</p>
+               <p className="font-mono font-semibold text-lg">Vote</p>
               </Link>
             </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
-              <Link href="/uzivatele">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Users</p>
-              </Link>
-            </li>
-            <li className={[styles.menu, 'py-0.5'].join(' ')}>
+            {isAdmin && (
+              <li>
+                <Link href="/users">
+                 <p className="font-mono font-semibold text-lg">Users</p>
+                </Link>
+              </li>
+            )}
+            <li>
               <Link href="/friends">
-                <p className="text-white font-mono font-semibold ml-2 text-lg">Friends</p>
+               <p className="font-mono font-semibold text-lg">Friends</p>
               </Link>
             </li>
           </ul>
