@@ -86,18 +86,27 @@ const Calendar: React.FC = () => {
                       <p className='my-auto ml-4'>{sessionData?.user.name}</p>
                   </div>
                   
-                    <div className='flex flex-row'>
-                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
-                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
+                  <div className="flex flex-row">
+                      <div>
+                      <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg ml-1" />
+                 </div>    
+                  <div className='ml-4 text-start my-auto'>
+                      <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          className='ml-4 text-start my-auto'>
-                          <p className='ml-4 text-start my-auto hover:underline'>{vote.song}</p>
-                    </a>
+                          className=''>
+                        <p className=' hover:underline'>{vote.song}</p>
+                      </a>
+                      <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className=''>
+                          <p className='hover:underline text-gray-400'>{vote.artist}</p>
+                          </a>
+                      </div>
                     </div>
                       {expandedIndex === index && (
                       <>
-                      <p>Artist: {vote.artist}</p>
                         <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>+/-: {vote.voteType}</p>
                         <p className=''>{formatDate(vote.createdAt)}</p>
                       </>
