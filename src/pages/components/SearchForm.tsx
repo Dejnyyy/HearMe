@@ -54,14 +54,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   return (
     <div className="">
       <input
-        className="rounded-md text-black py-1 m-3 pl-2"
+        className="rounded-md text-black py-1 m-3 pl-2 w-2/3"
         type="text"
-        placeholder='Search for a song...'
+        placeholder='Search a song'
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
       />
-      <button className='m-auto mr-2' onClick={handleSearch}>Search</button>
+      <button className='m-auto mr-4' onClick={handleSearch}>Search</button>
 
       {searchResults.map((song) => (
         <li
