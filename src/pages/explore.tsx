@@ -9,13 +9,15 @@ interface Vote {
   voteType: string;
   imageUrl?: string;
   userId: string;
+  name?: string;
+  image?: string;
 }
 
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [shownType, setShownType] = useState(true);  // true for all votes, false for only mine and friends
+  const [shownType, setShownType] = useState(true); // true for all votes, false for only mine and friends
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -40,7 +42,7 @@ const Explore: React.FC = () => {
     };
 
     fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
-  }, [shownType]);  // Re-run the effect when shownType changes
+  }, [shownType]); 
 
   const fetchUserDetails = async (userId: string) => {
     try {
@@ -69,7 +71,7 @@ const Explore: React.FC = () => {
   };
 
   const sortedVotes = [...votes].sort((a, b) => sortByDateDesc ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-  
+
   const toggleSortingOrder = () => setSortByDateDesc(!sortByDateDesc);
   const toggleTypeShown = () => setShownType(!shownType);
   const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
@@ -77,10 +79,15 @@ const Explore: React.FC = () => {
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
   const feedType = shownType ? "World" : "Friends";
 
+  const handleGenerateClick = (vote: Vote) => {
+    console.log('Generate button clicked for vote:', vote);
+    // Implement the desired functionality here
+  };
+
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{background: 'radial-gradient(circle, #777, #000)'}}>
+      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'radial-gradient(circle, #777, #000)' }}>
         <section className="flex justify-end mt-12 mr-10 ml-10">
           <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
             Date {sortingButtonText}
@@ -98,35 +105,40 @@ const Explore: React.FC = () => {
                 <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
                   <li className='cursor-pointer'>
                     <div className='flex flex-row'>
-                      <Image 
-                        src={vote.image || '/default-userimage.png'} 
+                      <Image
+                        src={vote.image || '/default-userimage.png'}
                         alt='Profile Picture'
                         width={50}
                         height={50}
                         className="rounded-full w-12 h-12"
                       />
                       <p className='my-auto ml-4'>{vote.name}</p>
+                      <button 
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                        onClick={() => handleGenerateClick(vote)}
+                      >
+                        Generate
+                      </button>
                     </div>
 
                     <div className="sm:flex sm:flex-row">
-                      <div className='mx-auto sm:mx-0 text-center sm:text-center'> 
-                   <img src={vote.imageUrl} alt={`Cover for ${vote.song}`}         
-                      className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
-
-                 </div>    
-                 <div className='ml-4 text-center sm:text-start my-auto'>
-                      <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
+                      <div className='mx-auto sm:mx-0 text-center sm:text-center'>
+                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`}
+                          className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
+                      </div>
+                      <div className='ml-4 text-center sm:text-start my-auto'>
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className=''>
-                        <p className=' hover:underline'>{vote.song}</p>
-                      </a>
-                      <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
+                          <p className=' hover:underline'>{vote.song}</p>
+                        </a>
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className=''>
                           <p className='hover:underline text-gray-400'>{vote.artist}</p>
-                          </a>
+                        </a>
                       </div>
                     </div>
                     {expandedIndex === index && (
