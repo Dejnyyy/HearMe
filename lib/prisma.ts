@@ -1,27 +1,17 @@
-// prisma jedinacek
+// lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
+import logAndMoveDeletedVote from './prismaMiddleware';
 
 declare global {
-    var prisma: PrismaClient | undefined;
+  var prisma: PrismaClient | undefined;
 }
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
-  }
-  prisma = global.prisma;
-}
+const prisma = globalThis.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+
+// Apply the middleware
+prisma.$use(logAndMoveDeletedVote);
 
 export default prisma;
-
-
-// import { PrismaClient } from "@prisma/client";
-//lib/prisma.ts
-declare global {
-     var prisma: PrismaClient | undefined;
- }
- export const db = globalThis.prisma ?? new PrismaClient();
-
- if (process.env.NODE_ENV !== 'production') globalThis.prisma = db;
+export const db = prisma;
