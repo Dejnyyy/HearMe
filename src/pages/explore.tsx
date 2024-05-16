@@ -130,7 +130,7 @@ const Explore: React.FC = () => {
                       <p className='my-auto ml-4'>{vote.name}</p>
                       {isAdmin && (
                         <button 
-                          className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded ml-auto"
+                          className=" hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent the outer click handler from firing
                             handleDeleteClick(vote.id);
