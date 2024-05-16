@@ -13,6 +13,7 @@ interface Vote {
   image?: string;
 }
 
+
 const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
