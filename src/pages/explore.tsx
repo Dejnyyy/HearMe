@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import Image from 'next/image';
+import { useSession } from "next-auth/react";
+
 
 interface Vote {
   createdAt: string;
@@ -15,10 +17,13 @@ interface Vote {
 
 
 const Explore: React.FC = () => {
+  const { data: sessionData } = useSession();
+
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // true for all votes, false for only mine and friends
+  const isAdmin = sessionData?.user?.isAdmin;
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -114,12 +119,15 @@ const Explore: React.FC = () => {
                         className="rounded-full w-12 h-12"
                       />
                       <p className='my-auto ml-4'>{vote.name}</p>
-                      <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                      {isAdmin && (
+                        <button 
+                        className=" hover:bg-red-700 text-gray-200 font-bold px-4 rounded-full ml-auto"
                         onClick={() => handleGenerateClick(vote)}
                       >
-                        Generate
+                        x
                       </button>
+                      )}
+                      
                     </div>
 
                     <div className="sm:flex sm:flex-row">
