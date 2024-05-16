@@ -3,8 +3,8 @@ import HamburgerMenu from './components/HamburgerMenu';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 
-
 interface Vote {
+  id: number; // Adjust the type based on your Prisma schema
   createdAt: string;
   song: string;
   artist: string;
@@ -15,10 +15,8 @@ interface Vote {
   image?: string;
 }
 
-
 const Explore: React.FC = () => {
   const { data: sessionData } = useSession();
-
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -85,9 +83,20 @@ const Explore: React.FC = () => {
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
   const feedType = shownType ? "World" : "Friends";
 
-  const handleGenerateClick = (vote: Vote) => {
-    console.log('Generate button clicked for vote:', vote);
-    // Implement the desired functionality here
+  const handleDeleteClick = async (voteId: number) => {
+    try {
+      const response = await fetch(`/api/deleteVote?voteId=${voteId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        console.error('Failed to delete vote');
+        return;
+      }
+      // Remove the vote from the state
+      setVotes(prevVotes => prevVotes.filter(vote => vote.id !== voteId));
+    } catch (error) {
+      console.error('Error deleting vote:', error);
+    }
   };
 
   return (
@@ -121,13 +130,15 @@ const Explore: React.FC = () => {
                       <p className='my-auto ml-4'>{vote.name}</p>
                       {isAdmin && (
                         <button 
-                        className=" hover:bg-red-700 text-gray-200 font-bold px-4 rounded-full ml-auto"
-                        onClick={() => handleGenerateClick(vote)}
-                      >
-                        x
-                      </button>
+                          className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded ml-auto"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent the outer click handler from firing
+                            handleDeleteClick(vote.id);
+                          }}
+                        >
+                          x
+                        </button>
                       )}
-                      
                     </div>
 
                     <div className="sm:flex sm:flex-row">
