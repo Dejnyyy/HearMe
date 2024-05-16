@@ -90,6 +90,16 @@ model Vote {
   imageUrl    String?
   createdAt   DateTime @default(now())
 }
+model DeletedVote {
+  id        Int      @id @default(autoincrement())
+  originalId Int
+  createdAt DateTime
+  song      String
+  artist    String
+  voteType  String
+  userId    String
+  deletedAt DateTime @default(now())
+}
 model FriendRequest {
     id          Int      @id @default(autoincrement())
     senderId    String   // ID of the user who sent the friend request
