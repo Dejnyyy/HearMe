@@ -6,7 +6,7 @@ import { User } from '@prisma/client';
 
 const Home: React.FC<{ userList: User[] }> = () => {
   const { data: sessionData } = useSession();
-  const userID = sessionData?.user?.id; // Extract userID here
+  const userID = sessionData?.user?.id; 
 
   return (
     <>

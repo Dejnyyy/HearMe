@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useSession } from "next-auth/react";
 
 interface Vote {
-  id: number; // Adjust the type based on your Prisma schema
+  id: number;
   createdAt: string;
   song: string;
   artist: string;
@@ -30,7 +30,7 @@ const Explore: React.FC = () => {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
           console.log('Votes fetch failed');
-          return; // Exit if fetch fails
+          return;
         }
         const votesData: Vote[] = await response.json();
         const votesWithUserDetails = await Promise.all(
@@ -46,7 +46,7 @@ const Explore: React.FC = () => {
     };
 
     fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
-  }, [shownType]); 
+  }, [shownType]);
 
   const fetchUserDetails = async (userId: string) => {
     try {
