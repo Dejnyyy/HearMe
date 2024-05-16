@@ -1,17 +1,18 @@
-// lib/prisma.ts
-import { PrismaClient } from '@prisma/client';
-import logAndMoveDeletedVote from './prismaMiddleware';
+import createExtendedPrismaClient from './prismaMiddleware';
 
 declare global {
-  var prisma: PrismaClient | undefined;
+  var prisma: ReturnType<typeof createExtendedPrismaClient> | undefined;
 }
 
-const prisma = globalThis.prisma || new PrismaClient();
+// Initialize the Prisma client with the middleware extension
+const prismaClient = createExtendedPrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+// Reuse the Prisma client instance across the application
+const prisma = globalThis.prisma || prismaClient;
 
-// Apply the middleware
-prisma.$use(logAndMoveDeletedVote);
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.prisma = prisma;
+}
 
 export default prisma;
 export const db = prisma;

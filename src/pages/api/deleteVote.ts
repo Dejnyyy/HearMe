@@ -1,4 +1,3 @@
-// pages/api/deleteVote.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from 'lib/prisma';
 
