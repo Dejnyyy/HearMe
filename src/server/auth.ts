@@ -1,4 +1,3 @@
-//auth.ts
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
 import {
@@ -9,11 +8,18 @@ import {
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import SpotifyProvider from "next-auth/providers/spotify";
+
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
+      isAdmin?: boolean;
     };
+  }
+
+  interface User {
+    id: string;
+    isAdmin?: boolean;
   }
 }
 
@@ -29,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: user.id,
-          isAdmin: fullUser?.isAdmin ?? false, //Pokud prestane fungovat login tak je to tim ze jsem si hral s timto :D
+          isAdmin: fullUser?.isAdmin ?? false,  // Ensure isAdmin is included
         },
       };
     },
@@ -43,6 +49,7 @@ export const authOptions: NextAuthOptions = {
     })
   ],
 };
+
 export const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];
