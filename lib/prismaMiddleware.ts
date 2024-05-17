@@ -6,7 +6,7 @@ const createExtendedPrismaClient = () => {
   return prisma.$extends({
     query: {
       vote: {
-        async delete({ model, operation, args, query }) {
+        async delete({ args, query }) {
           const voteId = args.where.id;
           const vote = await prisma.vote.findUnique({ where: { id: voteId } });
 
@@ -23,7 +23,6 @@ const createExtendedPrismaClient = () => {
               },
             });
           }
-
           return query(args);
         },
       },

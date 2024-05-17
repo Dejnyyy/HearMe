@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      const id = parseInt(voteId as string, 10); // Convert voteId to int
+      const id = parseInt(voteId as string, 10);
       const deletedVote = await db.vote.delete({
         where: { id },
       });
