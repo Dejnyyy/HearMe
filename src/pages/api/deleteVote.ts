@@ -8,7 +8,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!voteId || Array.isArray(voteId) || isNaN(Number(voteId))) {
       return res.status(400).json({ success: false, error: 'Invalid vote ID' });
     }
-
     try {
       const id = parseInt(voteId as string, 10);
       const deletedVote = await db.vote.delete({

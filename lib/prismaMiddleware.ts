@@ -8,10 +8,13 @@ const createExtendedPrismaClient = () => {
       vote: {
         async delete({ args, query }) {
           const voteId = args.where.id;
+          console.log(`Deleting vote with ID: ${voteId}`);
           const vote = await prisma.vote.findUnique({ where: { id: voteId } });
-
+          if(!vote) {
+            console.log(`Vote with ID: ${voteId} not found`);
+          }
           if (vote) {
-            console.log(`Moving deleted vote to DeletedVote table: ${voteId}`);
+            console.log(vote);
             await prisma.deletedVote.create({
               data: {
                 originalId: vote.id,
@@ -23,6 +26,7 @@ const createExtendedPrismaClient = () => {
               },
             });
           }
+          
           return query(args);
         },
       },
