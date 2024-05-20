@@ -121,6 +121,7 @@ const Profile: React.FC = () => {
         <div className="w-3/4 sm:w-2/3 md:w-1/2 lg:w-3/12 h-12 bg-stone-50 rounded-full my-5">
           <h1 className='text-black mt-2 text-center'>Last Vote - {lastVote ?? 'No votes yet'}</h1>
         </div>
+        
         {lastVoteDetails && (
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
             <img
