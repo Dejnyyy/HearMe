@@ -81,7 +81,7 @@ const FaveAlbum: React.FC = () => {
         )}
       </div>
       {isOpen && (
-        <div className="absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
+        <div className="w-auto lg:absolute mx-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchAlbums onAlbumClick={handleAlbumClick} />
         </div>
       )}

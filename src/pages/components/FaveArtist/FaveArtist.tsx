@@ -82,7 +82,7 @@ const FaveArtist: React.FC = () => {
         )}
       </div>
       {isOpen && (
-        <div className="absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
+        <div className="mx-auto lg:absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchArtists onArtistClick={handleArtistClick} />
         </div>
       )}
