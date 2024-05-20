@@ -1,9 +1,9 @@
-// FaveAlbum.tsx
 import React, { useState, useEffect } from 'react';
 import SearchAlbums from '../SearchAlbums';
 import { toast } from 'react-toastify';
 import JSON from 'json5';
 import styles from './FaveAlbum.module.css';
+import { CSSTransition } from 'react-transition-group';
 
 const FaveAlbum: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,12 +12,11 @@ const FaveAlbum: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
 
   useEffect(() => {
-  const fetchFavoriteAlbum = async () => {
+    const fetchFavoriteAlbum = async () => {
       try {
         const response = await fetch('/api/getFavouriteAlbum');
-       
         if (!response.ok) {
-          throw console.log('Network response was not ok');
+          console.log('Network response was not ok');
         }
         const albumData = await response.json();
         console.log(albumData.favoriteAlbum);
@@ -27,7 +26,6 @@ const FaveAlbum: React.FC = () => {
       } catch (error) {
         console.error('Error fetching favorite album from database:', error);
       }
-      return 
     };
 
     fetchFavoriteAlbum();
@@ -39,16 +37,14 @@ const FaveAlbum: React.FC = () => {
 
   const handleAlbumClick = (album: any) => {
     if (selectedAlbum && selectedAlbum.id === album.id) {
-      // If the clicked album is the same as the currently selected album, do nothing
       return;
     }
-    console.log('Selected Album:', album);
+
     setSelectedAlbum(album);
     localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));
-  
-    // Show a success toast notification
+
     toast.success(`Favorite album set to ${album.name}`, {
-      className: "toast-message",
+      className: 'toast-message',
       position: 'top-right',
       autoClose: 3000,
       hideProgressBar: false,
@@ -62,14 +58,14 @@ const FaveAlbum: React.FC = () => {
   return (
     <div>
       <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
-        { lastSelectedAlbum ? (
+        {lastSelectedAlbum ? (
           <div>
             <h2>Favourite Album:</h2>
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
               <img
                 src={lastSelectedAlbumImg || 'default-image-url'}
                 alt={`Image for ${lastSelectedAlbum}`}
-                className="artist-image w-16 ml-2 rounded-xl"
+                className={`album-image w-16 ml-2 rounded-lg ${styles.albumImage}`}
               />
               <div className="ml-2">
                 <strong>{lastSelectedAlbum}</strong>
@@ -80,11 +76,21 @@ const FaveAlbum: React.FC = () => {
           'Favorite Album'
         )}
       </div>
-      {isOpen && (
+      <CSSTransition
+        in={isOpen}
+        timeout={300}
+        classNames={{
+          enter: styles['modal-enter'],
+          enterActive: styles['modal-enter-active'],
+          exit: styles['modal-exit'],
+          exitActive: styles['modal-exit-active'],
+        }}
+        unmountOnExit
+      >
         <div className="w-auto lg:absolute mx-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
           <SearchAlbums onAlbumClick={handleAlbumClick} />
         </div>
-      )}
+      </CSSTransition>
     </div>
   );
 };
