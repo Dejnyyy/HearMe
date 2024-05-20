@@ -26,18 +26,23 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
-      const fullUser = await db.user.findUnique({
-        where: { id: user.id }
-      });
+      try {
+        const fullUser = await db.user.findUnique({
+          where: { id: user.id }
+        });
 
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-          isAdmin: fullUser?.isAdmin ?? false,  // Ensure isAdmin is included
-        },
-      };
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: user.id,
+            isAdmin: fullUser?.isAdmin?? false,  // Ensure isAdmin is included
+          },
+        };
+      } catch (error) {
+        console.error("Error in session callback:", error);
+        return session;
+      }
     },
   },
   adapter: PrismaAdapter(db),
