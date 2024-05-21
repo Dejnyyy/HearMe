@@ -67,7 +67,7 @@ const FaveArtist: React.FC = () => {
                 alt={`Image for ${selectedLastArtist}`}
                 className={`artist-image w-16 ml-2 rounded-lg ${styles.artistImage}`}
               />
-              <div className="ml-2">
+              <div className="ml-2 ">
                 <strong>{selectedLastArtist}</strong>
               </div>
             </div>
