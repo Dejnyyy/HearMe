@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
+import SearchBar from './SearchBar';
 
 interface UsersPageProps {
   userList: User[];
@@ -21,9 +22,10 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     isRequestReceived: false,
     isFriend: false 
   })));
+  const [filteredUserList, setFilteredUserList] = useState<ExtendedUser[]>(userList);
 
   const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
-  
+
   useEffect(() => {
     const fetchFriendRequests = async () => {
       if (sessionData?.user?.id) {
@@ -39,15 +41,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             requestPending: sentRequests.some(req => req.receiverId === user.id),
             isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
           }));
-          console.log(initialUserList.map(user => ({
-            ...user,
-            requestPending: sentRequests.some(req => req.receiverId === user.id),
-            isRequestReceived: receivedRequests.some(req => req.senderId === user.id)
-          }))
-          )
-          console.log("requesty co mi dosly:",receivedRequests.map(req => req.senderId));
-          console.log("requesty co jsem poslal:",sentRequests);
           setUserList(updatedUserList);
+          setFilteredUserList(updatedUserList);
         } catch (error) {
           console.error('Failed to fetch friend requests:', error);
         }
@@ -80,6 +75,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
           }));
           
           setUserList(updatedUserList);
+          setFilteredUserList(updatedUserList);
         } catch (error) {
           console.error('Failed to fetch friendships:', error);
         }
@@ -87,27 +83,34 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     };
     fetchFriendRequests();
     fetchMyFriendships();
-    
   }, [initialUserList, sessionData]);
-  
+
+  const handleSearch = (searchTerm: string) => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredUserList(
+      userList.filter(user => user.name.toLowerCase().includes(lowercasedTerm))
+    );
+  };
+
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
-      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
-      {userList.map(user => (
-  <div className='flex items-center m-8' key={user.id}>
-    <li className='flex-1'>
-      {user.name}
-    </li>
-    {isLoggedInUserAdmin && user.isAdmin !== true && (
-      <button
-        className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:text-red-500'
-        onClick={() => onDeleteUser(user.id)}>
-        Delete
-      </button>
-    )}
-  </div>
-      ))}
+      <SearchBar onSearch={handleSearch} /> 
+      <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
+        {filteredUserList.map(user => (
+          <div className='flex items-center m-8' key={user.id}>
+            <li className='flex-1'>
+              {user.name}
+            </li>
+            {isLoggedInUserAdmin && user.isAdmin !== true && (
+              <button
+                className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:text-red-500'
+                onClick={() => onDeleteUser(user.id)}>
+                Delete
+              </button>
+            )}
+          </div>
+        ))}
       </ul>
     </div>
   );

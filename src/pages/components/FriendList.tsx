@@ -246,7 +246,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
 
         <div className='m-4'>
           <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
-          <SearchBar onSearch={handleSearch} /> {/* Add the SearchBar component */}
+          <SearchBar onSearch={handleSearch} />
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {filteredUserList.map(user => (
               <div className='flex items-center m-8' key={user.id}>
