@@ -51,21 +51,21 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     fetchUserData();
   }, [initialUserList, sessionData]);
 
-  
   const fetchUserDetails = async (userId: string) => {
     try {
       const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
       if (!res.ok) {
         console.log('User fetch failed');
-        return { name: 'Unknown', image: '/default-profile.png' }; // Use a default image if fetch fails
+        return { name: 'Unknown', image: '/default-profile.png' }; 
       }
       const userData = await res.json();
       return { name: userData.name, image: userData.image };
     } catch (error) {
       console.error('fetchUserDetails error:', error);
-      return { name: 'Unknown', image: '/default-profile.png' }; // Provide a fallback name and image
+      return { name: 'Unknown', image: '/default-profile.png' };
     }
   };
+
   const acceptFriendRequest = async (senderId: string) => {
     try {
       const response = await fetch('/api/acceptFriendRequest', {
@@ -73,7 +73,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
+        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id })
       });
   
       if (response.ok) {
@@ -88,172 +88,174 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
       console.error('Error accepting friend request:', error);
     }
   };
-  
+
   const rejectFriendRequest = async (senderId: string) => {
     try {
-        const response = await fetch('/api/declineFriendRequest', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id})
-          });
+      const response = await fetch('/api/declineFriendRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ senderId: senderId, receiverId: sessionData?.user.id })
+      });
 
-        if (response.ok) {
-            console.log('Friend request declined successfully');
-            setUserList(prev => prev.map(user =>
-                user.id === senderId ? { ...user, isRequestReceived: false } : user
-            ));
-        } else {
-            console.log('Failed to decline friend request');
-        }
+      if (response.ok) {
+        console.log('Friend request declined successfully');
+        setUserList(prev => prev.map(user =>
+          user.id === senderId ? { ...user, isRequestReceived: false } : user
+        ));
+      } else {
+        console.log('Failed to decline friend request');
+      }
     } catch (error) {
-        console.error('Error declining friend request:', error);
+      console.error('Error declining friend request:', error);
     }
-};
-const onAddFriend = async (userId: string) => {
+  };
+
+  const onAddFriend = async (userId: string) => {
     console.log(`Add friend with ID: ${userId}`); 
     console.log(`Logged in user ID: ${sessionData?.user.id}`);
     const senderId = sessionData?.user.id;
-  try {
-    const response = await fetch('/api/sendFriendRequest', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ senderId, receiverId: userId })
-    });
-    if (response.ok) {
-      console.log('Friend request sent successfully');
-    } else {
-      console.log('Failed to send friend request');
+    try {
+      const response = await fetch('/api/sendFriendRequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ senderId, receiverId: userId })
+      });
+      if (response.ok) {
+        console.log('Friend request sent successfully');
+      } else {
+        console.log('Failed to send friend request');
+      }
+    } catch (error) {
+      console.error('Error sending friend request:', error as Error);
     }
-  } catch (error) {
-    console.error('Error sending friend request:', error as Error);
-  }
   };
-  
+
   return (
     <div>
-        <div className="grid lg:grid-cols-2 grid-cols-1">
+      <div className="grid lg:grid-cols-2 grid-cols-1">
         <div className='m-4'>
-      <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
-      <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl'>
-        {userList.filter(user => user.isFriend).map(user => (
-          <div className='flex items-center m-8' key={user.id}>
-             <li className='flex-1'>
-                <div className='flex flex-row'>
-                <Image
-                src={user.image || '/default-userimage.png'}
-                alt="Profile picture"
-                width={50}
-                height={50}
-                unoptimized={true} // Use this only if necessary
-                className='rounded-full w-12 h-12'
-                />
-            <p className='my-auto ml-4'>{user.name}</p>
-            </div>
-            </li>
-            {sessionData?.user.id !== user.id && (
-              <button disabled className='ml-2 border px-8 bg-green-200 text-green-700 rounded-xl font-mono font-semibold'>
-                Friends
-              </button>
-            )}
-          </div>
-        ))}
-      </ul>
-      </div>
-      <div className='m-4'>
-      <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
-      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
-        {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
-          <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>
-            <div className='flex flex-row m-auto'>
-                <Image
-                src={user.image || '/default-userimage.png'}
-                alt="Profile picture"
-                width={50}
-                height={50}
-                unoptimized={true} // Use this only if necessary
-                className='rounded-full w-12 h-12'
-                />
-            <p className='my-auto ml-4'>{user.name}</p>
-            </div>
-            {user.isRequestReceived && !user.isFriend && (
-          <>
-            <button
-              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
-              onClick={() => acceptFriendRequest(user.id)}>
-              Accept
-            </button>
-            <button
-              className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
-              onClick={() => rejectFriendRequest(user.id)}>
-              Reject
-            </button>
-            </>
-        )}</li>
-          </div>
-        ))}
-      </ul>
-      </div>
-      <div className='m-4'>
-      <h1 className='text-white font-mono font-semibold text-xl'>Sent Requests</h1>
-      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
-        {userList.filter(user => user.requestPending).map(user => (
-          <div className='flex items-center m-8' key={user.id}>
-            <li className='flex-1'>
-                <div className='flex flex-row'>
-                <Image
-                src={user.image || '/default-userimage.png'}
-                alt="Profile picture"
-                width={50}
-                height={50}
-                unoptimized={true} // Use this only if necessary
-                className='rounded-full w-12 h-12'
-                />
-            <p className='my-auto ml-4'>{user.name}</p>
-            </div>
-            </li>
-            <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
-              Pending
-            </button>
-          </div>
-        ))}
-      </ul>
-      </div>
-      <div className='m-4'>
-      <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
-      <ul className='text-white font-mono mb-5 text-lg  bg-gray-500 p-1 rounded-xl shadow-xl'>
-        {userList.map(user => (
-          <div className='flex items-center m-8' key={user.id}>
-           <li className='flex-1'>
-                <div className='flex flex-row'>
-                <Image
-                src={user.image || '/default-userimage.png'}
-                alt="Profile picture"
-                width={50}
-                height={50}
-                unoptimized={true} // Use this only if necessary
-                className='rounded-full w-12 h-12'
-                />
-            <p className='my-auto ml-4'>{user.name}</p>
-                </div>
-           
-            </li>
-            
-        {user.requestPending == false && !user.isRequestReceived&& sessionData?.user.id !== user.id&& !user.isFriend &&(
-          <button
-            className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
-            onClick={() => onAddFriend(user.id)}>
-            Add
-          </button> 
-        )} 
-          </div>
-        ))}
-      </ul>
-      </div>
+          <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
+          <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
+            {userList.filter(user => user.isFriend).map(user => (
+              <div className='flex items-center m-8' key={user.id}>
+                <li className='flex-1'>
+                  <div className='flex flex-row'>
+                    <Image
+                      src={user.image || '/default-userimage.png'}
+                      alt="Profile picture"
+                      width={50}
+                      height={50}
+                      unoptimized={true}
+                      className='rounded-full w-12 h-12'
+                    />
+                    <p className='my-auto ml-4'>{user.name}</p>
+                  </div>
+                </li>
+                {sessionData?.user.id !== user.id && (
+                  <button disabled className='ml-2 border px-8 bg-green-200 text-green-700 rounded-xl font-mono font-semibold'>
+                    Friends
+                  </button>
+                )}
+              </div>
+            ))}
+          </ul>
+        </div>
+
+        <div className='m-4'>
+          <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
+          <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
+            {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
+              <div className='flex items-center m-8' key={user.id}>
+                <li className='flex-1'>
+                  <div className='flex flex-row m-auto'>
+                    <Image
+                      src={user.image || '/default-userimage.png'}
+                      alt="Profile picture"
+                      width={50}
+                      height={50}
+                      unoptimized={true}
+                      className='rounded-full w-12 h-12'
+                    />
+                    <p className='my-auto ml-4'>{user.name}</p>
+                  </div>
+                  {user.isRequestReceived && !user.isFriend && (
+                    <>
+                      <button
+                        className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
+                        onClick={() => acceptFriendRequest(user.id)}>
+                        Accept
+                      </button>
+                      <button
+                        className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
+                        onClick={() => rejectFriendRequest(user.id)}>
+                        Reject
+                      </button>
+                    </>
+                  )}
+                </li>
+              </div>
+            ))}
+          </ul>
+        </div>
+
+        <div className='m-4'>
+          <h1 className='text-white font-mono font-semibold text-xl'>Sent Requests</h1>
+          <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
+            {userList.filter(user => user.requestPending).map(user => (
+              <div className='flex items-center m-8' key={user.id}>
+                <li className='flex-1'>
+                  <div className='flex flex-row'>
+                    <Image
+                      src={user.image || '/default-userimage.png'}
+                      alt="Profile picture"
+                      width={50}
+                      height={50}
+                      unoptimized={true}
+                      className='rounded-full w-12 h-12'
+                    />
+                    <p className='my-auto ml-4'>{user.name}</p>
+                  </div>
+                </li>
+                <button disabled className='ml-2 border px-8 bg-gray-200 text-gray-500 rounded-xl font-mono font-semibold'>
+                  Pending
+                </button>
+              </div>
+            ))}
+          </ul>
+        </div>
+        <div className='m-4'>
+          <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
+          <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
+            {userList.map(user => (
+              <div className='flex items-center m-8' key={user.id}>
+                <li className='flex-1'>
+                  <div className='flex flex-row'>
+                    <Image
+                      src={user.image || '/default-userimage.png'}
+                      alt="Profile picture"
+                      width={50}
+                      height={50}
+                      unoptimized={true}
+                      className='rounded-full w-12 h-12'
+                    />
+                    <p className='my-auto ml-4'>{user.name}</p>
+                  </div>
+                </li>
+                {user.requestPending == false && !user.isRequestReceived && sessionData?.user.id !== user.id && !user.isFriend && (
+                  <button
+                    className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
+                    onClick={() => onAddFriend(user.id)}>
+                    Add
+                  </button>
+                )}
+              </div>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
