@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
 import SearchBar from './SearchBar';
+import Image from 'next/image';
 
 interface UsersPageProps {
   userList: User[];
@@ -55,11 +56,8 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
           if (!response.ok) {
             console.log('Failed to fetch friendships');
           }
-          const friendships = await response.json(); // This should return an array of friendship objects
-    
-          // Update user list with friendship status
+          const friendships = await response.json();
           const friendIds = friendships.reduce((acc, friendship) => {
-            // Add both userId and friendId to the list of friend IDs, excluding the current user's ID
             if (friendship.userId !== sessionData.user.id) {
               acc.push(friendship.userId);
             }
@@ -71,7 +69,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     
           const updatedUserList = initialUserList.map(user => ({
             ...user,
-            isFriend: friendIds.includes(user.id) // Set isFriend true if user.id is in friendIds
+            isFriend: friendIds.includes(user.id)
           }));
           
           setUserList(updatedUserList);
@@ -100,7 +98,17 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
         {filteredUserList.map(user => (
           <div className='flex items-center m-8' key={user.id}>
             <li className='flex-1'>
-              {user.name}
+            <div className='flex flex-row'>
+                    <Image
+                      src={user.image || '/default-userimage.png'}
+                      alt="Profile picture"
+                      width={50}
+                      height={50}
+                      unoptimized={true}
+                      className='rounded-full w-12 h-12'
+                    />
+                    <p className='my-auto ml-4'>{user.name}</p>
+                  </div>
             </li>
             {isLoggedInUserAdmin && user.isAdmin !== true && (
               <button
