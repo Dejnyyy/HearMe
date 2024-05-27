@@ -20,7 +20,7 @@ const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [shownType, setShownType] = useState(true); // true for all votes, false for only mine and friends
+  const [shownType, setShownType] = useState(true);//vidim svet nebo friendy
   const isAdmin = sessionData?.user?.isAdmin;
 
   useEffect(() => {
@@ -92,7 +92,6 @@ const Explore: React.FC = () => {
         console.error('Failed to delete vote');
         return;
       }
-      // Remove the vote from the state
       setVotes(prevVotes => prevVotes.filter(vote => vote.id !== voteId));
     } catch (error) {
       console.error('Error deleting vote:', error);
