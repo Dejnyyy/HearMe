@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
-import Image from "next/image"
+import Image from "next/image";
+import SearchBar from './SearchBar';
 
 interface UsersPageProps {
   userList: User[];
@@ -23,6 +24,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     isFriend: false,
     image: user.image || '/default-userimage.png'
   })));
+  const [filteredUserList, setFilteredUserList] = useState<ExtendedUser[]>(userList);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,6 +45,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           isFriend: friendIds.has(user.id)
         }));
         setUserList(updatedUserList);
+        setFilteredUserList(updatedUserList); 
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -81,6 +84,9 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
         setUserList(prev => prev.map(user => 
           user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
         ));
+        setFilteredUserList(prev => prev.map(user => 
+          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
+        ));
       } else {
         console.log('Failed to accept friend request');
       }
@@ -102,6 +108,9 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
       if (response.ok) {
         console.log('Friend request declined successfully');
         setUserList(prev => prev.map(user =>
+          user.id === senderId ? { ...user, isRequestReceived: false } : user
+        ));
+        setFilteredUserList(prev => prev.map(user =>
           user.id === senderId ? { ...user, isRequestReceived: false } : user
         ));
       } else {
@@ -132,6 +141,13 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     } catch (error) {
       console.error('Error sending friend request:', error as Error);
     }
+  };
+
+  const handleSearch = (searchTerm: string) => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredUserList(
+      userList.filter(user => user.name.toLowerCase().includes(lowercasedTerm))
+    );
   };
 
   return (
@@ -227,10 +243,12 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
             ))}
           </ul>
         </div>
+
         <div className='m-4'>
           <h1 className='text-white font-mono font-semibold text-xl'>Users</h1>
+          <SearchBar onSearch={handleSearch} /> {/* Add the SearchBar component */}
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
-            {userList.map(user => (
+            {filteredUserList.map(user => (
               <div className='flex items-center m-8' key={user.id}>
                 <li className='flex-1'>
                   <div className='flex flex-row'>
