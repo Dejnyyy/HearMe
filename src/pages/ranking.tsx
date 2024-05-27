@@ -120,8 +120,8 @@ const Ranking: React.FC = () => {
           <div className="md:flex justify-center items-center" style={{ maxHeight: '40vh', overflowY:`auto`}}>
             {topVotes.map((vote, index) => (
               <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
-				<div className='md:grid md:grid-cols-3'>
-					<div className='text-2xl font-bold'>{index + 1}.</div>
+				<div className='md:grid md:grid-cols-1 mx-auto'>
+					<div className='text-2xl font-bold mx-auto'>{index + 1}.</div>
 				</div>
                 <div className="bg-gray-700 rounded-xl px-4 py-2 m-2">
                   <div className='flex flex-col'>
@@ -134,17 +134,6 @@ const Ranking: React.FC = () => {
                         className="rounded-full w-12 h-12"
                       />
                       <p className='my-auto ml-4'>{vote.name}</p>
-                      {isAdmin && (
-                        <button
-                          className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(vote.id);
-                          }}
-                        >
-                          x
-                        </button>
-                      )}
                     </div>
                   </div>
                   <div className='flex flex-col items-center'>
