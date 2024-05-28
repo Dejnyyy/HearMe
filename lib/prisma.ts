@@ -1,16 +1,22 @@
-import createExtendedPrismaClient from './prismaMiddleware';
-
+// prisma jedinacek
+import { PrismaClient } from '@prisma/client';
 declare global {
-  var prisma: ReturnType<typeof createExtendedPrismaClient> | undefined;
+    var prisma: PrismaClient | undefined;
 }
-
-const prismaClient = createExtendedPrismaClient();
-
-const prisma = globalThis.prisma || prismaClient;
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.prisma = prisma;
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  prisma = global.prisma;
 }
-
 export default prisma;
-export const db = prisma;
+// import { PrismaClient } from "@prisma/client";
+//lib/prisma.ts
+declare global {
+     var prisma: PrismaClient | undefined;
+ }
+ export const db = globalThis.prisma ?? new PrismaClient();
+
+ if (process.env.NODE_ENV !== 'production') globalThis.prisma = db;
