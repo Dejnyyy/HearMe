@@ -113,8 +113,8 @@ const Ranking: React.FC = () => {
         </section>
         <section className='justify-center items-center'>
           <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
-          <h2 className='text-center text-xl'>Top 3 Most Voted Songs:</h2>
-          <div className="md:flex justify-center items-center" style={{ maxHeight: '40vh', overflowY:`auto`}}>
+          <h2 className='text-center text-xl'>Top 3:</h2>
+          <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY:`auto`}}>
             {topVotes.map((vote, index) => (
               <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
 				<div className='md:grid md:grid-cols-1 mx-auto'>
