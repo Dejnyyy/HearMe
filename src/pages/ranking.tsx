@@ -106,10 +106,7 @@ const Ranking: React.FC = () => {
     <div>
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'radial-gradient(circle, #777, #000)' }}>
-        <section className="flex justify-end mt-12 mr-10 ml-10">
-          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
-            Date {sortingButtonText}
-          </button>
+        <section className="ml-auto mt-12 mr-10 ">
           <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
             Showing: {feedType}
           </button>
@@ -121,9 +118,9 @@ const Ranking: React.FC = () => {
             {topVotes.map((vote, index) => (
               <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
 				<div className='md:grid md:grid-cols-1 mx-auto'>
-					<div className='text-2xl font-bold mx-auto'>{index + 1}.</div>
+					<div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
 				</div>
-                <div className="bg-gray-700 rounded-xl px-4 py-2 m-2">
+                <div className="bg-gradient-to-b from-[#636363] to-[#ffffe6] rounded-xl px-4 py-2 m-2">
                   <div className='flex flex-col'>
                     <div className='flex flex-row'>
                       <Image
