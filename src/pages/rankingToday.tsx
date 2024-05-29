@@ -19,7 +19,7 @@ interface VoteWithCount extends Vote {
   voteCount: number;
 }
 
-const Ranking: React.FC = () => {
+const RankingToday: React.FC = () => {
   const { data: sessionData } = useSession();
   const [votes, setVotes] = useState<VoteWithCount[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -218,4 +218,4 @@ const Ranking: React.FC = () => {
   );
 };
 
-export default Ranking;
+export default RankingToday;
