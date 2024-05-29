@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HamburgerMenu from './components/HamburgerMenu';
+import HamburgerMenu from "./components/HamburgerMenu";
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 
@@ -13,20 +13,22 @@ interface Vote {
   userId: string;
   name?: string;
   image?: string;
-  voteCount: number; // Assuming you have vote count in your vote object
+}
+
+interface VoteWithCount extends Vote {
+  voteCount: number;
 }
 
 const Ranking: React.FC = () => {
   const { data: sessionData } = useSession();
   const [votes, setVotes] = useState<Vote[]>([]);
-  const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // World or friends view
   const isAdmin = sessionData?.user?.isAdmin;
 
   useEffect(() => {
     const fetchVotes = async () => {
-      const apiEndpoint = shownType ? '/api/getVotes' : '/api/findMineAndFriendsVotes';
+      const apiEndpoint = shownType ? '/api/getVotesVoteCount' : '/api/findMineAndFriendsVotes';
       try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
@@ -75,11 +77,6 @@ const Ranking: React.FC = () => {
     }).replace(',', ', ');
   };
 
-  // Sort votes by vote count
-  const sortedVotes = [...votes].sort((a, b) => b.voteCount - a.voteCount);
-  const topVotes = sortedVotes.slice(0, 3);
-  const remainingVotes = sortedVotes.slice(3);
-
   const toggleTypeShown = () => setShownType(!shownType);
   const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
 
@@ -100,6 +97,10 @@ const Ranking: React.FC = () => {
     }
   };
 
+  const sortedVotes = [...votes].sort((a, b) => b.voteCount - a.voteCount);
+  const topVotes = sortedVotes.slice(0, 3);
+  const remainingVotes = sortedVotes.slice(3);
+
   return (
     <div>
       <HamburgerMenu />
@@ -112,12 +113,12 @@ const Ranking: React.FC = () => {
         <section className='justify-center items-center'>
           <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
           <h2 className='text-center text-xl'>Top 3:</h2>
-          <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY:`auto`}}>
+          <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
             {topVotes.map((vote, index) => (
               <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
-				<div className='md:grid md:grid-cols-1 mx-auto'>
-					<div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
-				</div>
+                <div className='md:grid md:grid-cols-1 mx-auto'>
+                  <div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
+                </div>
                 <div className="bg-gradient-to-b from-[#636363] to-[#ffffe6] rounded-xl px-4 py-2 m-2">
                   <div className='flex flex-col'>
                     <div className='flex flex-row'>
@@ -139,13 +140,14 @@ const Ranking: React.FC = () => {
                     <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer">
                       <p className='hover:underline text-gray-400'>{vote.artist}</p>
                     </a>
+                    <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           <h2 className='text-center text-xl mt-8'>All Other Votes:</h2>
-          <div className="overflow-y-auto"style={{ maxHeight: '40vh' }}>
+          <div className="overflow-y-auto" style={{ maxHeight: '40vh' }}>
             <ul>
               {remainingVotes.map((vote, index) => (
                 <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
@@ -174,22 +176,16 @@ const Ranking: React.FC = () => {
 
                     <div className="sm:flex sm:flex-row">
                       <div className='mx-auto sm:mx-0 text-center sm:text-center'>
-                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`}
-                          className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
+                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
                       </div>
                       <div className='ml-4 text-center sm:text-start my-auto'>
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className=''>
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer" className=''>
                           <p className='hover:underline'>{vote.song}</p>
                         </a>
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className=''>
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer" className=''>
                           <p className='hover:underline text-gray-400'>{vote.artist}</p>
                         </a>
+                        <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
                       </div>
                     </div>
                     {expandedIndex === index && (
