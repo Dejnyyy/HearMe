@@ -101,6 +101,19 @@ const Ranking: React.FC = () => {
   const topVotes = sortedVotes.slice(0, 3);
   const remainingVotes = sortedVotes.slice(3);
 
+  const getGradientClass = (index: number) => {
+    switch (index) {
+      case 0:
+        return 'from-[#ffd700] to-[#ffffe6]'; // Gold gradient
+      case 1:
+        return 'from-[#c0c0c0] to-[#ffffe6]'; // Silver gradient
+      case 2:
+        return 'from-[#cd7f32] to-[#ffffe6]'; // Bronze gradient
+      default:
+        return 'from-[#636363] to-[#ffffe6]';//nemelo by se nikdy stat
+    }
+  };
+
   return (
     <div>
       <HamburgerMenu />
@@ -119,7 +132,7 @@ const Ranking: React.FC = () => {
                 <div className='md:grid md:grid-cols-1 mx-auto'>
                   <div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
                 </div>
-                <div className="bg-gradient-to-b from-[#636363] to-[#ffffe6] rounded-xl px-4 py-2 m-2">
+                <div className={`bg-gradient-to-b ${getGradientClass(index)} rounded-xl px-4 py-2 m-2`}>
                   <div className='flex flex-col'>
                     <div className='flex flex-row'>
                       <Image
