@@ -21,7 +21,7 @@ interface VoteWithCount extends Vote {
 
 const Ranking: React.FC = () => {
   const { data: sessionData } = useSession();
-  const [votes, setVotes] = useState<Vote[]>([]);
+  const [votes, setVotes] = useState<VoteWithCount[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // World or friends view
   const isAdmin = sessionData?.user?.isAdmin;
@@ -35,9 +35,9 @@ const Ranking: React.FC = () => {
           console.log('Votes fetch failed');
           return;
         }
-        const votesData: Vote[] = await response.json();
+        const votesData: VoteWithCount[] = await response.json();
         const votesWithUserDetails = await Promise.all(
-          votesData.map(async (vote: Vote) => ({
+          votesData.map(async (vote: VoteWithCount) => ({
             ...vote,
             ...await fetchUserDetails(vote.userId),
           }))
@@ -140,7 +140,7 @@ const Ranking: React.FC = () => {
                     <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer">
                       <p className='hover:underline text-gray-400'>{vote.artist}</p>
                     </a>
-                    <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
+                    <p className="mt-2 text-lg text-black font-bold">Votes: {vote.voteCount}</p>
                   </div>
                 </div>
               </div>

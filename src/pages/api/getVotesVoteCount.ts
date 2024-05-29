@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from 'lib/prisma'; // Adjust the path to your Prisma instance
+import { db } from 'lib/prisma'; 
 
 interface Vote {
   id: number;
