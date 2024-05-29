@@ -80,11 +80,9 @@ const Ranking: React.FC = () => {
   const topVotes = sortedVotes.slice(0, 3);
   const remainingVotes = sortedVotes.slice(3);
 
-  const toggleSortingOrder = () => setSortByDateDesc(!sortByDateDesc);
   const toggleTypeShown = () => setShownType(!shownType);
   const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
 
-  const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
   const feedType = shownType ? "World" : "Friends";
 
   const handleDeleteClick = async (voteId: number) => {
