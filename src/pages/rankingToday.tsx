@@ -117,7 +117,7 @@ const RankingToday: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'radial-gradient(circle, #777, #000)' }}>
+      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center'  }}>
         <section className="ml-auto mt-12 mr-10 ">
           <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
             Showing: {feedType}
