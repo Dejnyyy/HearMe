@@ -1,6 +1,7 @@
 import { db } from 'lib/prisma';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
+import { startOfDay, endOfDay } from 'date-fns';
 
 interface Vote {
   id: number;
@@ -29,6 +30,9 @@ export default async function handler(
   const userId = session.user.id;
 
   try {
+    const todayStart = startOfDay(new Date());
+    const todayEnd = endOfDay(new Date());
+
     // Fetching friendships where the user is either the user or the friend
     const friendships = await db.friendship.findMany({
       where: {
@@ -47,11 +51,15 @@ export default async function handler(
     const allUserIds = new Set(friendships.flatMap(f => [f.userId, f.friendId]));
     allUserIds.delete(userId);
 
-    // Fetch votes from these users
+    // Fetch votes from these users for the current date
     const votes = await db.vote.findMany({
       where: {
         userId: {
           in: Array.from(allUserIds),
+        },
+        createdAt: {
+          gte: todayStart,
+          lte: todayEnd,
         },
       },
     });
