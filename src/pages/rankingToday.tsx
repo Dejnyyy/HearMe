@@ -28,7 +28,7 @@ const RankingToday: React.FC = () => {
 
   useEffect(() => {
     const fetchVotes = async () => {
-      const apiEndpoint = shownType ? '/api/getVotesToday' : '/api/findMineAndFriendsVotes';
+      const apiEndpoint = shownType ? '/api/getVotesCountToday' : '/api/findMineAndFriendsVotes';
       try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
