@@ -29,12 +29,13 @@ const HamburgerMenu: React.FC = () => {
             <li><Link href="/calendar"><p className="font-mono font-semibold text-lg cursor-pointer">Calendar</p></Link></li>
             <li><Link href="/rankingToday"><p className="font-mono font-semibold text-lg cursor-pointer">Ranking</p></Link></li>
             <li><Link href="/explore"><p className="font-mono font-semibold text-lg cursor-pointer">Explore</p></Link></li>
-            <li><Link href="/vote"><p className="font-mono font-semibold text-lg cursor-pointer">Vote</p></Link></li>
+            <li><Link href="/voteToday"><p className="font-mono font-semibold text-lg cursor-pointer">Vote</p></Link></li>
             <li><Link href="/friends"><p className="font-mono font-semibold text-lg cursor-pointer">Friends</p></Link></li>
             {isAdmin && (
               <>
               <li><Link href="/admin"><p className="font-mono font-semibold text-lg border-t-2 cursor-pointer">Admin</p></Link></li>
               <li><Link href="/ranking"><p className="font-mono font-semibold text-lg cursor-pointer">Ranking</p></Link></li>
+              <li><Link href="/vote"><p className="font-mono font-semibold text-lg cursor-pointer">Vote</p></Link></li>
               </>
             )}
           </ul>
