@@ -9,7 +9,7 @@ interface Vote {
   song: string;
   artist: string;
   voteType: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   userId: string;
 }
 
@@ -65,17 +65,18 @@ export default async function handler(
     });
 
     // Calculate vote counts
-    const voteCounts = votes.reduce((acc, vote) => {
+    const voteCounts = votes.reduce<Record<string, VoteWithCount>>((acc, vote) => {
       const key = `${vote.song}-${vote.artist}`;
       if (!acc[key]) {
         acc[key] = {
           ...vote,
           voteCount: 0,
+          createdAt: vote.createdAt.toISOString(),
         };
       }
-      acc[key].voteCount += 1;
+      acc[key]!.voteCount += 1;
       return acc;
-    }, {} as Record<string, VoteWithCount>);
+    }, {});
 
     const votesWithCounts = Object.values(voteCounts);
     res.status(200).json(votesWithCounts);

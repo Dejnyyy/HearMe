@@ -8,7 +8,7 @@ interface Vote {
   song: string;
   artist: string;
   voteType: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   userId: string;
 }
 
@@ -63,9 +63,10 @@ export default async function handler(
         acc[key] = {
           ...vote,
           voteCount: 0,
+          createdAt: vote.createdAt.toISOString(),
         };
       }
-      acc[key].voteCount += 1;
+      acc[key]!.voteCount += 1; 
       return acc;
     }, {} as Record<string, VoteWithCount>);
 
