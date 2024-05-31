@@ -146,14 +146,14 @@ const Vote: React.FC = () => {
                 <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
               </div>
             </div>
-            <div className='mx-auto'>
+            <div className='mx-auto text-center'>
               <button
-                className="rounded-full  px-10 py-3 mx-6 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                className="rounded-full  px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
                 onClick={() => handleVote('+')}
               >Vote
               </button>
               <button
-                className="rounded-full bg-red-500 px-10 py-3 mx-6 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
+                className="rounded-full bg-red-500 px-10 py-3 mx-auto ml-4 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
                 onClick={() => handleVote('-')}
               >Vote
               </button>

@@ -1,10 +1,11 @@
+//voteToday.tsx
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
-import HamburgerMenu from "./components/HamburgerMenu";
+import HamburgerMenu from './components/HamburgerMenu';
 import { toast } from 'react-toastify';
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
 
 interface Artist {
   name: string;
@@ -28,7 +29,7 @@ const Vote: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const router = useRouter();
   const { data: session, status } = useSession();
-  const isUserLoggedIn = status === "authenticated";
+  const isUserLoggedIn = status === 'authenticated';
   const userId = session?.user?.id ?? '';
 
   useEffect(() => {
@@ -55,16 +56,16 @@ const Vote: React.FC = () => {
       toast.error('You need to be logged in to vote.');
       return;
     }
-  
+
     if (!selectedSong) {
       toast.error('No song selected.');
       return;
     }
-  
+
     const imageUrl = selectedSong.album.images[2]?.url ?? 'default-image-url';
-  
+
     try {
-      const response = await fetch('/api/vote', {
+      const response = await fetch('/api/findMylastVoteVote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -75,12 +76,23 @@ const Vote: React.FC = () => {
           imageUrl,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Vote successful:', data);
         toast.success('Thank you for your vote!', {
-          className: "toast-message",
+          className: 'toast-message',
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else if (response.status === 403) {
+        toast.error('You have already voted today.', {
+          className: 'toast-message',
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -92,7 +104,7 @@ const Vote: React.FC = () => {
       } else {
         console.error('Vote failed:', response.statusText);
         toast.error('Vote failed: ' + response.statusText, {
-          className: "toast-message",
+          className: 'toast-message',
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -105,7 +117,7 @@ const Vote: React.FC = () => {
     } catch (error) {
       console.log('Vote failed:', (error as Error));
       toast.error('Vote failed', {
-        className: "toast-message",
+        className: 'toast-message',
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -116,10 +128,10 @@ const Vote: React.FC = () => {
       });
     }
   };
-  
+
   return (
     <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold"style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold" style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <HamburgerMenu />
         <section>
           <div>
@@ -137,7 +149,7 @@ const Vote: React.FC = () => {
                 src={selectedSong.album.images[2]?.url ?? 'default-image-url'}
                 alt={`Album cover for ${selectedSong.name}`}
                 width={70}
-                height={70} 
+                height={70}
                 className='song-image mb-1 rounded-lg'
               />
               <div className='mx-2'>
@@ -148,14 +160,16 @@ const Vote: React.FC = () => {
             </div>
             <div className='mx-auto text-center'>
               <button
-                className="rounded-full  px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                className="rounded-full px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
                 onClick={() => handleVote('+')}
-              >Vote
+              >
+                Vote
               </button>
               <button
-                className="rounded-full bg-red-500 px-10 py-3 mx-auto  ml-4 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
+                className="rounded-full bg-red-500 px-10 py-3 mx-auto ml-4 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
                 onClick={() => handleVote('-')}
-              >Vote
+              >
+                Vote
               </button>
             </div>
           </div>
