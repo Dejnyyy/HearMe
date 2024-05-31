@@ -48,7 +48,7 @@ const Admin: React.FC = () => {
     };
     return (
         <>
-            <main className="flex min-h-screen flex-col items-center justify-center "style={{background: 'radial-gradient(circle, #777, #000)'}}>
+            <main className="flex min-h-screen flex-col items-center justify-center "style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <UsersPage userList={users} onDeleteUser={handleDeleteUser} />
                 <HamburgerMenu />
             </main>
