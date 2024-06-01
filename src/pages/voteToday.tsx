@@ -79,17 +79,44 @@ const VoteToday: React.FC = () => {
 
   const handleVote = async (voteType: string) => {
     if (!isUserLoggedIn) {
-      toast.error('You need to be logged in to vote.');
+        toast.error('You need to log in to vote',{
+            className: "toast-message",
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
       return;
     }
 
     if (!selectedSong) {
-      toast.error('No song selected.');
+        toast.error('No song selected',{
+            className: "toast-message",
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
       return;
     }
 
     if (!canVote()) {
-      toast.error('You can only vote once per day.');
+      toast.error('You can only vote once per day.',{
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
 
