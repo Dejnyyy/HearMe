@@ -44,7 +44,7 @@ export default async function handler(
 
     // Extract all unique user IDs from friendships
     const allUserIds = new Set<string>(friendships.flatMap(f => [f.userId, f.friendId]));
-    allUserIds.add(userId);  // Include the current user's votes as well
+    allUserIds.add(userId);  // Include the current user's votes
 
     // Fetch votes from these users
     const votes = await db.vote.findMany({
@@ -58,7 +58,7 @@ export default async function handler(
       },
     });
 
-    // Aggregate votes by song and artist
+    // Agregate votes by song and artist
     const voteCounts: Record<string, VoteCount> = votes.reduce((acc, vote) => {
       const accumulator: Record<string, VoteCount> = {};
 
@@ -81,7 +81,6 @@ export default async function handler(
       return acc;
     }, {});
 
-    // Convert the object into an array of results
     const results = Object.values(voteCounts);
 
     res.status(200).json(results);
