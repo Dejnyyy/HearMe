@@ -60,20 +60,23 @@ export default async function handler(
 
     // Aggregate votes by song and artist
     const voteCounts: Record<string, VoteCount> = votes.reduce((acc, vote) => {
+      const accumulator: Record<string, VoteCount> = {};
+
       const key = `${vote.song}-${vote.artist}`;
-      if (!acc[key]) {
-        acc[key] = {
+      if (!accumulator[key]) {
+        accumulator[key] = {
           song: vote.song,
           artist: vote.artist,
           voteCount: 0,
           users: [],
         };
       }
-      acc[key].voteCount++;
-      acc[key].users.push({
+      accumulator[key].voteCount++;
+      
+      accumulator[key].users.push({
         id: vote.user.id,
-        name: vote.user.name,
-        image: vote.user.image,
+        name: vote.user.name ?? '',
+        image: vote.user.image ?? '',
       });
       return acc;
     }, {});
