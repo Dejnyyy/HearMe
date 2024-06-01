@@ -1,11 +1,10 @@
-//voteToday.tsx
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import SearchForm from './components/SearchForm';
 import { useState, useEffect } from 'react';
-import HamburgerMenu from './components/HamburgerMenu';
+import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from 'react-toastify';
-import { useSession } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 
 interface Artist {
   name: string;
@@ -25,11 +24,12 @@ interface Song {
   album: Album;
 }
 
-const Vote: React.FC = () => {
+const VoteToday: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [lastVoteDate, setLastVoteDate] = useState<Date | null>(null);
   const router = useRouter();
   const { data: session, status } = useSession();
-  const isUserLoggedIn = status === 'authenticated';
+  const isUserLoggedIn = status === "authenticated";
   const userId = session?.user?.id ?? '';
 
   useEffect(() => {
@@ -39,6 +39,32 @@ const Vote: React.FC = () => {
       localStorage.setItem('selectedSong', querySong);
     }
   }, [router.query]);
+
+  useEffect(() => {
+    if (isUserLoggedIn) {
+      fetchLastVoteDate();
+    }
+  }, [isUserLoggedIn]);
+
+  const fetchLastVoteDate = async () => {
+    try {
+      const response = await fetch(`/api/voteToday?userId=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.lastVoteDate) {
+          setLastVoteDate(new Date(data.lastVoteDate));
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch last vote date:', error);
+    }
+  };
+
+  const canVote = (): boolean => {
+    if (!lastVoteDate) return true;
+    const now = new Date();
+    return now.getDate() !== lastVoteDate.getDate() || now.getMonth() !== lastVoteDate.getMonth() || now.getFullYear() !== lastVoteDate.getFullYear();
+  };
 
   const getArtistsNames = (track: Song): string => {
     return track.artists && track.artists.length > 0
@@ -62,10 +88,15 @@ const Vote: React.FC = () => {
       return;
     }
 
+    if (!canVote()) {
+      toast.error('You can only vote once per day.');
+      return;
+    }
+
     const imageUrl = selectedSong.album.images[2]?.url ?? 'default-image-url';
 
     try {
-      const response = await fetch('/api/findMylastVoteVote', {
+      const response = await fetch('/api/vote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -81,7 +112,7 @@ const Vote: React.FC = () => {
         const data = await response.json();
         console.log('Vote successful:', data);
         toast.success('Thank you for your vote!', {
-          className: 'toast-message',
+          className: "toast-message",
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -90,21 +121,11 @@ const Vote: React.FC = () => {
           draggable: true,
           progress: undefined,
         });
-      } else if (response.status === 403) {
-        toast.error('You have already voted today.', {
-          className: 'toast-message',
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        setLastVoteDate(new Date());
       } else {
         console.error('Vote failed:', response.statusText);
         toast.error('Vote failed: ' + response.statusText, {
-          className: 'toast-message',
+          className: "toast-message",
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
@@ -117,7 +138,7 @@ const Vote: React.FC = () => {
     } catch (error) {
       console.log('Vote failed:', (error as Error));
       toast.error('Vote failed', {
-        className: 'toast-message',
+        className: "toast-message",
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -160,16 +181,14 @@ const Vote: React.FC = () => {
             </div>
             <div className='mx-auto text-center'>
               <button
-                className="rounded-full px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                className="rounded-full  px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
                 onClick={() => handleVote('+')}
-              >
-                Vote
+              >Vote
               </button>
               <button
                 className="rounded-full bg-red-500 px-10 py-3 mx-auto ml-4 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
                 onClick={() => handleVote('-')}
-              >
-                Vote
+              >Vote
               </button>
             </div>
           </div>
@@ -179,4 +198,4 @@ const Vote: React.FC = () => {
   );
 };
 
-export default Vote;
+export default VoteToday;
