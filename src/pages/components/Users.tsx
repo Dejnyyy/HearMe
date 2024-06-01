@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/router';
 import SearchBar from './SearchBar';
 import Image from 'next/image';
 
@@ -24,6 +25,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     isFriend: false 
   })));
   const [filteredUserList, setFilteredUserList] = useState<ExtendedUser[]>(userList);
+  const router = useRouter();
 
   const isLoggedInUserAdmin = userList.find(user => user.id === sessionData?.user.id)?.isAdmin;
 
@@ -90,13 +92,17 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
     );
   };
 
+  const handleUserClick = (userId: string) => {
+    router.push(`/profile/${userId}`);
+  };
+
   return (
     <div>
       <h1 className='text-white font-mono font-semibold text-xl'>User List</h1>
       <SearchBar onSearch={handleSearch} /> 
       <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
         {filteredUserList.map(user => (
-          <div className='flex items-center m-8' key={user.id}>
+          <div className='flex items-center m-8 cursor-pointer' key={user.id} onClick={() => handleUserClick(user.id)}>
             <li className='flex-1'>
             <div className='flex flex-row'>
                     <Image
@@ -113,7 +119,10 @@ const UsersPage: React.FC<UsersPageProps> = ({ userList: initialUserList, onDele
             {isLoggedInUserAdmin && user.isAdmin !== true && (
               <button
                 className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:bg-gray-300 hover:text-red-500'
-                onClick={() => onDeleteUser(user.id)}>
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteUser(user.id);
+                }}>
                 Delete
               </button>
             )}
