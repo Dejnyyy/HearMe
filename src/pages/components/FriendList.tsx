@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@prisma/client';
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/router';
 import Image from "next/image";
 import SearchBar from './SearchBar';
 
@@ -25,6 +26,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     image: user.image || '/default-userimage.png'
   })));
   const [filteredUserList, setFilteredUserList] = useState<ExtendedUser[]>(userList);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -150,6 +152,10 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     );
   };
 
+  const handleUserClick = (userId: string) => {
+    router.push(`/profile/${userId}`);
+  };
+
   return (
     <div>
       <div className="grid lg:grid-cols-2 grid-cols-1">
@@ -157,7 +163,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {userList.filter(user => user.isFriend).map(user => (
-              <div className='flex items-center m-8' key={user.id}>
+              <div className='flex items-center m-8 cursor-pointer' key={user.id} onClick={() => handleUserClick(user.id)}>
                 <li className='flex-1'>
                   <div className='flex flex-row'>
                     <Image
@@ -185,7 +191,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           <h1 className='text-white font-mono font-semibold text-xl'>Pending Friend Requests</h1>
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {userList.filter(user => !user.isFriend && user.isRequestReceived).map(user => (
-              <div className='flex items-center m-8' key={user.id}>
+              <div className='flex items-center m-8 cursor-pointer' key={user.id} onClick={() => handleUserClick(user.id)}>
                 <li className='flex-1'>
                   <div className='flex flex-row m-auto'>
                     <Image
@@ -202,12 +208,18 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
                     <>
                       <button
                         className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
-                        onClick={() => acceptFriendRequest(user.id)}>
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          acceptFriendRequest(user.id);
+                        }}>
                         Accept
                       </button>
                       <button
                         className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-red-500'
-                        onClick={() => rejectFriendRequest(user.id)}>
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          rejectFriendRequest(user.id);
+                        }}>
                         Reject
                       </button>
                     </>
@@ -222,7 +234,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           <h1 className='text-white font-mono font-semibold text-xl'>Sent Requests</h1>
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {userList.filter(user => user.requestPending).map(user => (
-              <div className='flex items-center m-8' key={user.id}>
+              <div className='flex items-center m-8 cursor-pointer' key={user.id} onClick={() => handleUserClick(user.id)}>
                 <li className='flex-1'>
                   <div className='flex flex-row'>
                     <Image
@@ -249,7 +261,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
           <SearchBar onSearch={handleSearch} />
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {filteredUserList.map(user => (
-              <div className='flex items-center m-8' key={user.id}>
+              <div className='flex items-center m-8 cursor-pointer' key={user.id} onClick={() => handleUserClick(user.id)}>
                 <li className='flex-1'>
                   <div className='flex flex-row'>
                     <Image
@@ -266,7 +278,10 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
                 {user.requestPending == false && !user.isRequestReceived && sessionData?.user.id !== user.id && !user.isFriend && (
                   <button
                     className='ml-2 border px-8 bg-white text-black rounded-xl hover:text-yellow-500 font-mono font-semibold'
-                    onClick={() => onAddFriend(user.id)}>
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddFriend(user.id);
+                    }}>
                     Add
                   </button>
                 )}

@@ -11,15 +11,14 @@ type LastVoteDetails = {
   date: Date | string;
   song: string;
   artist: string;
-  imageUrl: string | null;
-} | null;
+  imageUrl: string ;
+};
 
 const UserProfile: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: sessionData } = useSession();
   const [userData, setUserData] = useState<any>(null);
-  const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
+  const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>();
   const [voteCount, setVoteCount] = useState<number>(0);
 
   useEffect(() => {
@@ -71,14 +70,46 @@ const UserProfile: React.FC = () => {
         </section>
         <div className="grid lg:gap-x-28 xl:gap-x-48 my-5 mx-5 grid-cols-1 lg:grid-cols-3">
           <div>
-            <FaveArtist favoriteArtist={userData.favoriteArtist} />
+        {userData.favoriteArtist ? (
+          <div>
+            <h2 className='text-center'>Favourite Artist:</h2>
+            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
+              <img
+                src={userData.favArtImg || 'default-image-url'}
+                alt={`Image for ${userData.favoriteArtist}`}
+                className={`artist-image w-16 ml-2 rounded-lg `}
+              />
+              <div className="ml-2 ">
+                <strong>{userData.favoriteArtist}</strong>
+              </div>
+            </div>
           </div>
+        ) : (
+          'Favorite Artist'
+        )}
+      </div>
           <div className="rounded-md py-1 text-center mt-2">
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
           </div>
           <div className="rounded-md py-1 text-center cursor-pointer my-auto">
             <div>
-              <FaveAlbum favoriteAlbum={userData.favoriteAlbum} />
+            {userData.favoriteAlbum ? (
+          <div>
+            <h2 className='text-center'>Favourite Album:</h2>
+            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
+              <img
+                src={userData.favAlbImg || 'default-image-url'}
+                alt={`Image for ${userData.favoriteAlbum}`}
+                className={`album-image w-16 ml-2 rounded-lg `}
+              />
+              <div className="ml-2">
+                <strong>{userData.favoriteAlbum}</strong>
+              </div>
+            </div>
+          </div>
+        ) : (
+          'Favorite Album'
+        )}
             </div>
           </div>
         </div>
