@@ -66,6 +66,15 @@ const UserProfile: React.FC = () => {
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{userData.name}</h1>
+            <div>
+        <Image
+          className="rounded-full w-24 h-24 border border-white"
+          src={userData.image ?? '/default-userimage.png'}
+          alt={"pfp of user" + userData.name}
+          width={250}
+          height={250} 
+        />
+      </div>
           </div>
         </section>
         <div className="grid lg:gap-x-28 xl:gap-x-48 my-5 mx-5 grid-cols-1 lg:grid-cols-3">
