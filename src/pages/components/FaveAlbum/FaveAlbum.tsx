@@ -11,23 +11,23 @@ const FaveAlbum: React.FC = () => {
   const [lastSelectedAlbumImg, setLastSelectedAlbumImg] = useState<any | null>(null);
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
 
-  useEffect(() => {
-    const fetchFavoriteAlbum = async () => {
-      try {
-        const response = await fetch('/api/getFavouriteAlbum');
-        if (!response.ok) {
-          console.log('Network response was not ok');
-        }
-        const albumData = await response.json();
-        console.log(albumData.favoriteAlbum);
-        console.log(albumData.favAlbImg);
-        setLastSelectedAlbumImg(albumData.favAlbImg);
-        setLastSelectedAlbum(albumData.favoriteAlbum);
-      } catch (error) {
-        console.error('Error fetching favorite album from database:', error);
+  const fetchFavoriteAlbum = async () => {
+    try {
+      const response = await fetch('/api/getFavouriteAlbum');
+      if (!response.ok) {
+        console.log('Network response was not ok');
       }
-    };
+      const albumData = await response.json();
+      console.log(albumData.favoriteAlbum);
+      console.log(albumData.favAlbImg);
+      setLastSelectedAlbumImg(albumData.favAlbImg);
+      setLastSelectedAlbum(albumData.favoriteAlbum);
+    } catch (error) {
+      console.error('Error fetching favorite album from database:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchFavoriteAlbum();
   }, []);
 
@@ -35,7 +35,7 @@ const FaveAlbum: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleAlbumClick = (album: any) => {
+  const handleAlbumClick = async (album: any) => {
     if (selectedAlbum && selectedAlbum.id === album.id) {
       return;
     }
@@ -53,6 +53,9 @@ const FaveAlbum: React.FC = () => {
       draggable: true,
       progress: undefined,
     });
+
+    await fetchFavoriteAlbum();
+    setIsOpen(false);
   };
 
   return (

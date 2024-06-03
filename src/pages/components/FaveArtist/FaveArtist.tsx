@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import JSON from 'json5';
 import styles from './FaveArtist.module.css';
 import { CSSTransition } from 'react-transition-group';
+import Image from 'next/image';
 
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,23 +12,23 @@ const FaveArtist: React.FC = () => {
   const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(null);
   const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<any | null>(null);
 
-  useEffect(() => {
-    const fetchFavoriteArtist = async () => {
-      try {
-        const response = await fetch('/api/getFavouriteArtist');
-        if (!response.ok) {
-          console.log('Network response was not ok');
-        }
-        const artistData = await response.json();
-        console.log(artistData.favoriteArtist);
-        console.log(artistData.favArtImg);
-        setLastSelectedArtistImg(artistData.favArtImg);
-        setLastSelectedArtist(artistData.favoriteArtist);
-      } catch (error) {
-        console.error('Error fetching favorite artist from database:', error);
+  const fetchFavoriteArtist = async () => {
+    try {
+      const response = await fetch('/api/getFavouriteArtist');
+      if (!response.ok) {
+        console.log('Network response was not ok');
       }
-    };
+      const artistData = await response.json();
+      console.log(artistData.favoriteArtist);
+      console.log(artistData.favArtImg);
+      setLastSelectedArtistImg(artistData.favArtImg);
+      setLastSelectedArtist(artistData.favoriteArtist);
+    } catch (error) {
+      console.error('Error fetching favorite artist from database:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchFavoriteArtist();
   }, []);
 
@@ -35,7 +36,7 @@ const FaveArtist: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleArtistClick = (artist: any) => {
+  const handleArtistClick = async (artist: any) => {
     if (selectedArtist && selectedArtist.id === artist.id) {
       return;
     }
@@ -53,6 +54,9 @@ const FaveArtist: React.FC = () => {
       draggable: true,
       progress: undefined,
     });
+
+    await fetchFavoriteArtist();
+    setIsOpen(false);
   };
 
   return (
@@ -62,11 +66,13 @@ const FaveArtist: React.FC = () => {
           <div>
             <h2>Favourite Artist:</h2>
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
-              <img
+              <Image
                 src={selectedLastArtistImg || 'default-image-url'}
                 alt={`Image for ${selectedLastArtist}`}
                 className={`artist-image w-16 ml-2 rounded-lg ${styles.artistImage}`}
-              />
+             width={50}
+             height={50}
+             />
               <div className="ml-2 ">
                 <strong>{selectedLastArtist}</strong>
               </div>
