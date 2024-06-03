@@ -89,6 +89,7 @@ const Vote: React.FC = () => {
           draggable: true,
           progress: undefined,
         });
+        router.push('/profile');
       } else {
         console.error('Vote failed:', response.statusText);
         toast.error('Vote failed: ' + response.statusText, {
@@ -119,7 +120,7 @@ const Vote: React.FC = () => {
   
   return (
     <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold"style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold" style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <HamburgerMenu />
         <section>
           <div>

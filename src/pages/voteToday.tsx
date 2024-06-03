@@ -149,6 +149,7 @@ const VoteToday: React.FC = () => {
           progress: undefined,
         });
         setLastVoteDate(new Date());
+        router.push('/profile');
       } else {
         console.error('Vote failed:', response.statusText);
         toast.error('Vote failed: ' + response.statusText, {
