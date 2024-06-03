@@ -32,7 +32,7 @@ const UserProfile: React.FC = () => {
 
     const fetchUserVotes = async () => {
       try {
-        const response = await fetch(`/api/getUserVotes?userId=${id}`);
+        const response = await fetch(`/api/getFirstVote?userId=${id}`);
         const votes = await response.json();
         setVoteCount(votes.length);
         if (votes.length > 0) {
@@ -50,15 +50,17 @@ const UserProfile: React.FC = () => {
     };
 
     const fetchFirstVote = async () => {
-        try {
-          const response = await fetch('/api/getMyFirstVote?first=true');
-          if (!response.ok) throw new Error('Failed to fetch the first vote');
-          const vote = await response.json();
-          setFirstVote(`${new Date(vote.createdAt).toLocaleDateString()}`);
-        } catch (error) {
-          console.error('Error fetching the first vote:', error);
+      try {
+        const response = await fetch(`/api/getFirstVote?userId=${id}`);
+        if (!response.ok) throw new Error('Failed to fetch the first vote');
+        const votes = await response.json();
+        if (votes.length > 0) {
+          setFirstVote(`${new Date(votes[0].createdAt).toLocaleDateString()}`);
         }
-      };
+      } catch (error) {
+        console.error('Error fetching the first vote:', error);
+      }
+    };
 
     if (id) {
       fetchUserData();
