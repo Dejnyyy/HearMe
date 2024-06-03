@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import HamburgerMenu from "../components/HamburgerMenu";
-import FaveArtist from "../components/FaveArtist";
-import FaveAlbum from "../components/FaveAlbum";
 import Image from 'next/image';
+import Loading from "../components/Loading";
 
 type LastVoteDetails = {
   date: Date | string;
@@ -57,7 +56,7 @@ const UserProfile: React.FC = () => {
     }
   }, [id]);
 
-  if (!userData) return <div>Loading...</div>;
+  if (!userData) return <Loading />;
 
   return (
     <div>
