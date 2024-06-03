@@ -125,8 +125,8 @@ const Profile: React.FC = () => {
         {lastVoteDetails && (
             <div className="bg-gray-700 rounded-2xl p-3 flex items-center mb-20">
             <img
-              src={lastVoteDetails.imageUrl ?? 'default-image-url'}
-              alt={' No voted songs yet'}
+              src={lastVoteDetails.imageUrl ?? ''}
+              alt={'No votes yet'}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
               />
             <div className='mx-2'>
@@ -154,7 +154,7 @@ function AuthShowcase() {
       <div>
         <Image
           className="rounded-full w-24 h-24 border border-white"
-          src={sessionData.user?.image ?? ""}
+          src={sessionData.user?.image ?? "/default-userimage.png"}
           alt={"pfp of user" + sessionData.user?.name}
           width={250}
           height={250} 
