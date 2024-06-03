@@ -33,7 +33,7 @@ const HamburgerMenu: React.FC = () => {
             <li><Link href="/friends"><p className="font-mono font-semibold text-lg cursor-pointer">Friends</p></Link></li>
             {isAdmin && (
               <>
-              <li><Link href="/admin"><p className="font-mono font-semibold text-lg border-t-2 cursor-pointer">Admin</p></Link></li>
+              <li><Link href="/admin"><p className="font-mono font-semibold text-lg border-t-2 cursor-pointer">Users</p></Link></li>
               <li><Link href="/ranking"><p className="font-mono font-semibold text-lg cursor-pointer">Ranking</p></Link></li>
               <li><Link href="/vote"><p className="font-mono font-semibold text-lg cursor-pointer">Vote</p></Link></li>
               </>
