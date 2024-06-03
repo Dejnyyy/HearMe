@@ -1,5 +1,4 @@
 // pages/api/vote.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../server/db';
 
@@ -41,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'GET') {
     const { userId } = req.query;
-
     if (typeof userId !== 'string') {
       res.status(400).json({ error: 'Invalid user ID' });
       return;

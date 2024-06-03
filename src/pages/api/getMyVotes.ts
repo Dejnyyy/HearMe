@@ -18,7 +18,7 @@ export default async function handler(
   try {
     const votes = await db.vote.findMany({
       where: {
-        userId: userId, // Assuming each vote has a userId field
+        userId: userId,
       },
     });
 

@@ -22,7 +22,7 @@ export default async function handler(
           userId: userId,
         },
         orderBy: {
-          createdAt: 'asc', // Assuming you have a 'createdAt' field to sort by
+          createdAt: 'asc',
         },
       });
 

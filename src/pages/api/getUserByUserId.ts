@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {db} from 'lib/prisma';
 
 const findUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { userId } = req.query; // Get userId from the query parameter
+  const { userId } = req.query; 
 
   if (!userId) {
     res.status(400).json({ error: 'No userId provided' });
@@ -14,13 +14,13 @@ const findUser = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const user = await db.user.findUnique({
       where: {
-        id: String(userId),// Ensure the id is a string, as expected by your schema
+        id: String(userId),
        }, 
        select: {
         id: true,
         name: true,
         email: true,
-        image: true, // Selecting the image field
+        image: true, 
         favoriteAlbum: true,
         favAlbImg: true,
         favoriteArtist: true,

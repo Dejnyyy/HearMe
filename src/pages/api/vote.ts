@@ -1,5 +1,4 @@
 // pages/api/vote.ts
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../server/db';
 
