@@ -61,13 +61,13 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
       const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
       if (!res.ok) {
         console.log('User fetch failed');
-        return { name: 'Unknown', image: '/default-profile.png' }; 
+        return { name: 'Unknown', image: '/default-userimage.png' }; 
       }
       const userData = await res.json();
       return { name: userData.name, image: userData.image };
     } catch (error) {
       console.error('fetchUserDetails error:', error);
-      return { name: 'Unknown', image: '/default-profile.png' };
+      return { name: 'Unknown', image: '/default-userimage.png' };
     }
   };
 
