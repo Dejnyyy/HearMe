@@ -7,10 +7,10 @@ import Image from 'next/image';
 import Loading from "../components/Loading";
 
 type LastVoteDetails = {
-  date: Date | string;
-  song: string;
-  artist: string;
-  imageUrl: string ;
+    date: Date | string;
+    song: string;
+    artist: string;
+    imageUrl: string ;
 };
 
 const UserProfile: React.FC = () => {

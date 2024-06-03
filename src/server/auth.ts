@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, user }) => {
       try {
         const fullUser = await db.user.findUnique({
-          where: { id: user.id }
+          where: { id: user.id as string }
         });
 
         return {
@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
           user: {
             ...session.user,
             id: user.id,
-            isAdmin: fullUser?.isAdmin?? false,  // Ensure isAdmin is included
+            isAdmin: fullUser?.isAdmin?? false,
           },
         };
       } catch (error) {
@@ -50,9 +50,21 @@ export const authOptions: NextAuthOptions = {
     SpotifyProvider({
       clientId: env.SPOTIFY_CLIENT_ID,
       clientSecret: env.SPOTIFY_CLIENT_SECRET,
-      authorization: "https://accounts.spotify.com/authorize?scope=user-read-currently-playing,user-read-recently-played,user-top-read,user-read-email,user-read-private,user-library-read,user-library-modify,user-read-playback-state,user-modify-playback-state",
+      authorization: "https://accounts.spotify.com/authorize?scope=user-read-email,user-read-private",
     })
   ],
+  events: {
+    async signIn(message) {
+      console.log('Sign in message:', message);
+    },
+    async signOut(message) {
+      console.log('Sign out message:', message);
+    },
+    async createUser(message) {
+      console.log('Create user message:', message);
+    },
+  },
+  debug: true,
 };
 
 export const getServerAuthSession = (ctx: {
