@@ -3,6 +3,7 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from 'next/router';
 
 interface Vote {
   id: number;
@@ -26,6 +27,7 @@ const RankingToday: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // World or friends view
   const isAdmin = sessionData?.user?.isAdmin;
+  const router = useRouter();
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -98,6 +100,10 @@ const RankingToday: React.FC = () => {
     }
   };
 
+  const handleUserClick = (userId: string) => {
+    router.push(`/profile/${userId}`);
+  };
+
   const sortedVotes = [...votes].sort((a, b) => b.voteCount - a.voteCount);
   const topVotes = sortedVotes.slice(0, 3);
   const remainingVotes = sortedVotes.slice(3);
@@ -111,7 +117,7 @@ const RankingToday: React.FC = () => {
       case 2:
         return 'from-[#cd7f32] to-[#ffffe6]'; // Bronze gradient
       default:
-        return 'from-[#636363] to-[#ffffe6]';//nemelo by se nikdy stat
+        return 'from-[#636363] to-[#ffffe6]';// Nemelo by se nikdy stat
     }
   };
 
@@ -126,12 +132,11 @@ const RankingToday: React.FC = () => {
         </section>
         <section className='justify-center items-center'>
           <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
-          {votes.length === 0 ? (<>
+          {votes.length === 0 ? (
             <div className="flex flex-col items-center mt-10">
               <p className="text-center">No Votes Today Yet</p>
               <Link href="/vote" className='underline text-2xl mt-20'>Vote</Link>
             </div>
-        </>
           ) : (
             <>
               <h2 className='text-center text-xl'>Top 3:</h2>
@@ -149,9 +154,10 @@ const RankingToday: React.FC = () => {
                             alt='Profile Picture'
                             width={50}
                             height={50}
-                            className="rounded-full w-12 h-12"
+                            className="rounded-full w-12 h-12 cursor-pointer"
+                            onClick={() => handleUserClick(vote.userId)}
                           />
-                          <p className='my-auto ml-4'>{vote.name}</p>
+                          <p className='my-auto ml-4 cursor-pointer' onClick={() => handleUserClick(vote.userId)}>{vote.name}</p>
                         </div>
                       </div>
                       <div className='flex flex-col items-center'>
@@ -169,7 +175,7 @@ const RankingToday: React.FC = () => {
                 ))}
               </div>
               <h2 className='text-center text-xl mt-8'>All Other Votes:</h2>
-              <div className="" style={{overflowY:'auto', maxHeight: '40vh' }}>
+              <div className="" style={{ overflowY: 'auto', maxHeight: '40vh' }}>
                 <ul>
                   {remainingVotes.map((vote, index) => (
                     <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
@@ -181,13 +187,14 @@ const RankingToday: React.FC = () => {
                             width={50}
                             height={50}
                             className="rounded-full w-12 h-12"
+                            onClick={() => handleUserClick(vote.userId)}
                           />
                           <p className='my-auto ml-4'>{vote.name}</p>
                           {isAdmin && (
                             <button
                               className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
                               onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 handleDeleteClick(vote.id);
                               }}
                             >
