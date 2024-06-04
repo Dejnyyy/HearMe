@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
+import { useRouter } from 'next/router';
 
 interface Vote {
   id: number;
@@ -20,8 +21,9 @@ const Explore: React.FC = () => {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [shownType, setShownType] = useState(true);//vidim svet nebo friendy
+  const [shownType, setShownType] = useState(true);
   const isAdmin = sessionData?.user?.isAdmin;
+  const router = useRouter();
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -98,6 +100,10 @@ const Explore: React.FC = () => {
     }
   };
 
+  const handleUserClick = (userId: string) => {
+    router.push(`/profile/${userId}`);
+  };
+
   return (
     <div>
       <HamburgerMenu />
@@ -125,11 +131,12 @@ const Explore: React.FC = () => {
                         width={50}
                         height={50}
                         className="rounded-full w-12 h-12"
+                        onClick={() => handleUserClick(vote.userId)}
                       />
-                      <p className='my-auto ml-4'>{vote.name}</p>
+                      <p className='my-auto ml-4' onClick={() => handleUserClick(vote.userId)}>{vote.name}</p>
                       {isAdmin && (
                         <button 
-                          className=" hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
+                          className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent the outer click handler from firing
                             handleDeleteClick(vote.id);
@@ -150,7 +157,7 @@ const Explore: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className=''>
-                          <p className=' hover:underline'>{vote.song}</p>
+                          <p className='hover:underline'>{vote.song}</p>
                         </a>
                         <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`}
                           target="_blank"
