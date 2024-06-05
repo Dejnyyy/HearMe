@@ -60,12 +60,12 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String? 
-    favoriteAlbum String?   // field for favorite album
-    favAlbImg     String?   // field for favorite album image
-    favoriteArtist String?  // field for favorite artist
-    favArtImg     String?   // field for favorite artist image
+    favoriteAlbum String?   
+    favAlbImg     String?   
+    favoriteArtist String?  
+    favArtImg     String?   
     isAdmin       Boolean   @default(false)
-     friendRequestsSent     FriendRequest[] @relation("friendRequestsSent")
+    friendRequestsSent     FriendRequest[] @relation("friendRequestsSent")
     friendRequestsReceived FriendRequest[] @relation("friendRequestsReceived")
     accounts      Account[]
     sessions      Session[]
