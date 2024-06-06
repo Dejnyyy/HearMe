@@ -15,6 +15,7 @@ Do tohoto souboru napíšete `NEXT_PUBLIC_SPOTIFY_CLIENT_ID=''` a do uvozovek vl
 Dále napíšete `NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=''` a do uvozovek vložíte své spotify client secret.
 Pomocí aplikace Xampp si vytvoříme databázi v mysql.
 Vytvoříme si zde 2 databáze například Hearme a HearmeShadow.
+
 V ".env" musíte mít:
 ```
 DATABASE_URL = ''
