@@ -83,8 +83,8 @@ const UserProfile: React.FC = () => {
                 className="rounded-full w-24 h-24 border border-white"
                 src={userData.image ?? '/default-userimage.png'}
                 alt={"pfp of user" + userData.name}
-                width={250}
-                height={250} 
+                width={1000}
+                height={1000} 
               />
             </div>
           </div>

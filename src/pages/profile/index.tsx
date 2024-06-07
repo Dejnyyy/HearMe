@@ -156,8 +156,8 @@ function AuthShowcase() {
           className="rounded-full w-24 h-24 border border-white"
           src={sessionData.user?.image ?? "/default-userimage.png"}
           alt={"pfp of user" + sessionData.user?.name}
-          width={250}
-          height={250} 
+          width={1000}
+          height={1000} 
         />
       </div>
       }
