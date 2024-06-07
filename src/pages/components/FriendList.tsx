@@ -237,7 +237,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
     <div>
       <ToastContainer />
       <div className="grid lg:grid-cols-2 grid-cols-1">
-        <div className='m-4'>
+        <div className='m-4 mt-20 md:mt-4'>
           <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
           <ul className='text-white font-mono mb-5 text-lg bg-gray-500 p-1 rounded-xl shadow-xl max-h-80 overflow-y-auto'>
             {userList.filter(user => user.isFriend).map(user => (
