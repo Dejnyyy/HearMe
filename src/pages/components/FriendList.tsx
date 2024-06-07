@@ -4,6 +4,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/router';
 import Image from "next/image";
 import SearchBar from './SearchBar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface UsersPageProps {
   userList: User[];
@@ -28,31 +30,31 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
   const [filteredUserList, setFilteredUserList] = useState<ExtendedUser[]>(userList);
   const router = useRouter();
 
+  const fetchUserData = async () => {
+    if (!sessionData?.user?.id) return;
+    try {
+      const responses = await Promise.all([
+        fetch(`/api/viewPendingRequests?userId=${sessionData.user.id}`),
+        fetch(`/api/viewFriendRequests?userId=${sessionData.user.id}`),
+        fetch(`/api/findMyFriendships?userId=${sessionData.user.id}`)
+      ]);
+      const [sentRequests, receivedRequests, friendships] = await Promise.all(responses.map(res => res.json()));
+
+      const friendIds = new Set(friendships.map(f => f.userId === sessionData.user.id ? f.friendId : f.userId));
+      const updatedUserList = initialUserList.map(user => ({
+        ...user,
+        requestPending: sentRequests.some(req => req.receiverId === user.id),
+        isRequestReceived: receivedRequests.some(req => req.senderId === user.id),
+        isFriend: friendIds.has(user.id)
+      }));
+      setUserList(updatedUserList);
+      setFilteredUserList(updatedUserList); 
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!sessionData?.user?.id) return;
-      try {
-        const responses = await Promise.all([
-          fetch(`/api/viewPendingRequests?userId=${sessionData.user.id}`),
-          fetch(`/api/viewFriendRequests?userId=${sessionData.user.id}`),
-          fetch(`/api/findMyFriendships?userId=${sessionData.user.id}`)
-        ]);
-        const [sentRequests, receivedRequests, friendships] = await Promise.all(responses.map(res => res.json()));
-
-        const friendIds = new Set(friendships.map(f => f.userId === sessionData.user.id ? f.friendId : f.userId));
-        const updatedUserList = initialUserList.map(user => ({
-          ...user,
-          requestPending: sentRequests.some(req => req.receiverId === user.id),
-          isRequestReceived: receivedRequests.some(req => req.senderId === user.id),
-          isFriend: friendIds.has(user.id)
-        }));
-        setUserList(updatedUserList);
-        setFilteredUserList(updatedUserList); 
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     fetchUserData();
   }, [initialUserList, sessionData]);
 
@@ -82,18 +84,41 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
       });
   
       if (response.ok) {
-        console.log('Friend request accepted successfully');
-        setUserList(prev => prev.map(user => 
-          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
-        ));
-        setFilteredUserList(prev => prev.map(user => 
-          user.id === senderId ? { ...user, isFriend: true, isRequestReceived: false } : user
-        ));
+        toast.success('Friend Request sent successfully', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        await fetchUserData();
       } else {
-        console.log('Failed to accept friend request');
+        toast.error('Failed to accept friend request', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error('Error accepting friend request:', error);
+      toast.error('An error occurred while accepting friend request', {
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -108,18 +133,41 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
       });
 
       if (response.ok) {
-        console.log('Friend request declined successfully');
-        setUserList(prev => prev.map(user =>
-          user.id === senderId ? { ...user, isRequestReceived: false } : user
-        ));
-        setFilteredUserList(prev => prev.map(user =>
-          user.id === senderId ? { ...user, isRequestReceived: false } : user
-        ));
+        toast.success('Friend request declined', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        await fetchUserData();
       } else {
-        console.log('Failed to decline friend request');
+        toast.error('Failed to decline friend request', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       console.error('Error declining friend request:', error);
+      toast.error('An error occurred while declining friend request', {
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -136,12 +184,41 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
         body: JSON.stringify({ senderId, receiverId: userId })
       });
       if (response.ok) {
-        console.log('Friend request sent successfully');
+        toast.success('Friend Request sent successfully', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        await fetchUserData();
       } else {
-        console.log('Failed to send friend request');
+        toast.error('Failed to send friend request', {
+          className: "toast-message",
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
-      console.error('Error sending friend request:', error as Error);
+      console.error('Error sending friend request:', error);
+      toast.error('An error occurred while sending friend request', {
+        className: "toast-message",
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -158,6 +235,7 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
 
   return (
     <div>
+      <ToastContainer />
       <div className="grid lg:grid-cols-2 grid-cols-1">
         <div className='m-4'>
           <h1 className='text-white font-mono font-semibold text-xl'>Friends</h1>
@@ -240,8 +318,8 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
                     <Image
                       src={user.image || '/default-userimage.png'}
                       alt="Profile picture"
-                      width={50}
-                      height={50}
+                      width={1000}
+                      height={1000}
                       unoptimized={true}
                       className='rounded-full w-12 h-12'
                     />
