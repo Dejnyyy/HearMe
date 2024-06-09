@@ -67,6 +67,8 @@ export default async function handler(
     // Calculate vote counts
     const voteCounts = votes.reduce<Record<string, VoteWithCount>>((acc, vote) => {
       const key = `${vote.song}-${vote.artist}`;
+      const voteValue = vote.voteType === '+' ? 1 : -1;
+
       if (!acc[key]) {
         acc[key] = {
           ...vote,
@@ -74,7 +76,7 @@ export default async function handler(
           createdAt: vote.createdAt.toISOString(),
         };
       }
-      acc[key]!.voteCount += 1;
+      acc[key]!.voteCount += voteValue;
       return acc;
     }, {});
 

@@ -42,13 +42,15 @@ const getVotes = async (req: NextApiRequest, res: NextApiResponse) => {
       // Calculate vote counts
       const voteCounts = votes.reduce((acc, vote) => {
         const key = `${vote.song}-${vote.artist}`;
+        const voteValue = vote.voteType === '+' ? 1 : -1;
+
         if (!acc[key]) {
           acc[key] = {
             ...vote,
             voteCount: 0,
           };
         }
-        acc[key].voteCount += 1;
+        acc[key].voteCount += voteValue;
         return acc;
       }, {} as Record<string, VoteWithCount>);
 
