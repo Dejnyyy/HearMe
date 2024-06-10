@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from 'next/router';
+import Loading from "./components/Loading";
+
 
 interface Vote {
   id: number;
@@ -26,16 +28,19 @@ const RankingToday: React.FC = () => {
   const [votes, setVotes] = useState<VoteWithCount[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // World or friends view
+  const [loading, setLoading] = useState(true); // Loading state
   const isAdmin = sessionData?.user?.isAdmin;
   const router = useRouter();
 
   useEffect(() => {
     const fetchVotes = async () => {
+      setLoading(true); // Set loading to true before fetching data
       const apiEndpoint = shownType ? '/api/getVotesCountToday' : '/api/findMineFriendsVotesCount';
       try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
           console.log('Votes fetch failed');
+          setLoading(false); // Set loading to false in case of error
           return;
         }
         const votesData: VoteWithCount[] = await response.json();
@@ -48,10 +53,15 @@ const RankingToday: React.FC = () => {
         setVotes(votesWithUserDetails);
       } catch (error) {
         console.error('Error fetching votes:', error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
-    fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
+    fetchVotes().catch((error: Error) => {
+      console.error('Failed to fetch votes:', error);
+      setLoading(false); // Set loading to false in case of error
+    });
   }, [shownType]);
 
   const fetchUserDetails = async (userId: string) => {
@@ -117,7 +127,7 @@ const RankingToday: React.FC = () => {
       case 2:
         return 'from-[#cd7f32] to-[#ffffe6]'; // Bronze gradient
       default:
-        return 'from-[#636363] to-[#ffffe6]';// Nemelo by se nikdy stat
+        return 'from-[#636363] to-[#ffffe6]'; // Default gradient
     }
   };
 
@@ -125,14 +135,16 @@ const RankingToday: React.FC = () => {
     <div>
       <HamburgerMenu />
       <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <section className="ml-auto mt-12 mr-10 ">
+        <section className="ml-auto mt-12 mr-10">
           <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
             Showing: {feedType}
           </button>
         </section>
         <section className='justify-center items-center'>
           <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
-          {votes.length === 0 ? (
+          {loading ? (
+             <Loading />
+          ) : votes.length === 0 ? (
             <div className="flex flex-col items-center mt-10">
               <p className="text-center">No Votes Today Yet</p>
               <Link href="/vote" className='underline text-2xl mt-20'>Vote</Link>

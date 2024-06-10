@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HamburgerMenu from "./components/HamburgerMenu";
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
+import Loading from "./components/Loading";
 
 interface Vote {
   id: number;
@@ -24,15 +25,18 @@ const Ranking: React.FC = () => {
   const [votes, setVotes] = useState<VoteWithCount[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true); // World or friends view
+  const [loading, setLoading] = useState(true); // Loading state
   const isAdmin = sessionData?.user?.isAdmin;
 
   useEffect(() => {
     const fetchVotes = async () => {
+      setLoading(true); // Set loading to true before fetching data
       const apiEndpoint = shownType ? '/api/getVotesVoteCount' : '/api/findMineAndFriendsVotes';
       try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
           console.log('Votes fetch failed');
+          setLoading(false); // Set loading to false in case of error
           return;
         }
         const votesData: VoteWithCount[] = await response.json();
@@ -45,10 +49,15 @@ const Ranking: React.FC = () => {
         setVotes(votesWithUserDetails);
       } catch (error) {
         console.error('Error fetching votes:', error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
-    fetchVotes().catch((error: Error) => console.error('Failed to fetch votes:', error));
+    fetchVotes().catch((error: Error) => {
+      console.error('Failed to fetch votes:', error);
+      setLoading(false); // Set loading to false in case of error
+    });
   }, [shownType]);
 
   const fetchUserDetails = async (userId: string) => {
@@ -110,7 +119,7 @@ const Ranking: React.FC = () => {
       case 2:
         return 'from-[#cd7f32] to-[#ffffe6]'; // Bronze gradient
       default:
-        return 'from-[#636363] to-[#ffffe6]';//nemelo by se nikdy stat
+        return 'from-[#636363] to-[#ffffe6]'; // Default gradient
     }
   };
 
@@ -125,93 +134,99 @@ const Ranking: React.FC = () => {
         </section>
         <section className='justify-center items-center'>
           <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
-          <h2 className='text-center text-xl'>Top 3:</h2>
-          <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
-            {topVotes.map((vote, index) => (
-              <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
-                <div className='md:grid md:grid-cols-1 mx-auto'>
-                  <div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
-                </div>
-                <div className={`bg-gradient-to-b ${getGradientClass(index)} rounded-xl px-4 py-2 m-2`}>
-                  <div className='flex flex-col'>
-                    <div className='flex flex-row'>
-                      <Image
-                        src={vote.image || '/default-userimage.png'}
-                        alt='Profile Picture'
-                        width={50}
-                        height={50}
-                        className="rounded-full w-12 h-12"
-                      />
-                      <p className='my-auto ml-4'>{vote.name}</p>
+          {loading ? (
+           <Loading />
+          ) : (
+            <>
+              <h2 className='text-center text-xl'>Top 3:</h2>
+              <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
+                {topVotes.map((vote, index) => (
+                  <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
+                    <div className='md:grid md:grid-cols-1 mx-auto'>
+                      <div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
+                    </div>
+                    <div className={`bg-gradient-to-b ${getGradientClass(index)} rounded-xl px-4 py-2 m-2`}>
+                      <div className='flex flex-col'>
+                        <div className='flex flex-row'>
+                          <Image
+                            src={vote.image || '/default-userimage.png'}
+                            alt='Profile Picture'
+                            width={50}
+                            height={50}
+                            className="rounded-full w-12 h-12"
+                          />
+                          <p className='my-auto ml-4'>{vote.name}</p>
+                        </div>
+                      </div>
+                      <div className='flex flex-col items-center'>
+                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg" />
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer">
+                          <p className='hover:underline text-black'>{vote.song}</p>
+                        </a>
+                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer">
+                          <p className='hover:underline text-gray-600'>{vote.artist}</p>
+                        </a>
+                        <p className="mt-2 text-lg text-black font-bold">Votes: {vote.voteCount}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className='flex flex-col items-center'>
-                    <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg" />
-                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer">
-                      <p className='hover:underline text-black'>{vote.song}</p>
-                    </a>
-                    <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer">
-                      <p className='hover:underline text-gray-600'>{vote.artist}</p>
-                    </a>
-                    <p className="mt-2 text-lg text-black font-bold">Votes: {vote.voteCount}</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <h2 className='text-center text-xl mt-8'>All Other Votes:</h2>
-          <div className="overflow-y-auto" style={{ maxHeight: '40vh' }}>
-            <ul>
-              {remainingVotes.map((vote, index) => (
-                <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
-                  <li className='cursor-pointer'>
-                    <div className='flex flex-row'>
-                      <Image
-                        src={vote.image || '/default-userimage.png'}
-                        alt='Profile Picture'
-                        width={50}
-                        height={50}
-                        className="rounded-full w-12 h-12"
-                      />
-                      <p className='my-auto ml-4'>{vote.name}</p>
-                      {isAdmin && (
-                        <button
-                          className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
-                          onClick={(e) => {
-                            e.stopPropagation(); 
-                            handleDeleteClick(vote.id);
-                          }}
-                        >
-                          x
-                        </button>
-                      )}
-                    </div>
+              <h2 className='text-center text-xl mt-8'>All Other Votes:</h2>
+              <div className="overflow-y-auto" style={{ maxHeight: '40vh' }}>
+                <ul>
+                  {remainingVotes.map((vote, index) => (
+                    <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                      <li className='cursor-pointer'>
+                        <div className='flex flex-row'>
+                          <Image
+                            src={vote.image || '/default-userimage.png'}
+                            alt='Profile Picture'
+                            width={50}
+                            height={50}
+                            className="rounded-full w-12 h-12"
+                          />
+                          <p className='my-auto ml-4'>{vote.name}</p>
+                          {isAdmin && (
+                            <button
+                              className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
+                              onClick={(e) => {
+                                e.stopPropagation(); 
+                                handleDeleteClick(vote.id);
+                              }}
+                            >
+                              x
+                            </button>
+                          )}
+                        </div>
 
-                    <div className="sm:flex sm:flex-row">
-                      <div className='mx-auto sm:mx-0 text-center sm:text-center'>
-                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
-                      </div>
-                      <div className='ml-4 text-center sm:text-start my-auto'>
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer" className=''>
-                          <p className='hover:underline'>{vote.song}</p>
-                        </a>
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer" className=''>
-                          <p className='hover:underline text-gray-400'>{vote.artist}</p>
-                        </a>
-                        <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
-                      </div>
+                        <div className="sm:flex sm:flex-row">
+                          <div className='mx-auto sm:mx-0 text-center sm:text-center'>
+                            <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
+                          </div>
+                          <div className='ml-4 text-center sm:text-start my-auto'>
+                            <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer" className=''>
+                              <p className='hover:underline'>{vote.song}</p>
+                            </a>
+                            <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer" className=''>
+                              <p className='hover:underline text-gray-400'>{vote.artist}</p>
+                            </a>
+                            <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
+                          </div>
+                        </div>
+                        {expandedIndex === index && (
+                          <>
+                            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>Type of vote: {vote.voteType}</p>
+                            <p>{formatDate(vote.createdAt)}</p>
+                          </>
+                        )}
+                      </li>
                     </div>
-                    {expandedIndex === index && (
-                      <>
-                        <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>Type of vote: {vote.voteType}</p>
-                        <p>{formatDate(vote.createdAt)}</p>
-                      </>
-                    )}
-                  </li>
-                </div>
-              ))}
-            </ul>
-          </div>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
         </section>
       </main>
     </div>
