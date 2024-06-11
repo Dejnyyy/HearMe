@@ -63,7 +63,7 @@ const Calendar: React.FC = () => {
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
 
   const handleNoVotesClick = () => {
-    router.push('/vote');
+    router.push('/voteToday');
   };
 
   return (

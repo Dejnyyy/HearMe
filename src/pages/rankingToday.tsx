@@ -147,7 +147,7 @@ const RankingToday: React.FC = () => {
           ) : votes.length === 0 ? (
             <div className="flex flex-col items-center mt-10">
               <p className="text-center">No Votes Today Yet</p>
-              <Link href="/vote" className='underline text-2xl mt-20'>Vote</Link>
+              <Link href="/voteToday" className='underline text-2xl mt-20'>Vote</Link>
             </div>
           ) : (
             <>
