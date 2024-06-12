@@ -19,16 +19,19 @@
 }
 
 .open {
-  transform: rotate(45deg);
-  background-color: red; /* Change color when open */
+  transform: rotate(-45deg) translateY(-3px);
+  background-color: white; /* Change color when open */
+  border-radius: 100px;
 }
 
 .open:nth-child(2) {
-  opacity: 0;
+  opacity: 1;
+  transform: rotate(0deg) translateX(15px);
+  width: 150%;
 }
 
 .open:nth-child(3) {
-  transform: rotate(-45deg);
+  transform: rotate(45deg)translateY(3px);
 }
 
 .menuOverlay {
