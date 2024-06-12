@@ -1,4 +1,3 @@
-// components/HamburgerMenu.tsx
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './HamburgerMenu.module.css';
@@ -12,11 +11,11 @@ const HamburgerMenu: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust this value based on your design
+      setIsMobile(window.innerWidth <= 768);
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Call the function initially
+    handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -26,7 +25,7 @@ const HamburgerMenu: React.FC = () => {
   };
 
   const menuItems = (
-    <ul className="space-y-1">
+    <ul className={styles.menuItems}>
       <li><Link href="/"><p className="font-mono font-semibold text-lg cursor-pointer">Home</p></Link></li>
       <li><Link href="/profile"><p className="font-mono font-semibold text-lg cursor-pointer">Profile</p></Link></li>
       <li><Link href="/calendar"><p className="font-mono font-semibold text-lg cursor-pointer">Calendar</p></Link></li>
@@ -55,7 +54,7 @@ const HamburgerMenu: React.FC = () => {
           </div>
 
           {isOpen && (
-            <div className={`menu ${styles.menu} show`}>
+            <div className={`${styles.menuOverlay} ${isOpen ? styles.show : ''}`}>
               {menuItems}
             </div>
           )}

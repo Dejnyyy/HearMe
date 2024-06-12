@@ -1,4 +1,3 @@
-/* styles/HamburgerMenu.module.css */
 .hamburgerMenu {
   cursor: pointer;
   display: flex;
@@ -9,7 +8,7 @@
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1000; /* Ensure the hamburger menu is always on top */
+  z-index: 1000;
 }
 
 .bar {
@@ -20,13 +19,44 @@
 }
 
 .open {
-  transform: rotate(180deg);
+  transform: rotate(45deg);
+  background-color: red; /* Change color when open */
+}
+
+.open:nth-child(2) {
+  opacity: 0;
+}
+
+.open:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+.menuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.menuOverlay.show {
   opacity: 1;
 }
 
-.menu {
-  transition: opacity 0.3s ease-in-out;
-  opacity: 1;
+.menuItems {
+  list-style: none;
+  padding: 0;
+}
+
+.menuItems li {
+  margin: 10px 0;
 }
 
 .sidebarContainer {
@@ -34,71 +64,56 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 50px; /* The hoverable area width */
+  width: 50px;
   z-index: 999;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Use flex-start instead of start */
-  align-items: flex-start; /* Use flex-start instead of start */
+  justify-content: flex-start;
+  align-items: flex-start;
   width: 250px;
   height: 100%;
   background-color: #2d2d2d;
   color: white;
   position: absolute;
   top: 0;
-  left: -250px; /* Hide sidebar offscreen */
+  left: -250px;
   padding: 20px;
   transition: left 300ms ease-in-out;
 }
 
 .sidebarContainer:hover .sidebar {
-  left: 0; /* Slide in the sidebar */
+  left: 0;
 }
 
 @media (min-width: 769px) {
   .hamburgerMenu {
-    display: none; /* Hide hamburger menu on larger screens */
+    display: none;
   }
 }
 
 @media (max-width: 768px) {
   .sidebarContainer {
-    display: none; /* Ensure sidebar is hidden on mobile */
+    display: none;
   }
 
-  .menu.show {
-    display: block;
-    position: fixed;
-    top: 50px; /* Adjust based on your layout */
-    left: 20px;
-    background-color: #2d2d2d;
-    padding: 10px;
-    border-radius: 5px;
+  .menuItems {
+    text-align: center;
   }
 
-  .menu ul {
-    list-style: none;
-    background-color: black;
-    padding: 0;
-    padding-top: 7%;
-    padding-left: 4%;
+  .menuItems li {
+    margin: 15px 0;
   }
 
-  .menu li {
-    margin: 10px 0;
-  }
-
-  .menu a {
+  .menuItems p {
     color: white;
     text-decoration: none;
-    font-mono: font-semibold;
-    font-size: 18px;
+    font-size: 24px;
   }
 
-  .menu a:hover {
+  .menuItems p:hover {
     text-decoration: underline;
   }
 }
