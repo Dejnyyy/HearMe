@@ -29,8 +29,6 @@ const Introduction: React.FC = () => {
             To use my app, you need to scroll all the way down. Then you just navigate by clicking on the menu in the top left of your screen.
           </p>
         </div>
-        
-       
         </>
       ) : (
         <>
@@ -41,12 +39,13 @@ const Introduction: React.FC = () => {
           </div>
           <div className="introduction-box border mt-10 border-yellow-300 p-4 mx-10 md:mx-20 rounded-lg text-white text-center shadow-lg">
             <p className="font-mono text-lg">
-              To use my app, you need to scroll all the way down.         </p>
+              To use my app, you need to scroll all the way down.         
+            </p>
           </div>
           <div className="introduction-box border mt-5 border-yellow-300 p-4 mx-10 md:mx-20 rounded-lg text-white text-center shadow-lg">
             <p className="font-mono text-lg">
-            Then you just navigate by moving your cursor to the left side of your screen to show the menu.
-        </p>
+              Then you just navigate by moving your cursor to the left side of your screen to show the menu.
+            </p>
           </div>
         </>
       )}
