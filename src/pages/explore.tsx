@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HamburgerMenu from './components/HamburgerMenu';
 import Image from 'next/image';
 import { useSession } from "next-auth/react";
@@ -24,40 +24,41 @@ const Explore: React.FC = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [shownType, setShownType] = useState(true);
   const [loading, setLoading] = useState(true); // Loading state
+  const [page, setPage] = useState(1); // Page state for pagination
+  const [hasMore, setHasMore] = useState(true); // State to track if there are more votes to load
   const isAdmin = sessionData?.user?.isAdmin;
   const router = useRouter();
+  const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const fetchVotes = async () => {
-      setLoading(true); // Set loading to true before fetching data
-      const apiEndpoint = shownType ? '/api/getVotes' : '/api/findMineAndFriendsVotes';
-      try {
-        const response = await fetch(apiEndpoint);
-        if (!response.ok) {
-          console.log('Votes fetch failed');
-          setLoading(false); // Set loading to false in case of error
-          return;
-        }
-        const votesData: Vote[] = await response.json();
-        const votesWithUserDetails = await Promise.all(
-          votesData.map(async (vote: Vote) => ({
-            ...vote,
-            ...await fetchUserDetails(vote.userId),
-          }))
-        );
-        setVotes(votesWithUserDetails);
-      } catch (error) {
-        console.error('Error fetching votes:', error);
-      } finally {
-        setLoading(false); // Set loading to false after data is fetched
-      }
-    };
+    fetchVotes();
+  }, [shownType, page]);
 
-    fetchVotes().catch((error: Error) => {
-      console.error('Failed to fetch votes:', error);
-      setLoading(false); // Set loading to false in case of error
-    });
-  }, [shownType]);
+  const fetchVotes = async () => {
+    setLoading(true); // Set loading to true before fetching data
+    const apiEndpoint = shownType ? `/api/getOptimalVotes?page=${page}&limit=20` : `/api/findMineAndFriendsVotes?page=${page}&limit=20`;
+    try {
+      const response = await fetch(apiEndpoint);
+      if (!response.ok) {
+        console.log('Votes fetch failed');
+        setLoading(false); // Set loading to false in case of error
+        return;
+      }
+      const { votes: votesData, totalVotes } = await response.json();
+      const votesWithUserDetails = await Promise.all(
+        votesData.map(async (vote: Vote) => ({
+          ...vote,
+          ...await fetchUserDetails(vote.userId),
+        }))
+      );
+      setVotes(prevVotes => [...prevVotes, ...votesWithUserDetails]);
+      setHasMore(votes.length + votesWithUserDetails.length < totalVotes);
+    } catch (error) {
+      console.error('Error fetching votes:', error);
+    } finally {
+      setLoading(false); // Set loading to false after data is fetched
+    }
+  };
 
   const fetchUserDetails = async (userId: string) => {
     try {
@@ -88,7 +89,11 @@ const Explore: React.FC = () => {
   const sortedVotes = [...votes].sort((a, b) => sortByDateDesc ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
   const toggleSortingOrder = () => setSortByDateDesc(!sortByDateDesc);
-  const toggleTypeShown = () => setShownType(!shownType);
+  const toggleTypeShown = () => {
+    setVotes([]); // Clear votes when toggling type
+    setPage(1); // Reset to first page
+    setShownType(!shownType);
+  };
   const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
 
   const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
@@ -113,6 +118,24 @@ const Explore: React.FC = () => {
     router.push(`/profile/${userId}`);
   };
 
+  const lastVoteElementRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+
+    if (lastVoteElementRef.current) {
+      observer.current.observe(lastVoteElementRef.current);
+    }
+  }, [loading, hasMore]);
+
   return (
     <div>
       <HamburgerMenu />
@@ -134,7 +157,12 @@ const Explore: React.FC = () => {
             <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
               <ul>
                 {sortedVotes.map((vote, index) => (
-                  <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
+                  <div 
+                    key={index} 
+                    className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" 
+                    onClick={() => toggleExpanded(index)}
+                    ref={index === sortedVotes.length - 1 ? lastVoteElementRef : null}
+                  >
                     <li className='cursor-pointer'>
                       <div className='flex flex-row'>
                         <Image
