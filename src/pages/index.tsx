@@ -19,7 +19,7 @@ const Home: React.FC<{ userList: User[] }> = () => {
       <main
         className="flex min-h-screen flex-col items-center justify-center"
         style={{
-          background: 'url("/cssBackground4.png")',
+          background: 'url("/HearMeBG4.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
