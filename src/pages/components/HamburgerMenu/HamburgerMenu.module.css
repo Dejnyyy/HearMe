@@ -9,6 +9,7 @@
   position: fixed;
   top: 20px;
   left: 20px;
+  z-index: 1000; /* Ensure the hamburger menu is always on top */
 }
 
 .bar {
@@ -27,12 +28,75 @@
   transition: opacity 0.3s ease-in-out;
   opacity: 1;
 }
-/*
-.menu:hover {
-  transition-delay: 0.1s;
-  opacity: 1;
-  text-decoration: underline;
+
+.sidebarContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50px; /* The hoverable area width */
+  z-index: 999;
 }
-.menu.show {
-  opacity: 1;
-}*/
+
+.sidebar {
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  width: 250px;
+  height: 100%;
+  background-color: #2d2d2d;
+  color: white;
+  position: absolute;
+  top: 0;
+  left: -250px; /* Hide sidebar offscreen */
+  padding: 20px;
+  transition: left 0.3s;
+}
+
+.sidebarContainer:hover .sidebar {
+  display: flex; /* Display sidebar on hover */
+  left: 0; /* Slide in the sidebar */
+}
+
+@media (min-width: 769px) {
+  .hamburgerMenu {
+    display: none; /* Hide hamburger menu on larger screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebarContainer {
+    display: none; /* Ensure sidebar is hidden on mobile */
+  }
+
+  .menu.show {
+    display: block;
+    position: fixed;
+    top: 50px; /* Adjust based on your layout */
+    left: 20px;
+    background-color: #2d2d2d;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .menu ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .menu li {
+    margin: 10px 0;
+  }
+
+  .menu a {
+    color: white;
+    text-decoration: none;
+    font-mono: font-semibold;
+    font-size: 18px;
+  }
+
+  .menu a:hover {
+    text-decoration: underline;
+  }
+}
