@@ -284,7 +284,8 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
                   </div>
                   {user.isRequestReceived && !user.isFriend && (
                     <>
-                      <button
+                    <div className='md:block flex flex-row text-center mx-auto'>
+                    <button
                         className='ml-2 border px-8 bg-white text-black rounded-xl font-mono font-semibold hover:text-green-500'
                         onClick={(e) => {
                           e.stopPropagation();
@@ -300,6 +301,8 @@ const FriendsPage: React.FC<UsersPageProps> = ({ userList: initialUserList }) =>
                         }}>
                         Reject
                       </button>
+                    </div>
+                     
                     </>
                   )}
                 </li>
