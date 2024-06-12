@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg  font-mono font-semibold"style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg  font-mono font-semibold"style={{ background: 'url("/HearMebg4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>

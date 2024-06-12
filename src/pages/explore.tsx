@@ -30,6 +30,13 @@ const Explore: React.FC = () => {
   const router = useRouter();
   const observer = useRef<IntersectionObserver | null>(null);
 
+  const getRandomBackground = () => {
+    const bgNumber = Math.floor(Math.random() * 7) + 1;
+    return `/HearMeBG${bgNumber}.png`;
+  };
+
+  const [background, setBackground] = useState(getRandomBackground());
+
   useEffect(() => {
     fetchVotes();
   }, [shownType, page]);
@@ -139,7 +146,7 @@ const Explore: React.FC = () => {
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: `url(${background})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <section className="flex justify-end mt-12 mr-10 ml-10">
           <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
             Date {sortingButtonText}
