@@ -17,9 +17,9 @@ const Home: React.FC<{ userList: User[] }> = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main
-        className="flex min-h-screen flex-col items-center justify-center"
+        className="flex min-h-screen flex-col items-center justify-center bg-black"
         style={{
-          background: 'url("/HearMeBG4.png")',
+         
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
