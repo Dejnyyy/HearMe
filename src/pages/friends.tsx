@@ -26,7 +26,7 @@ const Friends: React.FC = () => {
 
     return (
         <>
-            <main className="flex min-h-screen flex-col items-center justify-center"style={{ background: 'url("/cssBackground4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <main className="flex min-h-screen flex-col items-center justify-center"style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 <FriendsPage userList={users} />
                 <HamburgerMenu />
             </main>
