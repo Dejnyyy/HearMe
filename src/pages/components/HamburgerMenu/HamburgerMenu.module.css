@@ -39,10 +39,10 @@
 }
 
 .sidebar {
-  display: none; /* Hidden by default */
+  display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start; /* Use flex-start instead of start */
+  align-items: flex-start; /* Use flex-start instead of start */
   width: 250px;
   height: 100%;
   background-color: #2d2d2d;
@@ -51,11 +51,10 @@
   top: 0;
   left: -250px; /* Hide sidebar offscreen */
   padding: 20px;
-  transition: left 0.3s;
+  transition: left 300ms ease-in-out;
 }
 
 .sidebarContainer:hover .sidebar {
-  display: flex; /* Display sidebar on hover */
   left: 0; /* Slide in the sidebar */
 }
 
@@ -82,7 +81,10 @@
 
   .menu ul {
     list-style: none;
+    background-color: black;
     padding: 0;
+    padding-top: 7%;
+    padding-left: 4%;
   }
 
   .menu li {
