@@ -57,7 +57,7 @@ const Home: React.FC<{ userList: User[] }> = () => {
           width={200}
           height={200}
         />
-        {sessionData && <HamburgerMenu />}
+        {/* {sessionData && <HamburgerMenu />} */}
         {sessionData && (
           <div className="font-mono text-lg font-semibold text-white mb-4">
             Hello,{" "}
