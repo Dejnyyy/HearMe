@@ -36,7 +36,7 @@ const Explore: React.FC = () => {
 
   const fetchVotes = async () => {
     setLoading(true); // Set loading to true before fetching data
-    const apiEndpoint = shownType ? `/api/getOptimalVotes?page=${page}&limit=20` : `/api/findMineAndFriendsVotes?page=${page}&limit=20`;
+    const apiEndpoint = shownType ? `/api/getOptimalVotes?page=${page}&limit=20` : `/api/findMineAndFriendsVotesOptimal?page=${page}&limit=20`;
     try {
       const response = await fetch(apiEndpoint);
       if (!response.ok) {
