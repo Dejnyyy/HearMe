@@ -31,7 +31,7 @@
 }
 
 .open:nth-child(3) {
-  transform: rotate(45deg)translateY(3px);
+  transform: rotate(45deg) translateY(3px);
 }
 
 .menuOverlay {
@@ -67,8 +67,20 @@
   top: 0;
   left: 0;
   height: 100%;
-  width: 50px;
+ 
   z-index: 999;
+  
+  animation: pulseSidebar 2s infinite;
+}
+
+@keyframes pulseSidebar {
+  0%, 100% {
+    left: 0;
+  }
+  50% {
+    left: 20px;
+    border-right: 3px solid white;
+  }
 }
 
 .sidebar {
