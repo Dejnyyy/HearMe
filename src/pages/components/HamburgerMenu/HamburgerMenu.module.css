@@ -66,21 +66,10 @@
   position: fixed;
   top: 0;
   left: 0;
+  width: 50px;
   height: 100%;
- 
   z-index: 999;
   
-  animation: pulseSidebar 2s infinite;
-}
-
-@keyframes pulseSidebar {
-  0%, 100% {
-    left: 0;
-  }
-  50% {
-    left: 20px;
-    border-right: 3px solid white;
-  }
 }
 
 .sidebar {

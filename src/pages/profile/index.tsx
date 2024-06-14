@@ -20,10 +20,11 @@ const Profile: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [lastVote, setLastVote] = useState<string | null>(null);
   const [firstVote, setFirstVote] = useState<string | null>(null);
-  const [voteCount, setVoteCount] = useState<number>(0); // Added state variable for vote count
+  const [voteCount, setVoteCount] = useState<number>(0);
   const [lastVoteDetails, setLastVoteDetails] = useState<LastVoteDetails>(null);
   const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
   const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
@@ -32,6 +33,7 @@ const Profile: React.FC = () => {
   const handleFavoriteAlbumChange = (newAlbum: string) => {
     setFavoriteAlbum(newAlbum);
   };
+
   useEffect(() => {
     if (storedSelectedSong) {
       setSelectedSong(JSON.parse(storedSelectedSong as string));
@@ -42,7 +44,7 @@ const Profile: React.FC = () => {
         setSelectedSong(JSON.parse(localStorageSelectedSong));
       }
     }
-    
+
     const fetchFirstVote = async () => {
       try {
         const response = await fetch('/api/getMyFirstVote?first=true');
@@ -59,7 +61,7 @@ const Profile: React.FC = () => {
         const response = await fetch('/api/getMyVotes')
         if (!response.ok) console.log('Failed to fetch votes');
         const votes = await response.json();
-        setVoteCount(votes.length); // Update vote count state
+        setVoteCount(votes.length);
         if (votes.length > 0) {
           const lastVote = votes[votes.length - 1];
           setLastVote(`${new Date(lastVote.createdAt).toLocaleDateString()}`);
@@ -68,6 +70,7 @@ const Profile: React.FC = () => {
         console.error('Error fetching votes:', error);
       }
     };
+
     const fetchLastVote = async () => {
       try {
         const response = await fetch('/api/getMyLastVote?last=true');
@@ -83,15 +86,33 @@ const Profile: React.FC = () => {
         console.error('Error fetching the last vote:', error);
       }
     };
-    
+
     if (sessionData) {
-       fetchFirstVote();
-       fetchLastVote();
+      fetchFirstVote();
+      fetchLastVote();
       console.log("firstVote:", firstVote);
       console.log("lastVote:", lastVote);
     }
     void fetchVotes();
   }, [storedSelectedSong, sessionData]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = (scrollTop / docHeight) * 100;
+
+      setScrollProgress(scrolled);
+
+      if (scrolled >= 100) {
+        router.push("/profile");
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [router]);
 
   return (
     <div>
@@ -141,6 +162,7 @@ const Profile: React.FC = () => {
           </div>
         )}
       </main>
+      <CircularLoading progress={188 - (188 * scrollProgress) / 100} />
     </div>
   );
 };
@@ -164,5 +186,34 @@ function AuthShowcase() {
     </div>
   );
 }
+
+const CircularLoading: React.FC<{ progress: number }> = ({ progress }) => {
+  return (
+    <div className="fixed bottom-5 right-5">
+      <svg className="circular-chart" viewBox="0 0 36 36">
+        <path
+          className="circle-bg"
+          d="M18 2.0845
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="#eee"
+          strokeWidth="3.8"
+        />
+        <path
+          className="circle"
+          strokeDasharray={`${progress}, 100`}
+          d="M18 2.0845
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
+          fill="none"
+          stroke="#4caf50"
+          strokeWidth="2.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  );
+};
 
 export default Profile;
