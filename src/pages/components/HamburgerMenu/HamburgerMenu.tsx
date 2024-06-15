@@ -52,7 +52,6 @@ const HamburgerMenu: React.FC = () => {
             <div className={`${styles.bar} ${isOpen ? styles.open : ''}`} />
             <div className={`${styles.bar} ${isOpen ? styles.open : ''}`} />
           </div>
-
           {isOpen && (
             <div className={`${styles.menuOverlay} ${isOpen ? styles.show : ''}`}>
               {menuItems}
