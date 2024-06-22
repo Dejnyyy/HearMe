@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import HamburgerMenu from "./components/HamburgerMenu";
+//import HamburgerMenu from "./components/HamburgerMenu";
 import CircularLoading from "./components/CircularLoading";
 import Introduction from "./components/Introduction";
 import { User } from "@prisma/client";
