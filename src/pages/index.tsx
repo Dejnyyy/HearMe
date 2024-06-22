@@ -7,6 +7,8 @@ import Introduction from "./components/Introduction";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { LinearGradient } from 'react-text-gradients'
+
 
 const Home: React.FC<{ userList: User[] }> = () => {
   const { data: sessionData } = useSession();
@@ -64,7 +66,7 @@ const Home: React.FC<{ userList: User[] }> = () => {
             <span className="cursor-pointer underline">
               {sessionData.user?.name}
             </span>{" "}
-            welcome to <span className="text-yellow-300">HearMe</span>
+            welcome to <LinearGradient gradient={['to left', '#FFD700 ,#ff68f0']}>HearMe</LinearGradient>
           </div>
         )}
        
