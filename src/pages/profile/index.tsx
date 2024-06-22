@@ -5,6 +5,7 @@ import HamburgerMenu from "../components/HamburgerMenu";
 import { useEffect, useState } from 'react';
 import FaveArtist from '../components/FaveArtist';
 import FaveAlbum from '../components/FaveAlbum';
+import ProfileCircularLoading from '../components/ProfileCircularloading';
 
 type LastVoteDetails = {
   date: Date | string;
@@ -25,6 +26,8 @@ const Profile: React.FC = () => {
   const [favoriteArtist, setFavoriteArtist] = useState<string | null>(null);
   const [favoriteAlbum, setFavoriteAlbum] = useState<string | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [scrollUpProgress, setScrollUpProgress] = useState(0);
 
   const handleFavoriteArtistChange = (newArtist: string) => {
     setFavoriteArtist(newArtist);
@@ -104,33 +107,45 @@ const Profile: React.FC = () => {
 
       setScrollProgress(scrolled);
 
-      if (scrolled >= 100) {
-        router.push("/profile");
+      if (scrollTop < lastScrollTop) {
+        // Scroll up detected
+        setScrollUpProgress(prev => {
+          const newProgress = prev + 3;
+          if (newProgress >= 100) {
+            router.push("/");
+          }
+          return newProgress;
+        });
+      } else {
+        setScrollUpProgress(0);
       }
+
+      setLastScrollTop(scrollTop <= 0 ? 0 : scrollTop); // For mobile or negative scrolling
     };
+    
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [router]);
+  }, [lastScrollTop, router]);
 
   return (
     <div>
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg  font-mono font-semibold"style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <section>
           <div>
             <h1 className='text-center my-3 underline'>{sessionData?.user.name}</h1>
             <AuthShowcase />
           </div>
         </section>
-        <div className="grid lg:gap-x-28 xl:gap-x-48 my-5 mx-5  grid-cols-1 lg:grid-cols-3">
+        <div className="grid lg:gap-x-28 xl:gap-x-48 my-5 mx-5 grid-cols-1 lg:grid-cols-3">
           <div>
             <FaveArtist />
           </div>
           <div className="rounded-md py-1 text-center mt-2">
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>Votes: {voteCount}</span>
-            <br  />
+            <br />
             <span className='bg-gray-700 px-4 py-2 rounded-lg'>First Vote: {firstVote ?? 'No votes yet'}</span>
           </div>
           <div className="rounded-md py-1 text-center cursor-pointer my-auto">
@@ -144,25 +159,27 @@ const Profile: React.FC = () => {
         </div>
 
         {lastVoteDetails && (
-            <div className="bg-gray-700 rounded-2xl p-3 flex items-center mb-20">
+          <div className="bg-gray-700 rounded-2xl p-3 flex items-center mb-20">
             <img
               src={lastVoteDetails.imageUrl ?? ''}
               alt={'No votes yet'}
               className="artist-image w-16 h-auto ml-2 rounded-xl"
-              />
+            />
             <div className='mx-2'>
-            <a href={`https://open.spotify.com/search/${encodeURIComponent(lastVoteDetails.song)}`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a href={`https://open.spotify.com/search/${encodeURIComponent(lastVoteDetails.song)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className='text-start '>
                 <p className='text-start hover:underline'>{lastVoteDetails.song}</p>
-            </a>  
+              </a>
               <span className='text-gray-400 w-auto'>{lastVoteDetails.artist}</span>
             </div>
           </div>
         )}
+        {/* Artificially adding height to enable scrolling */}
+        <div style={{ height: '30vh' }}></div>
       </main>
-      <CircularLoading progress={188 - (188 * scrollProgress) / 100} />
+      <ProfileCircularLoading progress={scrollUpProgress} />
     </div>
   );
 };
@@ -172,48 +189,19 @@ function AuthShowcase() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {sessionData && 
-      <div>
-        <Image
-          className="rounded-full w-24 h-24 border border-white"
-          src={sessionData.user?.image ?? "/default-userimage.png"}
-          alt={"pfp of user" + sessionData.user?.name}
-          width={1000}
-          height={1000} 
-        />
-      </div>
+      {sessionData &&
+        <div>
+          <Image
+            className="rounded-full w-24 h-24 border border-white"
+            src={sessionData.user?.image ?? "/default-userimage.png"}
+            alt={"pfp of user" + sessionData.user?.name}
+            width={1000}
+            height={1000}
+          />
+        </div>
       }
     </div>
   );
 }
-
-const CircularLoading: React.FC<{ progress: number }> = ({ progress }) => {
-  return (
-    <div className="fixed bottom-5 right-5">
-      <svg className="circular-chart" viewBox="0 0 36 36">
-        <path
-          className="circle-bg"
-          d="M18 2.0845
-          a 15.9155 15.9155 0 0 1 0 31.831
-          a 15.9155 15.9155 0 0 1 0 -31.831"
-          fill="none"
-          stroke="#eee"
-          strokeWidth="3.8"
-        />
-        <path
-          className="circle"
-          strokeDasharray={`${progress}, 100`}
-          d="M18 2.0845
-          a 15.9155 15.9155 0 0 1 0 31.831
-          a 15.9155 15.9155 0 0 1 0 -31.831"
-          fill="none"
-          stroke="#4caf50"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    </div>
-  );
-};
 
 export default Profile;
