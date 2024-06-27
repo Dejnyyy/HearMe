@@ -69,7 +69,6 @@
   width: 50px;
   height: 100%;
   z-index: 999;
-  
 }
 
 .sidebar {
@@ -111,13 +110,22 @@
     margin: 15px 0;
   }
 
-  .menuItems p {
+  .menuItems a {
     color: white;
     text-decoration: none;
     font-size: 24px;
   }
 
-  .menuItems p:hover {
+  .menuItems a:hover {
     text-decoration: underline;
   }
+}
+
+.menuText {
+  display: flex;
+  align-items: center;
+}
+
+.menuText svg {
+  margin-right: 8px;
 }

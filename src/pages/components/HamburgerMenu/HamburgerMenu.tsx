@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './HamburgerMenu.module.css';
 import { useSession } from "next-auth/react";
+import { FaHome, FaUser, FaCalendarAlt, FaChartLine, FaCompass, FaVoteYea, FaUsers, FaUserShield, FaCrown, FaThumbsUp } from 'react-icons/fa';
 
 const HamburgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,18 +27,18 @@ const HamburgerMenu: React.FC = () => {
 
   const menuItems = (
     <ul className={styles.menuItems}>
-      <li><Link href="/"><p className="font-mono font-semibold text-lg cursor-pointer">Home</p></Link></li>
-      <li><Link href="/profile"><p className="font-mono font-semibold text-lg cursor-pointer">Profile</p></Link></li>
-      <li><Link href="/calendar"><p className="font-mono font-semibold text-lg cursor-pointer">Calendar</p></Link></li>
-      <li><Link href="/rankingToday"><p className="font-mono font-semibold text-lg cursor-pointer">Ranking</p></Link></li>
-      <li><Link href="/explore"><p className="font-mono font-semibold text-lg cursor-pointer">Explore</p></Link></li>
-      <li><Link href="/voteToday"><p className="font-mono font-semibold text-lg cursor-pointer">Vote</p></Link></li>
-      <li><Link href="/friends"><p className="font-mono font-semibold text-lg cursor-pointer">Friends</p></Link></li>
+      <li><Link href="/"><p className={styles.menuText}><FaHome /> Home</p></Link></li>
+      <li><Link href="/profile"><p className={styles.menuText}><FaUser /> Profile</p></Link></li>
+      <li><Link href="/calendar"><p className={styles.menuText}><FaCalendarAlt /> Calendar</p></Link></li>
+      <li><Link href="/rankingToday"><p className={styles.menuText}><FaChartLine /> Ranking</p></Link></li>
+      <li><Link href="/explore"><p className={styles.menuText}><FaCompass /> Explore</p></Link></li>
+      <li><Link href="/voteToday"><p className={styles.menuText}><FaVoteYea /> Vote</p></Link></li>
+      <li><Link href="/friends"><p className={styles.menuText}><FaUsers /> Friends</p></Link></li>
       {isAdmin && (
         <>
-          <li><Link href="/admin"><p className="font-mono font-semibold text-lg border-t-2 cursor-pointer">Users</p></Link></li>
-          <li><Link href="/ranking"><p className="font-mono font-semibold text-lg cursor-pointer">Ranking Admin</p></Link></li>
-          <li><Link href="/vote"><p className="font-mono font-semibold text-lg cursor-pointer">Vote Admin</p></Link></li>
+          <li><Link href="/admin"><p className={styles.menuText}><FaUserShield /> Users</p></Link></li>
+          <li><Link href="/ranking"><p className={styles.menuText}><FaCrown /> Ranking Admin</p></Link></li>
+          <li><Link href="/vote"><p className={styles.menuText}><FaThumbsUp /> Vote Admin</p></Link></li>
         </>
       )}
     </ul>
