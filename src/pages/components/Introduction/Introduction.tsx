@@ -53,11 +53,7 @@ const Introduction: React.FC = () => {
         </>
       ) : (
         <>
-          <div className="introduction-box border mt-10 border-white p-4 mx-10 md:mx-20 rounded-lg text-white text-center shadow-lg">
-            <p className="font-mono text-lg">
-              My name is Dejny and I'm an IT student from the Czech Republic. This project is my school work that ended 10th of June 2024.
-            </p>
-          </div>
+        
           <div className="introduction-box border mt-10 border-white p-4 mx-10 md:mx-20 rounded-lg text-white text-center shadow-lg">
             <p className="font-mono text-lg">
               To use my app, you need to scroll all the way down.
