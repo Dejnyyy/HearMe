@@ -25,6 +25,7 @@ const FriendsCircles: React.FC = () => {
 
     return (
         <div className="flex min-h-screen items-start justify-center bg-black pt-10">
+         <HamburgerMenu />
             <div className="flex flex-wrap justify-center gap-4">
                 {users.map((user) => (
                     <div key={user.id} className="flex flex-col items-center">
