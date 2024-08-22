@@ -31,7 +31,7 @@ const FriendsCircles: React.FC = () => {
                     <div key={user.id} className="flex flex-col items-center">
                         <div className="w-12 h-12 rounded-full bg-gray-300">
                             <img
-                                src={user.image || "/defaultProfileImage.png"}
+                                src={user.image || "/default-userImage.png"}
                                 alt={`${user.name}'s profile`}
                                 className="w-full h-full rounded-full object-cover"
                             />

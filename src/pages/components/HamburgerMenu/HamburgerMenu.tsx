@@ -34,7 +34,7 @@ const HamburgerMenu: React.FC = () => {
       <li><Link href="/explore"><p className={styles.menuText}><FaCompass /> Explore</p></Link></li>
       <li><Link href="/voteToday"><p className={styles.menuText}><FaVoteYea /> Vote</p></Link></li>
       <li><Link href="/friends"><p className={styles.menuText}><FaUsers /> Friends</p></Link></li>
-      <li><Link href="/friendsCircles"><p className={styles.menuText}><FaUsers /> Homito</p></Link></li>
+      <li><Link href="/friendsCircles"><p className={styles.menuText}><FaUsers /> FriendCircles</p></Link></li>
 
      {isAdmin && (
         <>
