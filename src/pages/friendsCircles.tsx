@@ -22,7 +22,6 @@ const FriendsCircles: React.FC = () => {
 
         fetchUsers();
     }, []);
-
     return (
         <div className="flex min-h-screen items-start justify-center bg-black pt-10">
          <HamburgerMenu />
