@@ -40,9 +40,16 @@ const FriendsCircles: React.FC = () => {
     };
 
     return (
-        <div className="flex min-h-screen items-start justify-center bg-black pt-10">
+        <div className="flex min-h-screen items-center justify-center bg-black pt-10">
             <HamburgerMenu />
-            <div className="flex flex-col items-center">
+            <div className="flex items-center">
+                <button
+                    onClick={handlePrevious}
+                    disabled={currentIndex === 0}
+                    className="w-10 h-10 flex items-center justify-center bg-gray-600 text-white rounded-full disabled:opacity-50 mr-4"
+                >
+                    <FaChevronLeft />
+                </button>
                 <div className="flex flex-wrap justify-center gap-4 overflow-hidden">
                     <AnimatePresence initial={false}>
                         {users.slice(currentIndex, currentIndex + visibleUsersCount).map((user) => (
@@ -66,22 +73,13 @@ const FriendsCircles: React.FC = () => {
                         ))}
                     </AnimatePresence>
                 </div>
-                <div className="flex justify-between w-full mt-4">
-                    <button
-                        onClick={handlePrevious}
-                        disabled={currentIndex === 0}
-                        className="w-10 h-10 flex items-center justify-center bg-gray-600 text-white rounded-full disabled:opacity-50"
-                    >
-                        <FaChevronLeft />
-                    </button>
-                    <button
-                        onClick={handleNext}
-                        disabled={currentIndex >= users.length - visibleUsersCount}
-                        className="w-10 h-10 flex items-center justify-center bg-gray-600 text-white rounded-full disabled:opacity-50"
-                    >
-                        <FaChevronRight />
-                    </button>
-                </div>
+                <button
+                    onClick={handleNext}
+                    disabled={currentIndex >= users.length - visibleUsersCount}
+                    className="w-10 h-10 flex items-center justify-center bg-gray-600 text-white rounded-full disabled:opacity-50 ml-4"
+                >
+                    <FaChevronRight />
+                </button>
             </div>
         </div>
     );
