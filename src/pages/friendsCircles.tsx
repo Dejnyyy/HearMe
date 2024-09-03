@@ -39,6 +39,25 @@ const FriendsCircles: React.FC = () => {
         }
     };
 
+    const variants = {
+        enter: (direction: number) => {
+            return {
+                x: direction > 0 ? 100 : -100,
+                opacity: 0,
+            };
+        },
+        center: {
+            x: 0,
+            opacity: 1,
+        },
+        exit: (direction: number) => {
+            return {
+                x: direction < 0 ? 100 : -100,
+                opacity: 0,
+            };
+        },
+    };
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-black pt-10">
             <HamburgerMenu />
@@ -50,27 +69,31 @@ const FriendsCircles: React.FC = () => {
                 >
                     <FaChevronLeft />
                 </button>
-                <div className="flex flex-wrap justify-center gap-4 overflow-hidden">
-                    <AnimatePresence initial={false}>
-                        {users.slice(currentIndex, currentIndex + visibleUsersCount).map((user) => (
-                            <motion.div
-                                key={user.id}
-                                initial={{ opacity: 0, x: 50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -50 }}
-                                transition={{ duration: 0.5 }}
-                                className="flex flex-col items-center"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-gray-300">
-                                    <img
-                                        src={user.image || "/default-userImage.png"}
-                                        alt={`${user.name}'s profile`}
-                                        className="w-full h-full rounded-full object-cover"
-                                    />
+                <div className="relative w-full flex justify-center overflow-hidden">
+                    <AnimatePresence initial={false} custom={currentIndex}>
+                        <motion.div
+                            key={currentIndex}
+                            custom={currentIndex}
+                            variants={variants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{ duration: 0.5 }}
+                            className="absolute flex gap-4"
+                        >
+                            {users.slice(currentIndex, currentIndex + visibleUsersCount).map((user) => (
+                                <div key={user.id} className="flex flex-col items-center">
+                                    <div className="w-12 h-12 rounded-full bg-gray-300">
+                                        <img
+                                            src={user.image || "/default-userImage.png"}
+                                            alt={`${user.name}'s profile`}
+                                            className="w-full h-full rounded-full object-cover"
+                                        />
+                                    </div>
+                                    <p className="text-white mt-1 text-sm">{user.name}</p>
                                 </div>
-                                <p className="text-white mt-1 text-sm">{user.name}</p>
-                            </motion.div>
-                        ))}
+                            ))}
+                        </motion.div>
                     </AnimatePresence>
                 </div>
                 <button
