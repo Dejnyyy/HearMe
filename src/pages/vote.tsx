@@ -120,14 +120,14 @@ const Vote: React.FC = () => {
   
   return (
     <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center text-lg font-mono font-semibold" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main className="flex min-h-screen flex-col text-white items-center justify-center" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <HamburgerMenu />
         <section>
           <div>
-            <h1>Vote</h1>
+            <h1 className=' text-lg font-mono font-semibold'>Vote</h1>
           </div>
         </section>
-        <div className="w-5/6 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3 h-96 overflow-y-auto my-2 rounded-xl shadow-lg bg-zinc-800">
+        <div className="w-5/6 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3 h-96 overflow-y-auto my-2 rounded-xl shadow-lg text-lg font-mono font-semibold bg-zinc-800">
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
