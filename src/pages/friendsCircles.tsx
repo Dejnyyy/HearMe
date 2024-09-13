@@ -28,6 +28,7 @@ const FriendsCircles: React.FC = () => {
                 const response = await fetch('/api/najdiusery'); // Replace with actual friends endpoint
                 if (response.ok) {
                     const fetchedUsers = await response.json();
+                    console.log('Fetched users:', fetchedUsers); // Log fetched users
                     setUsers(fetchedUsers);
                 } else {
                     console.error('Failed to fetch users:', response.statusText);
@@ -85,11 +86,16 @@ const FriendsCircles: React.FC = () => {
     
         return diffInHours <= 24;
     };
-    
 
     // Helper function to find the vote details of a user by their ID
     const getLastVoteForUser = (userId: string): VoteDetails | null => {
-        return friendsLastVotes.find(vote => vote.userId === userId) || null;
+        const lastVote = friendsLastVotes.find(vote => vote.userId === userId) || null;
+        if (!lastVote) {
+            console.log(`No last vote found for user with ID: ${userId}`);
+        } else {
+            console.log(`Found last vote for user with ID: ${userId}, Vote:`, lastVote);
+        }
+        return lastVote;
     };
 
     // Filter users who have voted in the last 24 hours

@@ -50,24 +50,22 @@ export default async function handler(
         return res.status(404).json({ error: 'No friends found' });
       }
 
-      // Fetch the last vote for each friend
-      const lastVotes = await db.vote.findMany({
-        where: {
-          userId: {
-            in: friendIds,
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        distinct: ['userId'],  // Get the most recent vote per friend
-      });
+      // Fetch the last vote for each friend using Promise.all for efficient parallel fetching
+      const lastVotes = await Promise.all(friendIds.map(async (friendId) => {
+        return await db.vote.findFirst({
+          where: { userId: friendId },
+          orderBy: { createdAt: 'desc' },
+        });
+      }));
 
-      if (lastVotes.length === 0) {
+      // Filter out any friends who may not have any votes
+      const filteredLastVotes = lastVotes.filter(vote => vote !== null);
+
+      if (filteredLastVotes.length === 0) {
         return res.status(404).json({ error: 'No votes found for friends' });
       }
 
-      return res.status(200).json(lastVotes);
+      return res.status(200).json(filteredLastVotes);
     } else {
       // Fetch all votes for the current user
       const votes = await db.vote.findMany({
