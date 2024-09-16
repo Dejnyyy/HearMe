@@ -52,7 +52,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   };
 
   return (
-    <div className="">
+    <div className="font-mono font-semibold">
       <input
         className="rounded-md text-black py-1 m-3 pl-2 w-2/3"
         type="text"

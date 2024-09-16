@@ -191,7 +191,7 @@ const VoteToday: React.FC = () => {
           <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
-          <div className="my-2 rounded-md p-4">
+          <div className="my-2 rounded-md p-4 font-semibold font-mono">
             <h2>Selected Song</h2>
             <div className="my-2 p-4 rounded-xl bg-zinc-800 flex items-center">
               <Image

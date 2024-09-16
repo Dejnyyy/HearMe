@@ -128,10 +128,10 @@ const Vote: React.FC = () => {
           </div>
         </section>
         <div className="w-5/6 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3 h-96 overflow-y-auto my-2 rounded-xl shadow-lg text-lg font-mono font-semibold bg-zinc-800">
-          <SearchForm onSongClick={handleSongClick} />
+          <SearchForm  onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
-          <div className="my-2 rounded-md p-4">
+          <div className="my-2 rounded-md p-4 font-mono font-semibold">
             <h2>Selected Song</h2>
             <div className="my-2 p-4 rounded-xl bg-zinc-800 flex items-center">
               <Image
