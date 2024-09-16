@@ -172,7 +172,6 @@ const FriendsCircles: React.FC = () => {
                     </button>
                 </motion.div>
             </div>
-
             {/* List of users who voted in the last 24 hours */}
             {usersWhoVotedInLast24Hours.length > 0 ? (
                 <div className="mt-8 text-center">
