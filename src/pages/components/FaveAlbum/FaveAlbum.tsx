@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import SearchAlbums from '../SearchAlbums';
-import { toast } from 'react-toastify';
-import JSON from 'json5';
-import styles from './FaveAlbum.module.css';
-import { CSSTransition } from 'react-transition-group';
+import React, { useState, useEffect } from "react";
+import SearchAlbums from "../SearchAlbums";
+import { toast } from "react-toastify";
+import JSON from "json5";
+import styles from "./FaveAlbum.module.css";
+import { CSSTransition } from "react-transition-group";
 
 const FaveAlbum: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [lastSelectedAlbum, setLastSelectedAlbum] = useState<any | null>(null);
-  const [lastSelectedAlbumImg, setLastSelectedAlbumImg] = useState<any | null>(null);
+  const [lastSelectedAlbumImg, setLastSelectedAlbumImg] = useState<any | null>(
+    null,
+  );
   const [selectedAlbum, setSelectedAlbum] = useState<any | null>(null);
 
   const fetchFavoriteAlbum = async () => {
     try {
-      const response = await fetch('/api/getFavouriteAlbum');
+      const response = await fetch("/api/getFavouriteAlbum");
       if (!response.ok) {
-        console.log('Network response was not ok');
+        console.log("Network response was not ok");
       }
       const albumData = await response.json();
       console.log(albumData.favoriteAlbum);
@@ -23,7 +25,7 @@ const FaveAlbum: React.FC = () => {
       setLastSelectedAlbumImg(albumData.favAlbImg);
       setLastSelectedAlbum(albumData.favoriteAlbum);
     } catch (error) {
-      console.error('Error fetching favorite album from database:', error);
+      console.error("Error fetching favorite album from database:", error);
     }
   };
 
@@ -41,11 +43,11 @@ const FaveAlbum: React.FC = () => {
     }
 
     setSelectedAlbum(album);
-    localStorage.setItem('lastSelectedAlbum', JSON.stringify(album));
+    localStorage.setItem("lastSelectedAlbum", JSON.stringify(album));
 
     toast.success(`Favorite album set to ${album.name}`, {
-      className: 'toast-message',
-      position: 'top-right',
+      className: "toast-message",
+      position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -60,15 +62,18 @@ const FaveAlbum: React.FC = () => {
 
   return (
     <div>
-      <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
+      <div
+        className="cursor-pointer rounded-md text-center"
+        onClick={toggleSearch}
+      >
         {lastSelectedAlbum ? (
           <div>
             <h2>Favourite Album:</h2>
-            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
+            <div className="flex items-center rounded-2xl bg-gray-700 p-3">
               <img
-                src={lastSelectedAlbumImg || 'default-image-url'}
+                src={lastSelectedAlbumImg || "default-image-url"}
                 alt={`Image for ${lastSelectedAlbum}`}
-                className={`album-image w-16 ml-2 rounded-lg ${styles.albumImage}`}
+                className={`album-image ml-2 w-16 rounded-lg ${styles.albumImage}`}
               />
               <div className="ml-2">
                 <strong>{lastSelectedAlbum}</strong>
@@ -76,21 +81,21 @@ const FaveAlbum: React.FC = () => {
             </div>
           </div>
         ) : (
-          'Favorite Album'
+          "Favorite Album"
         )}
       </div>
       <CSSTransition
         in={isOpen}
         timeout={300}
         classNames={{
-          enter: styles['modal-enter'],
-          enterActive: styles['modal-enter-active'],
-          exit: styles['modal-exit'],
-          exitActive: styles['modal-exit-active'],
+          enter: styles["modal-enter"],
+          enterActive: styles["modal-enter-active"],
+          exit: styles["modal-exit"],
+          exitActive: styles["modal-exit-active"],
         }}
         unmountOnExit
       >
-        <div className="w-auto lg:absolute mx-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
+        <div className="mx-auto my-2 h-96 w-auto overflow-y-auto rounded-lg border bg-zinc-800 lg:absolute">
           <SearchAlbums onAlbumClick={handleAlbumClick} />
         </div>
       </CSSTransition>

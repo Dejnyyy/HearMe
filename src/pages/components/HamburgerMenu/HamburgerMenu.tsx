@@ -1,71 +1,184 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import styles from './HamburgerMenu.module.css';
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import styles from "./HamburgerMenu.module.css";
 import { useSession } from "next-auth/react";
-import { FaHome, FaUser, FaCalendarAlt, FaChartLine, FaCompass, FaVoteYea, FaUsers, FaUserShield, FaCrown, FaThumbsUp } from 'react-icons/fa';
+import { useRouter } from "next/router";
+import {
+  FaHome,
+  FaUser,
+  FaCalendarAlt,
+  FaChartLine,
+  FaCompass,
+  FaVoteYea,
+  FaUsers,
+  FaUserShield,
+  FaCrown,
+  FaThumbsUp,
+} from "react-icons/fa";
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+  adminOnly?: boolean;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { href: "/", label: "Home", icon: <FaHome /> },
+  { href: "/profile", label: "Profile", icon: <FaUser /> },
+  { href: "/calendar", label: "Calendar", icon: <FaCalendarAlt /> },
+  { href: "/rankingToday", label: "Ranking", icon: <FaChartLine /> },
+  { href: "/explore", label: "Explore", icon: <FaCompass /> },
+  { href: "/voteToday", label: "Vote", icon: <FaVoteYea /> },
+  { href: "/friends", label: "Friends", icon: <FaUsers /> },
+  //{ href: "/friendsCircles", label: "FriendCircles", icon: <FaUsers /> },
+  // Admin
+  { href: "/admin", label: "Users", icon: <FaUserShield />, adminOnly: true },
+  {
+    href: "/ranking",
+    label: "Ranking Admin",
+    icon: <FaCrown />,
+    adminOnly: true,
+  },
+  { href: "/vote", label: "Vote Admin", icon: <FaThumbsUp />, adminOnly: true },
+];
 
 const HamburgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: sessionData } = useSession();
-  const isAdmin = sessionData?.user?.isAdmin;
   const [isMobile, setIsMobile] = useState(false);
+  const { data: sessionData } = useSession();
+  const isAdmin = !!(sessionData as any)?.user?.isAdmin;
+  const router = useRouter();
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
 
+  // Detect mobile on client
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
+    const update = () =>
+      setIsMobile(typeof window !== "undefined" && window.innerWidth <= 768);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  // Close on route change
+  useEffect(() => {
+    const handleRoute = () => setIsOpen(false);
+    router.events.on("routeChangeStart", handleRoute);
+    return () => router.events.off("routeChangeStart", handleRoute);
+  }, [router.events]);
+
+  // Esc to close + body scroll lock only when open on mobile
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsOpen(false);
+    window.addEventListener("keydown", onKey);
+
+    if (isMobile && isOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        window.removeEventListener("keydown", onKey);
+        document.body.style.overflow = prev;
+      };
+    }
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, isMobile]);
+
+  const items = NAV_ITEMS.filter((i) => (i.adminOnly ? isAdmin : true));
+
+  const isActive = (href: string) => {
+    const path = router.asPath.split("?")[0];
+    return path === href;
   };
 
-  const menuItems = (
-    <ul className={styles.menuItems}>
-      <li><Link href="/"><p className={styles.menuText}><FaHome /> Home</p></Link></li>
-      <li><Link href="/profile"><p className={styles.menuText}><FaUser /> Profile</p></Link></li>
-      <li><Link href="/calendar"><p className={styles.menuText}><FaCalendarAlt /> Calendar</p></Link></li>
-      <li><Link href="/rankingToday"><p className={styles.menuText}><FaChartLine /> Ranking</p></Link></li>
-      <li><Link href="/explore"><p className={styles.menuText}><FaCompass /> Explore</p></Link></li>
-      <li><Link href="/voteToday"><p className={styles.menuText}><FaVoteYea /> Vote</p></Link></li>
-      <li><Link href="/friends"><p className={styles.menuText}><FaUsers /> Friends</p></Link></li>
-      <li><Link href="/friendsCircles"><p className={styles.menuText}><FaUsers /> FriendCircles</p></Link></li>
-
-     {isAdmin && (
-        <>
-          <li><Link href="/admin"><p className={styles.menuText}><FaUserShield /> Users</p></Link></li>
-          <li><Link href="/ranking"><p className={styles.menuText}><FaCrown /> Ranking Admin</p></Link></li>
-          <li><Link href="/vote"><p className={styles.menuText}><FaThumbsUp /> Vote Admin</p></Link></li>
-        </>
-      )}
+  const MenuList = (
+    <ul className={styles.menuItems} role="menu" aria-label="Main navigation">
+      {items.map((item) => (
+        <li key={item.href} role="none">
+          <Link
+            href={item.href}
+            className={`${styles.menuLink} ${
+              isActive(item.href) ? styles.active : ""
+            }`}
+            role="menuitem"
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            <span className={styles.icon}>{item.icon}</span>
+            <span className={styles.menuText}>{item.label}</span>
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 
+  /* ===== Desktop behavior: hover to open, button hides while open ===== */
+  if (!isMobile) {
+    return (
+      <>
+        {/* Fixed hamburger (hidden when open) */}
+        <button
+          className={`${styles.hamburgerBtnFixed} ${
+            isOpen ? styles.hiddenBtn : ""
+          }`}
+          onMouseEnter={() => setIsOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={isOpen}
+          aria-controls="desktop-sidebar"
+        >
+          <span className={styles.bar} />
+          <span className={styles.bar} />
+          <span className={styles.bar} />
+        </button>
+
+        {/* Sidebar that appears on hover, closes when mouse leaves it */}
+        <aside
+          id="desktop-sidebar"
+          ref={sidebarRef}
+          className={`${styles.sidebarHover} ${
+            isOpen ? styles.sidebarOpen : ""
+          }`}
+          onMouseLeave={() => setIsOpen(false)}
+          aria-label="Sidebar"
+        >
+          <nav className={styles.sidebarInner}>{MenuList}</nav>
+        </aside>
+      </>
+    );
+  }
   return (
-    <div>
-      {isMobile ? (
-        <div>
-          <div className={styles.hamburgerMenu} onClick={toggleMenu}>
-            <div className={`${styles.bar} ${isOpen ? styles.open : ''}`} />
-            <div className={`${styles.bar} ${isOpen ? styles.open : ''}`} />
-            <div className={`${styles.bar} ${isOpen ? styles.open : ''}`} />
-          </div>
-          {isOpen && (
-            <div className={`${styles.menuOverlay} ${isOpen ? styles.show : ''}`}>
-              {menuItems}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className={styles.sidebarContainer}>
-          <div className={styles.sidebar}>
-            {menuItems}
-          </div>
+    <div className={styles.mobileWrap}>
+      {/* Render button ONLY when closed */}
+      {!isOpen && (
+        <button
+          className={styles.hamburgerBtnFixed}
+          onClick={() => setIsOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+        >
+          <span className={styles.bar} />
+          <span className={styles.bar} />
+          <span className={styles.bar} />
+        </button>
+      )}
+
+      {isOpen && (
+        <div
+          ref={overlayRef}
+          id="mobile-menu"
+          className={styles.menuOverlay}
+          onClick={(e) => {
+            if (e.target === overlayRef.current) setIsOpen(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+        >
+          <nav
+            className={styles.mobileSheet}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {MenuList}
+          </nav>
         </div>
       )}
     </div>

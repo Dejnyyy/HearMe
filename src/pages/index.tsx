@@ -1,41 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import React from "react";
 import Head from "next/head";
-//import HamburgerMenu from "./components/HamburgerMenu";
-import CircularLoading from "./components/CircularLoading";
-import Introduction from "./components/Introduction";
-import { User } from "@prisma/client";
 import Image from "next/image";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { LinearGradient } from "react-text-gradients";
+import { User } from "@prisma/client";
 import { useRouter } from "next/router";
-import { LinearGradient } from 'react-text-gradients'
 
+interface HomeProps {
+  userList: User[];
+}
 
-const Home: React.FC<{ userList: User[] }> = () => {
-  const { data: sessionData } = useSession();
-  const userID = sessionData?.user?.id;
+const Home: React.FC<HomeProps> = () => {
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrolled = (scrollTop / docHeight) * 100;
-
-      setScrollProgress(scrolled);
-
-      if (scrolled >= 100) {
-        router.push("/profile");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [router]);
 
   return (
     <>
@@ -44,36 +21,44 @@ const Home: React.FC<{ userList: User[] }> = () => {
         <meta name="description" content="Created by Dejny" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main
-        className="flex min-h-screen flex-col items-center justify-start bg-black"
-        style={{
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          paddingTop: "20px", // Add padding to allow space for scrolling
-        }}
-      >
+
+      <main className="flex min-h-screen flex-col items-center justify-center bg-black">
+        {/* Logo */}
         <Image
           src="/favicon.png"
-          className="m-2 w-64"
-          alt="Logo"
+          alt="HearMe Logo"
           width={200}
           height={200}
+          className="m-4 w-64"
+          priority
         />
-        {/* {sessionData && <HamburgerMenu />} */}
+
+        {/* Greeting */}
         {sessionData && (
-          <div className="font-mono text-lg font-semibold text-white mb-4">
+          <h1 className="mb-6 text-center font-mono text-lg font-semibold text-white">
             Hello,{" "}
             <span className="cursor-pointer underline">
               {sessionData.user?.name}
             </span>{" "}
-            welcome to <LinearGradient gradient={['to left', '#FFD700 ,#ff68f0']}>HearMe</LinearGradient>
-          </div>
+            welcome to{" "}
+            <LinearGradient gradient={["to left", "#FFD700, #ff68f0"]}>
+              HearMe
+            </LinearGradient>
+          </h1>
         )}
-       
-        <AuthShowcase userID={userID} />
-        {sessionData && <Introduction />} 
-        <div style={{ height: "500px" }}></div>
-        <CircularLoading progress={188 - (188 * scrollProgress) / 100} />
+
+        {/* Auth Buttons */}
+        <AuthShowcase />
+
+        {/* Enter App Button */}
+        {sessionData && (
+          <button
+            onClick={() => router.push("/profile")}
+            className="mt-8 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 px-8 py-3 font-mono font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-xl active:scale-95"
+          >
+            Enter App →
+          </button>
+        )}
       </main>
     </>
   );
@@ -83,21 +68,23 @@ interface AuthShowcaseProps {
   userID?: string;
 }
 
-export const AuthShowcase: React.FC<AuthShowcaseProps> = ({ userID }) => {
-  const { data: sessionData } = useSession();
-  console.log(sessionData);
-  console.log(userID);
+const AuthShowcase: React.FC<AuthShowcaseProps> = () => {
+  const { data: sessionData, status } = useSession();
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {sessionData && <div>{/* Content to show when authenticated */}</div>}
       <button
-        className="mt-10 rounded-full bg-white px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-white/50"
-        onClick={
-          sessionData ? () => void signOut() : () => void signIn("spotify")
+        className="mt-6 rounded-full bg-white px-10 py-3 font-mono font-semibold text-black shadow-md transition hover:scale-105 hover:bg-white/70 active:scale-95"
+        onClick={() =>
+          sessionData ? signOut({ callbackUrl: "/" }) : signIn("spotify")
         }
+        disabled={status === "loading"}
       >
-        {sessionData ? "Sign out" : "Sign in via Spotify"}
+        {status === "loading"
+          ? "Loading..."
+          : sessionData
+            ? "Sign out"
+            : "Sign in via Spotify"}
       </button>
     </div>
   );

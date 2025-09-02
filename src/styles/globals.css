@@ -9,38 +9,52 @@
   background: white;
   color: black;
 }
-  /* width scrollbaru */
+/* width scrollbaru */
 ::-webkit-scrollbar {
-    width: 5px;
-  }
-  
-  /* Track scrollbaru */
-  ::-webkit-scrollbar-track {
-    border-radius: 5%;
-  }
-   
-  /* ten posouvak*/
-  ::-webkit-scrollbar-thumb {
-    background: white; 
-    border-radius: 50px;
-  }
-  /* najeti na posouvak */
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgb(130, 130, 130); 
-  }
-  .toast-message {
-    background: black;
-    color: #fff;
-    font-size: 20px;
-    padding: 30px 20px;
-  }
-  .vote-positive {
-    color: rgb(6, 240, 6);
-  }
-  .vote-negative {
-    color: red;
-  }
+  width: 5px;
+}
+
+/* Track scrollbaru */
+::-webkit-scrollbar-track {
+  border-radius: 5%;
+}
+
+/* ten posouvak*/
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 50px;
+}
+/* najeti na posouvak */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(130, 130, 130);
+}
+.toast-message {
+  background: black;
+  color: #fff;
+  font-size: 20px;
+  padding: 30px 20px;
+}
+.vote-positive {
+  color: rgb(6, 240, 6);
+}
+.vote-negative {
+  color: red;
+}
 .colorful-circle {
   border: 4px solid;
   border-image: linear-gradient(45deg, #f39c12, #e74c3c, #8e44ad, #3498db) 1;
+}
+/* global.css */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
