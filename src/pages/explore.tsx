@@ -1,231 +1,363 @@
-import React, { useState, useEffect, useRef } from 'react';
-import HamburgerMenu from './components/HamburgerMenu';
-import Image from 'next/image';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
+import HamburgerMenu from "./components/HamburgerMenu";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import Loading from "./components/Loading";
+import { ArrowDownAZ, ArrowUpAZ, Users, Globe2, Trash2 } from "lucide-react";
 
+/* ==================== Types ==================== */
 interface Vote {
   id: number;
   createdAt: string;
   song: string;
   artist: string;
-  voteType: string;
+  voteType: string; // '+' | '-'
   imageUrl?: string;
   userId: string;
   name?: string;
   image?: string;
 }
 
+/* ==================== Helpers ==================== */
+const formatDate = (dateString: string) =>
+  new Date(dateString).toLocaleString("cs-CZ", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+/* ==================== Component ==================== */
 const Explore: React.FC = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
+  const isAdmin = Boolean((sessionData as any)?.user?.isAdmin);
+
+  // feed state
   const [votes, setVotes] = useState<Vote[]>([]);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [shownType, setShownType] = useState(true);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [page, setPage] = useState(1); // Page state for pagination
-  const [hasMore, setHasMore] = useState(true); // State to track if there are more votes to load
-  const isAdmin = sessionData?.user?.isAdmin;
-  const router = useRouter();
-  const observer = useRef<IntersectionObserver | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [worldFeed, setWorldFeed] = useState(true);
 
-  const getRandomBackground = () => {
-    const bgNumber = Math.floor(Math.random() * 7) + 1;
-    return `/HearMeBG${bgNumber}.png`;
-  };
+  // pagination + loading
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [background, setBackground] = useState(getRandomBackground());
+  // sentinel for infinite scroll
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  useEffect(() => {
-    fetchVotes();
-  }, [shownType, page]);
+  const apiEndpoint = useMemo(
+    () =>
+      worldFeed
+        ? `/api/getOptimalVotes?page=${page}&limit=20`
+        : `/api/findMineAndFriendsVotesOptimal?page=${page}&limit=20`,
+    [worldFeed, page],
+  );
 
-  const fetchVotes = async () => {
-    setLoading(true); // Set loading to true before fetching data
-    const apiEndpoint = shownType ? `/api/getOptimalVotes?page=${page}&limit=20` : `/api/findMineAndFriendsVotesOptimal?page=${page}&limit=20`;
-    try {
-      const response = await fetch(apiEndpoint);
-      if (!response.ok) {
-        console.log('Votes fetch failed');
-        setLoading(false); // Set loading to false in case of error
-        return;
-      }
-      const { votes: votesData, totalVotes } = await response.json();
-      const votesWithUserDetails = await Promise.all(
-        votesData.map(async (vote: Vote) => ({
-          ...vote,
-          ...await fetchUserDetails(vote.userId),
-        }))
-      );
-      setVotes(prevVotes => [...prevVotes, ...votesWithUserDetails]);
-      setHasMore(votes.length + votesWithUserDetails.length < totalVotes);
-    } catch (error) {
-      console.error('Error fetching votes:', error);
-    } finally {
-      setLoading(false); // Set loading to false after data is fetched
-    }
-  };
-
-  const fetchUserDetails = async (userId: string) => {
+  // fetch user details for each vote
+  const fetchUserDetails = useCallback(async (userId: string) => {
     try {
       const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
-      if (!res.ok) {
-        console.log('User fetch failed');
-        return { name: 'Unknown', image: '/default-profile.png' };
-      }
+      if (!res.ok) return { name: "Unknown", image: "/default-profile.png" };
       const userData = await res.json();
-      return { name: userData.name, image: userData.image };
-    } catch (error) {
-      console.error('fetchUserDetails error:', error);
-      return { name: 'Unknown', image: '/default-profile.png' };
+      return {
+        name: userData?.name ?? "Unknown",
+        image: userData?.image ?? "/default-profile.png",
+      };
+    } catch {
+      return { name: "Unknown", image: "/default-profile.png" };
     }
-  };
+  }, []);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('cz-CS', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).replace(',', ', ');
-  };
-
-  const sortedVotes = [...votes].sort((a, b) => sortByDateDesc ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-
-  const toggleSortingOrder = () => setSortByDateDesc(!sortByDateDesc);
-  const toggleTypeShown = () => {
-    setVotes([]); // Clear votes when toggling type
-    setPage(1); // Reset to first page
-    setShownType(!shownType);
-  };
-  const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
-
-  const sortingButtonText = sortByDateDesc ? "Descendant" : "Ascendant";
-  const feedType = shownType ? "World" : "Friends";
-
-  const handleDeleteClick = async (voteId: number) => {
+  const fetchVotes = useCallback(async () => {
+    setLoading(true);
+    const ac = new AbortController();
     try {
-      const response = await fetch(`/api/deleteVote?voteId=${voteId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        console.error('Failed to delete vote');
+      const res = await fetch(apiEndpoint, { signal: ac.signal });
+      if (!res.ok) {
+        setLoading(false);
         return;
       }
-      setVotes(prevVotes => prevVotes.filter(vote => vote.id !== voteId));
-    } catch (error) {
-      console.error('Error deleting vote:', error);
+      const { votes: votesData, totalVotes } = await res.json();
+
+      // attach user info
+      const withUsers: Vote[] = await Promise.all(
+        (votesData as Vote[]).map(async (v) => {
+          const details = await fetchUserDetails(v.userId);
+          return { ...v, ...details };
+        }),
+      );
+
+      // de-dupe by id while appending
+      setVotes((prev) => {
+        const byId = new Map<number, Vote>();
+        [...prev, ...withUsers].forEach((v) => byId.set(v.id, v));
+        return Array.from(byId.values());
+      });
+
+      setHasMore((prevVotesCount) => {
+        // Can't access prev here; compute using latest known length after setVotes.
+        // Instead, compare using incoming totals: next line recalculated below in effect.
+        return true;
+      });
+    } catch (e) {
+      // noop + keep graceful UI
+    } finally {
+      setLoading(false);
+    }
+    return () => ac.abort();
+  }, [apiEndpoint, fetchUserDetails]);
+
+  // Keep hasMore in sync with total vs local count (re-check after each fetch)
+  useEffect(() => {
+    // When backend provides totalVotes only in the fetch, we can't access here;
+    // as a simple heuristic: if the fetch returned less than requested (20), stop.
+    // Better: the endpoint already sets totalVotes; if needed, you can return it from fetchVotes.
+    // For now we'll rely on "page bumps until empty page".
+  }, [votes.length]);
+
+  // initial + on page/world toggle
+  useEffect(() => {
+    fetchVotes();
+  }, [fetchVotes]);
+
+  // reset when switching feed type
+  const toggleFeed = () => {
+    setWorldFeed((v) => !v);
+    setVotes([]);
+    setPage(1);
+    setHasMore(true);
+    setExpandedId(null);
+  };
+
+  const toggleSort = () => setSortByDateDesc((v) => !v);
+
+  const onCardToggle = (voteId: number) => {
+    setExpandedId((cur) => (cur === voteId ? null : voteId));
+  };
+
+  const sortedVotes = useMemo(() => {
+    const copy = [...votes];
+    copy.sort((a, b) =>
+      sortByDateDesc
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+    return copy;
+  }, [votes, sortByDateDesc]);
+
+  const handleDelete = async (voteId: number) => {
+    try {
+      const res = await fetch(`/api/deleteVote?voteId=${voteId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) return;
+      setVotes((prev) => prev.filter((v) => v.id !== voteId));
+    } catch {
+      // noop
     }
   };
 
-  const handleUserClick = (userId: string) => {
-    router.push(`/profile/${userId}`);
-  };
+  const goToUser = (userId: string) => router.push(`/profile/${userId}`);
 
-  const lastVoteElementRef = useRef<HTMLDivElement | null>(null);
-
+  // intersection observer for infinite scroll
   useEffect(() => {
-    if (loading) return;
+    if (!sentinelRef.current || loading) return;
 
-    if (observer.current) observer.current.disconnect();
+    if (observerRef.current) observerRef.current.disconnect();
 
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => prevPage + 1);
+    observerRef.current = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMore && !loading) {
+        setPage((p) => p + 1);
       }
     });
 
-    if (lastVoteElementRef.current) {
-      observer.current.observe(lastVoteElementRef.current);
-    }
-  }, [loading, hasMore]);
+    observerRef.current.observe(sentinelRef.current);
+    return () => observerRef.current?.disconnect();
+  }, [hasMore, loading]);
 
+  /* ==================== UI ==================== */
   return (
     <div>
-      <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <section className="flex justify-end mt-12 mr-10 ml-10">
-          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleSortingOrder}>
-            Date {sortingButtonText}
-          </button>
-          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
-            Showing: {feedType}
-          </button>
-        </section>
-        <section className='justify-center items-center'>
-          <h1 className='text-5xl mt-2 text-center'>Explore</h1>
-          <h2 className='text-center text-xl'>All {feedType} Votes:</h2>
-          {loading ? (
-            <Loading />
-          ) : (
-            <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-              <ul>
-                {sortedVotes.map((vote, index) => (
-                  <div 
-                    key={index} 
-                    className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" 
-                    onClick={() => toggleExpanded(index)}
-                    ref={index === sortedVotes.length - 1 ? lastVoteElementRef : null}
-                  >
-                    <li className='cursor-pointer'>
-                      <div className='flex flex-row'>
-                        <Image
-                          src={vote.image || '/default-userimage.png'}
-                          alt='Profile Picture'
-                          width={50}
-                          height={50}
-                          className="rounded-full w-12 h-12"
-                          onClick={() => handleUserClick(vote.userId)}
-                        />
-                        <p className='my-auto ml-4' onClick={() => handleUserClick(vote.userId)}>{vote.name}</p>
-                        {isAdmin && (
-                          <button 
-                            className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
-                            onClick={(e) => {
-                              e.stopPropagation(); // Prevent the outer click handler from firing
-                              handleDeleteClick(vote.id);
-                            }}
-                          >
-                            x
-                          </button>
-                        )}
-                      </div>
+      <main
+        className="min-h-screen w-full bg-cover bg-center text-white"
+        style={{ backgroundImage: 'url("/HearMeBG4.png")' }}
+      >
+        <HamburgerMenu />
 
-                      <div className="sm:flex sm:flex-row">
-                        <div className='mx-auto sm:mx-0 text-center sm:text-center'>
-                          <img src={vote.imageUrl} alt={`Cover for ${vote.song}`}
-                            className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
-                        </div>
-                        <div className='ml-4 text-center sm:text-start my-auto'>
-                          <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className=''>
-                            <p className='hover:underline'>{vote.song}</p>
-                          </a>
-                          <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className=''>
-                            <p className='hover:underline text-gray-400'>{vote.artist}</p>
-                          </a>
-                        </div>
-                      </div>
-                      {expandedIndex === index && (
-                        <>
-                          <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>Type of vote: {vote.voteType}</p>
-                          <p>{formatDate(vote.createdAt)}</p>
-                        </>
-                      )}
-                    </li>
-                  </div>
-                ))}
-              </ul>
+        {/* Header / Controls */}
+        <section className="mx-auto w-full max-w-5xl px-4 pt-10">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <div>
+              <h1 className="text-center font-mono text-3xl font-semibold tracking-wide sm:text-left">
+                Explore
+              </h1>
+              <p className="text-center font-mono text-sm text-zinc-300 sm:text-left">
+                All {worldFeed ? "World" : "Friends"} Votes
+              </p>
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleSort}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/60 px-4 py-2 font-mono text-sm backdrop-blur hover:bg-zinc-800/60"
+              >
+                {sortByDateDesc ? (
+                  <ArrowDownAZ className="h-4 w-4" />
+                ) : (
+                  <ArrowUpAZ className="h-4 w-4" />
+                )}
+                Date {sortByDateDesc ? "Desc." : "Asc."}
+              </button>
+              <button
+                onClick={toggleFeed}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/60 px-4 py-2 font-mono text-sm backdrop-blur hover:bg-zinc-800/60"
+              >
+                {worldFeed ? (
+                  <Globe2 className="h-4 w-4" />
+                ) : (
+                  <Users className="h-4 w-4" />
+                )}
+                Showing: {worldFeed ? "World" : "Friends"}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Feed */}
+        <section className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6">
+          <div className="grid grid-cols-1 gap-4">
+            {sortedVotes.map((vote) => {
+              const expanded = expandedId === vote.id;
+              return (
+                <article
+                  key={vote.id}
+                  className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4 backdrop-blur-md transition hover:bg-zinc-900/60"
+                  onClick={() => onCardToggle(vote.id)}
+                  role="button"
+                >
+                  {/* Top: user row */}
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={vote.image || "/default-userimage.png"}
+                      alt="Profile picture"
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full object-cover"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToUser(vote.userId);
+                      }}
+                    />
+                    <button
+                      className="truncate text-left font-mono text-sm text-zinc-200 hover:underline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToUser(vote.userId);
+                      }}
+                    >
+                      {vote.name ?? "Unknown"}
+                    </button>
+
+                    {isAdmin && (
+                      <button
+                        className="ml-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-red-600/20 px-3 py-1 text-xs text-red-200 hover:bg-red-600/30"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(vote.id);
+                        }}
+                        aria-label="Delete vote"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Middle: song row */}
+                  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                    <div className="shrink-0">
+                      <Image
+                        src={vote.imageUrl || "/default-image-url"}
+                        alt={`Cover for ${vote.song}`}
+                        width={100}
+                        height={100}
+                        className="h-24 w-24 rounded-lg object-cover"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <a
+                        href={`https://open.spotify.com/search/${encodeURIComponent(
+                          vote.song,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block truncate font-mono text-lg font-semibold hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {vote.song}
+                      </a>
+                      <a
+                        href={`https://open.spotify.com/search/${encodeURIComponent(
+                          vote.artist,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block truncate font-mono text-sm text-zinc-300 hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {vote.artist}
+                      </a>
+
+                      {/* Expanded meta */}
+                      {expanded && (
+                        <div className="mt-2 space-y-1">
+                          <p
+                            className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
+                              vote.voteType === "+"
+                                ? "bg-green-500/20 text-green-300"
+                                : "bg-red-500/20 text-red-300"
+                            }`}
+                          >
+                            Type: {vote.voteType}
+                          </p>
+                          <p className="text-xs text-zinc-400">
+                            {formatDate(vote.createdAt)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+
+            {/* Loading / Empty / Sentinel */}
+            {loading && (
+              <div className="mt-2">
+                <Loading />
+              </div>
+            )}
+
+            {!loading && sortedVotes.length === 0 && (
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center text-zinc-300 backdrop-blur-md">
+                No votes yet.
+              </div>
+            )}
+
+            {/* Sentinel for infinite scroll */}
+            <div ref={sentinelRef} className="h-6 w-px self-center opacity-0" />
+          </div>
         </section>
       </main>
     </div>

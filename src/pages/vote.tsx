@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-import Image from 'next/image';
-import SearchForm from './components/SearchForm';
-import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+import Image from "next/image";
+import SearchForm from "./components/SearchForm";
+import { useState, useEffect } from "react";
 import HamburgerMenu from "./components/HamburgerMenu";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 
 interface Artist {
@@ -29,44 +29,44 @@ const Vote: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const isUserLoggedIn = status === "authenticated";
-  const userId = session?.user?.id ?? '';
+  const userId = session?.user?.id ?? "";
 
   useEffect(() => {
     const { selectedSong: querySong } = router.query;
-    if (typeof querySong === 'string') {
+    if (typeof querySong === "string") {
       setSelectedSong(JSON.parse(querySong));
-      localStorage.setItem('selectedSong', querySong);
+      localStorage.setItem("selectedSong", querySong);
     }
   }, [router.query]);
 
   const getArtistsNames = (track: Song): string => {
     return track.artists && track.artists.length > 0
-      ? track.artists.map((artist) => artist.name).join(', ')
-      : 'Unknown Artist';
+      ? track.artists.map((artist) => artist.name).join(", ")
+      : "Unknown Artist";
   };
 
   const handleSongClick = (clickedSong: Song) => {
     setSelectedSong(clickedSong);
-    console.log('Selected Song:', clickedSong);
+    console.log("Selected Song:", clickedSong);
   };
 
   const handleVote = async (voteType: string) => {
     if (!isUserLoggedIn) {
-      toast.error('You need to be logged in to vote.');
+      toast.error("You need to be logged in to vote.");
       return;
     }
-  
+
     if (!selectedSong) {
-      toast.error('No song selected.');
+      toast.error("No song selected.");
       return;
     }
-  
-    const imageUrl = selectedSong.album.images[2]?.url ?? 'default-image-url';
-  
+
+    const imageUrl = selectedSong.album.images[2]?.url ?? "default-image-url";
+
     try {
-      const response = await fetch('/api/vote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId,
           song: selectedSong.name,
@@ -75,13 +75,13 @@ const Vote: React.FC = () => {
           imageUrl,
         }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-        console.log('Vote successful:', data);
-        toast.success('Thank you for your vote!', {
+        console.log("Vote successful:", data);
+        toast.success("Thank you for your vote!", {
           className: "toast-message",
-          position: 'top-right',
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -89,12 +89,12 @@ const Vote: React.FC = () => {
           draggable: true,
           progress: undefined,
         });
-        router.push('/profile');
+        router.push("/profile");
       } else {
-        console.error('Vote failed:', response.statusText);
-        toast.error('Vote failed: ' + response.statusText, {
+        console.error("Vote failed:", response.statusText);
+        toast.error("Vote failed: " + response.statusText, {
           className: "toast-message",
-          position: 'top-right',
+          position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -104,10 +104,10 @@ const Vote: React.FC = () => {
         });
       }
     } catch (error) {
-      console.log('Vote failed:', (error as Error));
-      toast.error('Vote failed', {
+      console.log("Vote failed:", error as Error);
+      toast.error("Vote failed", {
         className: "toast-message",
-        position: 'top-right',
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -117,46 +117,57 @@ const Vote: React.FC = () => {
       });
     }
   };
-  
+
   return (
     <div>
-      <main className="flex min-h-screen flex-col text-white items-center justify-center" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <main
+        className="flex min-h-screen flex-col items-center justify-center text-white"
+        style={{
+          background: 'url("/HearMeBG4.png")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <HamburgerMenu />
         <section>
           <div>
-            <h1 className=' text-lg font-mono font-semibold'>Vote</h1>
+            <h1 className=" font-mono text-lg font-semibold">Vote</h1>
           </div>
         </section>
-        <div className="w-5/6 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3 h-96 overflow-y-auto my-2 rounded-xl shadow-lg text-lg font-mono font-semibold bg-zinc-800">
-          <SearchForm  onSongClick={handleSongClick} />
+        <div className="my-2 h-96 w-5/6 overflow-y-auto rounded-xl bg-zinc-800 font-mono text-lg font-semibold shadow-lg sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3">
+          <SearchForm onSongClick={handleSongClick} />
         </div>
         {selectedSong && (
           <div className="my-2 rounded-md p-4 font-mono font-semibold">
             <h2>Selected Song</h2>
-            <div className="my-2 p-4 rounded-xl bg-zinc-800 flex items-center">
+            <div className="my-2 flex items-center rounded-xl bg-zinc-800 p-4">
               <Image
-                src={selectedSong.album.images[2]?.url ?? 'default-image-url'}
+                src={selectedSong.album.images[2]?.url ?? "default-image-url"}
                 alt={`Album cover for ${selectedSong.name}`}
                 width={70}
-                height={70} 
-                className='song-image mb-1 rounded-lg'
+                height={70}
+                className="song-image mb-1 rounded-lg"
               />
-              <div className='mx-2'>
+              <div className="mx-2">
                 <strong>{selectedSong.name}</strong>
                 <br />
-                <span className='text-gray-400'>{getArtistsNames(selectedSong)}</span>
+                <span className="text-gray-400">
+                  {getArtistsNames(selectedSong)}
+                </span>
               </div>
             </div>
-            <div className='mx-auto text-center'>
+            <div className="mx-auto text-center">
               <button
-                className="rounded-full  px-10 py-3 mx-auto mr-4 bg-green-500 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
-                onClick={() => handleVote('+')}
-              >Vote
+                className="mx-auto  mr-4 rounded-full bg-green-500 px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                onClick={() => handleVote("+")}
+              >
+                Vote
               </button>
               <button
-                className="rounded-full bg-red-500 px-10 py-3 mx-auto ml-4 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
-                onClick={() => handleVote('-')}
-              >Vote
+                className="mx-auto ml-4 rounded-full bg-red-500 px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
+                onClick={() => handleVote("-")}
+              >
+                Vote
               </button>
             </div>
           </div>
