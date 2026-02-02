@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./HamburgerMenu.module.css";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import {
   FaHome,
@@ -14,6 +14,7 @@ import {
   FaUserShield,
   FaCrown,
   FaThumbsUp,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 type NavItem = {
@@ -91,6 +92,10 @@ const HamburgerMenu: React.FC = () => {
     return path === href;
   };
 
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   const MenuList = (
     <ul className={styles.menuItems} role="menu" aria-label="Main navigation">
       {items.map((item) => (
@@ -108,6 +113,19 @@ const HamburgerMenu: React.FC = () => {
           </Link>
         </li>
       ))}
+      {/* Sign Out Button */}
+      <li role="none" className={styles.signOutItem}>
+        <button
+          onClick={handleSignOut}
+          className={styles.signOutBtn}
+          role="menuitem"
+        >
+          <span className={styles.icon}>
+            <FaSignOutAlt />
+          </span>
+          <span className={styles.menuText}>Sign Out</span>
+        </button>
+      </li>
     </ul>
   );
 

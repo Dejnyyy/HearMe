@@ -176,3 +176,38 @@
     opacity: 1;
   }
 }
+
+/* ===== Sign Out Button ===== */
+.signOutItem {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.signOutBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    transform 0.08s ease,
+    background-color 0.15s ease;
+}
+
+.signOutBtn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+}
+
+.signOutBtn:active {
+  transform: scale(0.98);
+}
