@@ -178,7 +178,7 @@ const Explore: React.FC = () => {
 
     observerRef.current = new IntersectionObserver((entries) => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasMore && !loading) {
+      if (entry?.isIntersecting && hasMore && !loading) {
         setPage((p) => p + 1);
       }
     });
