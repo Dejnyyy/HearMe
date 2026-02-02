@@ -124,32 +124,32 @@ const UsersPage: React.FC<UsersPageProps> = ({
   };
 
   return (
-    <div>
-      <h1 className="font-mono text-xl font-semibold text-white">User List</h1>
+    <div className="w-full max-w-lg">
+      <h1 className="mb-4 text-2xl font-bold text-white">User List</h1>
       <SearchBar onSearch={handleSearch} />
-      <ul className="mb-5 max-h-80 overflow-y-auto rounded-xl bg-gray-500 p-1 font-mono text-lg text-white shadow-xl">
+      <ul className="mt-4 max-h-80 overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900 p-2">
         {filteredUserList.map((user) => (
           <div
-            className="m-8 flex cursor-pointer items-center"
+            className="flex cursor-pointer items-center rounded-xl p-3 transition-colors hover:bg-gray-800"
             key={user.id}
             onClick={() => handleUserClick(user.id)}
           >
             <li className="flex-1">
-              <div className="flex flex-row">
+              <div className="flex flex-row items-center">
                 <Image
                   src={user.image || "/default-userimage.png"}
                   alt="Profile picture"
-                  width={50}
-                  height={50}
+                  width={40}
+                  height={40}
                   unoptimized={true}
-                  className="h-12 w-12 rounded-full"
+                  className="h-10 w-10 rounded-full"
                 />
-                <p className="my-auto ml-4">{user.name}</p>
+                <p className="ml-3 font-medium text-white">{user.name}</p>
               </div>
             </li>
             {isLoggedInUserAdmin && user.isAdmin !== true && (
               <button
-                className="ml-2 rounded-xl border bg-white px-8 font-mono font-semibold text-black hover:bg-gray-300 hover:text-red-500"
+                className="ml-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-1.5 text-sm text-gray-300 transition-colors hover:border-red-700 hover:bg-red-900/50 hover:text-red-400"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDeleteUser(user.id);

@@ -5,17 +5,18 @@ import { useState, useEffect } from "react";
 import HamburgerMenu from "./components/HamburgerMenu";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
+import { ThumbsUp, ThumbsDown } from "lucide-react";
 
 interface Artist {
   name: string;
 }
 
-interface Image {
+interface SpotifyImage {
   url: string;
 }
 
 interface Album {
-  images: Image[];
+  images: SpotifyImage[];
 }
 
 interface Song {
@@ -47,7 +48,6 @@ const Vote: React.FC = () => {
 
   const handleSongClick = (clickedSong: Song) => {
     setSelectedSong(clickedSong);
-    console.log("Selected Song:", clickedSong);
   };
 
   const handleVote = async (voteType: string) => {
@@ -77,97 +77,81 @@ const Vote: React.FC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Vote successful:", data);
         toast.success("Thank you for your vote!", {
-          className: "toast-message",
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         router.push("/profile");
       } else {
-        console.error("Vote failed:", response.statusText);
         toast.error("Vote failed: " + response.statusText, {
-          className: "toast-message",
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     } catch (error) {
-      console.log("Vote failed:", error as Error);
       toast.error("Vote failed", {
-        className: "toast-message",
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     }
   };
 
   return (
-    <div>
-      <main
-        className="flex min-h-screen flex-col items-center justify-center text-white"
-        style={{
-          background: 'url("/HearMeBG4.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <HamburgerMenu />
-        <section>
-          <div>
-            <h1 className=" font-mono text-lg font-semibold">Vote</h1>
+    <div className="min-h-screen bg-black">
+      <HamburgerMenu />
+
+      <main className="flex min-h-screen flex-col items-center px-4 pb-16 pt-16 text-white">
+        <h1 className="mb-8 text-3xl font-bold">Vote</h1>
+
+        {/* Search Section */}
+        <div className="mb-6 w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-900 p-4">
+          <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-500">
+            Search Track
+          </h2>
+          <div className="max-h-80 overflow-y-auto">
+            <SearchForm onSongClick={handleSongClick} />
           </div>
-        </section>
-        <div className="my-2 h-96 w-5/6 overflow-y-auto rounded-xl bg-zinc-800 font-mono text-lg font-semibold shadow-lg sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3">
-          <SearchForm onSongClick={handleSongClick} />
         </div>
+
+        {/* Selected Song */}
         {selectedSong && (
-          <div className="my-2 rounded-md p-4 font-mono font-semibold">
-            <h2>Selected Song</h2>
-            <div className="my-2 flex items-center rounded-xl bg-zinc-800 p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-900 p-4">
+            <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-500">
+              Selected Track
+            </h2>
+
+            <div className="mb-6 flex items-center gap-4 rounded-xl border border-gray-700 bg-gray-800 p-4">
               <Image
                 src={selectedSong.album.images[2]?.url ?? "default-image-url"}
                 alt={`Album cover for ${selectedSong.name}`}
-                width={70}
-                height={70}
-                className="song-image mb-1 rounded-lg"
+                width={64}
+                height={64}
+                className="rounded-lg"
               />
-              <div className="mx-2">
-                <strong>{selectedSong.name}</strong>
-                <br />
-                <span className="text-gray-400">
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-white">
+                  {selectedSong.name}
+                </p>
+                <p className="truncate text-gray-500">
                   {getArtistsNames(selectedSong)}
-                </span>
+                </p>
               </div>
             </div>
-            <div className="mx-auto text-center">
+
+            <div className="flex justify-center gap-4">
               <button
-                className="mx-auto  mr-4 rounded-full bg-green-500 px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-green-700"
+                className="bg-gold-500 hover:bg-gold-400 inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-black transition"
                 onClick={() => handleVote("+")}
               >
-                Vote
+                <ThumbsUp className="h-5 w-5" />
+                Upvote
               </button>
               <button
-                className="mx-auto ml-4 rounded-full bg-red-500 px-10 py-3 font-mono font-semibold text-black no-underline transition hover:bg-red-700"
+                className="inline-flex items-center gap-2 rounded-xl bg-gray-700 px-8 py-3 font-semibold text-white transition hover:bg-gray-600"
                 onClick={() => handleVote("-")}
               >
-                Vote
+                <ThumbsDown className="h-5 w-5" />
+                Downvote
               </button>
             </div>
           </div>

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import HamburgerMenu from "./components/HamburgerMenu";
-import Image from 'next/image';
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Loading from "./components/Loading";
+import { Globe2, Users, Trophy, Trash2 } from "lucide-react";
 
 interface Vote {
   id: number;
@@ -24,39 +25,41 @@ const Ranking: React.FC = () => {
   const { data: sessionData } = useSession();
   const [votes, setVotes] = useState<VoteWithCount[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [shownType, setShownType] = useState(true); // World or friends view
-  const [loading, setLoading] = useState(true); // Loading state
+  const [shownType, setShownType] = useState(true);
+  const [loading, setLoading] = useState(true);
   const isAdmin = sessionData?.user?.isAdmin;
 
   useEffect(() => {
     const fetchVotes = async () => {
-      setLoading(true); // Set loading to true before fetching data
-      const apiEndpoint = shownType ? '/api/getVotesVoteCount' : '/api/findMineAndFriendsVotes';
+      setLoading(true);
+      const apiEndpoint = shownType
+        ? "/api/getVotesVoteCount"
+        : "/api/findMineAndFriendsVotes";
       try {
         const response = await fetch(apiEndpoint);
         if (!response.ok) {
-          console.log('Votes fetch failed');
-          setLoading(false); // Set loading to false in case of error
+          console.log("Votes fetch failed");
+          setLoading(false);
           return;
         }
         const votesData: VoteWithCount[] = await response.json();
         const votesWithUserDetails = await Promise.all(
           votesData.map(async (vote: VoteWithCount) => ({
             ...vote,
-            ...await fetchUserDetails(vote.userId),
-          }))
+            ...(await fetchUserDetails(vote.userId)),
+          })),
         );
         setVotes(votesWithUserDetails);
       } catch (error) {
-        console.error('Error fetching votes:', error);
+        console.error("Error fetching votes:", error);
       } finally {
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
       }
     };
 
     fetchVotes().catch((error: Error) => {
-      console.error('Failed to fetch votes:', error);
-      setLoading(false); // Set loading to false in case of error
+      console.error("Failed to fetch votes:", error);
+      setLoading(false);
     });
   }, [shownType]);
 
@@ -64,45 +67,48 @@ const Ranking: React.FC = () => {
     try {
       const res = await fetch(`/api/getUserByUserId?userId=${userId}`);
       if (!res.ok) {
-        console.log('User fetch failed');
-        return { name: 'Unknown', image: '/default-profile.png' };
+        console.log("User fetch failed");
+        return { name: "Unknown", image: "/default-profile.png" };
       }
       const userData = await res.json();
       return { name: userData.name, image: userData.image };
     } catch (error) {
-      console.error('fetchUserDetails error:', error);
-      return { name: 'Unknown', image: '/default-profile.png' };
+      console.error("fetchUserDetails error:", error);
+      return { name: "Unknown", image: "/default-profile.png" };
     }
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('cz-CS', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).replace(',', ', ');
+    return date
+      .toLocaleString("cz-CS", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      .replace(",", ", ");
   };
 
   const toggleTypeShown = () => setShownType(!shownType);
-  const toggleExpanded = (index: number) => setExpandedIndex(expandedIndex === index ? null : index);
+  const toggleExpanded = (index: number) =>
+    setExpandedIndex(expandedIndex === index ? null : index);
 
   const feedType = shownType ? "World" : "Friends";
 
   const handleDeleteClick = async (voteId: number) => {
     try {
       const response = await fetch(`/api/deleteVote?voteId=${voteId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       if (!response.ok) {
-        console.error('Failed to delete vote');
+        console.error("Failed to delete vote");
         return;
       }
-      setVotes(prevVotes => prevVotes.filter(vote => vote.id !== voteId));
+      setVotes((prevVotes) => prevVotes.filter((vote) => vote.id !== voteId));
     } catch (error) {
-      console.error('Error deleting vote:', error);
+      console.error("Error deleting vote:", error);
     }
   };
 
@@ -110,124 +116,211 @@ const Ranking: React.FC = () => {
   const topVotes = sortedVotes.slice(0, 3);
   const remainingVotes = sortedVotes.slice(3);
 
-  const getGradientClass = (index: number) => {
+  const getRankBorder = (index: number) => {
     switch (index) {
       case 0:
-        return 'from-[#ffd700] to-[#ffffe6]'; // Gold gradient
+        return "border-gold-500";
       case 1:
-        return 'from-[#c0c0c0] to-[#ffffe6]'; // Silver gradient
+        return "border-gray-400";
       case 2:
-        return 'from-[#cd7f32] to-[#ffffe6]'; // Bronze gradient
+        return "border-amber-700";
       default:
-        return 'from-[#636363] to-[#ffffe6]'; // Default gradient
+        return "border-gray-700";
     }
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-black">
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col text-white text-lg font-mono font-semibold" style={{ background: 'url("/HearMeBG4.png")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <section className="ml-auto mt-12 mr-10 ">
-          <button className='bg-gray-700 hover:bg-gray-800 mx-auto px-4 py-2 rounded-lg shadow-lg' onClick={toggleTypeShown}>
+
+      <main className="px-4 pb-16 pt-8 text-white">
+        {/* Header */}
+        <div className="mx-auto mb-8 flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Ranking</h1>
+            <p className="text-gray-500">All-time leaderboard</p>
+          </div>
+          <button
+            onClick={toggleTypeShown}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm transition-colors hover:bg-gray-800"
+          >
+            {shownType ? (
+              <Globe2 className="h-4 w-4" />
+            ) : (
+              <Users className="h-4 w-4" />
+            )}
             Showing: {feedType}
           </button>
-        </section>
-        <section className='justify-center items-center'>
-          <h1 className='text-5xl mt-2 text-center'>Ranking</h1>
+        </div>
+
+        {/* Content */}
+        <div className="mx-auto max-w-5xl">
           {loading ? (
-           <Loading />
+            <Loading />
+          ) : votes.length === 0 ? (
+            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-10 text-center">
+              <p className="text-lg text-gray-400">No votes yet.</p>
+            </div>
           ) : (
             <>
-              <h2 className='text-center text-xl'>Top 3:</h2>
-              <div className="md:flex justify-center items-center mt-4" style={{ maxHeight: '40vh', overflowY: 'auto' }}>
+              {/* Top 3 */}
+              <h2 className="mb-4 text-center text-xl text-gray-400">Top 3:</h2>
+              <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
                 {topVotes.map((vote, index) => (
-                  <div key={index} className="mx-auto w-64 sm:w-80 md:w-96">
-                    <div className='md:grid md:grid-cols-1 mx-auto'>
-                      <div className='text-2xl font-bold mx-auto'>#{index + 1}</div>
-                    </div>
-                    <div className={`bg-gradient-to-b ${getGradientClass(index)} rounded-xl px-4 py-2 m-2`}>
-                      <div className='flex flex-col'>
-                        <div className='flex flex-row'>
-                          <Image
-                            src={vote.image || '/default-userimage.png'}
-                            alt='Profile Picture'
-                            width={50}
-                            height={50}
-                            className="rounded-full w-12 h-12"
-                          />
-                          <p className='my-auto ml-4'>{vote.name}</p>
-                        </div>
+                  <article
+                    key={index}
+                    className={`rounded-2xl border-2 ${getRankBorder(
+                      index,
+                    )} bg-gray-900 p-4`}
+                  >
+                    <div className="mb-3 flex items-center justify-between">
+                      <div className="bg-gold-500 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-black">
+                        <Trophy className="h-4 w-4" />#{index + 1}
                       </div>
-                      <div className='flex flex-col items-center'>
-                        <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="my-2 rounded-lg" />
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer">
-                          <p className='hover:underline text-black'>{vote.song}</p>
-                        </a>
-                        <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer">
-                          <p className='hover:underline text-gray-600'>{vote.artist}</p>
-                        </a>
-                        <p className="mt-2 text-lg text-black font-bold">Votes: {vote.voteCount}</p>
+                      <div className="text-sm text-gray-400">
+                        Votes:{" "}
+                        <span className="text-gold-400 font-bold">
+                          {vote.voteCount}
+                        </span>
                       </div>
                     </div>
-                  </div>
+
+                    <div className="mb-4 flex items-center gap-3">
+                      <Image
+                        src={vote.image || "/default-userimage.png"}
+                        alt="Profile Picture"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full"
+                      />
+                      <p className="text-gray-300">{vote.name}</p>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                      <img
+                        src={vote.imageUrl || "/favicon.png"}
+                        alt={`Cover for ${vote.song}`}
+                        className="mb-3 h-32 w-32 rounded-lg object-cover"
+                      />
+                      <a
+                        href={`https://open.spotify.com/search/${encodeURIComponent(
+                          vote.song,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-center font-medium text-white hover:underline"
+                      >
+                        {vote.song}
+                      </a>
+                      <a
+                        href={`https://open.spotify.com/search/${encodeURIComponent(
+                          vote.artist,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-500 hover:underline"
+                      >
+                        {vote.artist}
+                      </a>
+                    </div>
+                  </article>
                 ))}
               </div>
-              <h2 className='text-center text-xl mt-8'>All Other Votes:</h2>
-              <div className="overflow-y-auto" style={{ maxHeight: '40vh' }}>
-                <ul>
-                  {remainingVotes.map((vote, index) => (
-                    <div key={index} className="bg-gray-700 mx-auto w-3/4 sm:w-2/3 lg:w-1/2 xl:w-1/3 rounded-xl px-4 py-2 m-2" onClick={() => toggleExpanded(index)}>
-                      <li className='cursor-pointer'>
-                        <div className='flex flex-row'>
-                          <Image
-                            src={vote.image || '/default-userimage.png'}
-                            alt='Profile Picture'
-                            width={50}
-                            height={50}
-                            className="rounded-full w-12 h-12"
-                          />
-                          <p className='my-auto ml-4'>{vote.name}</p>
-                          {isAdmin && (
-                            <button
-                              className="hover:bg-red-800 text-white font-bold px-4 py-2 h-1/2 rounded-full ml-auto"
-                              onClick={(e) => {
-                                e.stopPropagation(); 
-                                handleDeleteClick(vote.id);
-                              }}
-                            >
-                              x
-                            </button>
-                          )}
-                        </div>
 
-                        <div className="sm:flex sm:flex-row">
-                          <div className='mx-auto sm:mx-0 text-center sm:text-center'>
-                            <img src={vote.imageUrl} alt={`Cover for ${vote.song}`} className="mx-auto sm:ml-1 text-center my-2 rounded-lg" />
-                          </div>
-                          <div className='ml-4 text-center sm:text-start my-auto'>
-                            <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.song)}`} target="_blank" rel="noopener noreferrer" className=''>
-                              <p className='hover:underline'>{vote.song}</p>
-                            </a>
-                            <a href={`https://open.spotify.com/search/${encodeURIComponent(vote.artist)}`} target="_blank" rel="noopener noreferrer" className=''>
-                              <p className='hover:underline text-gray-400'>{vote.artist}</p>
-                            </a>
-                            <p className="mt-2 text-lg font-bold">Votes: {vote.voteCount}</p>
-                          </div>
-                        </div>
-                        {expandedIndex === index && (
-                          <>
-                            <p className={vote.voteType === '+' ? 'vote-positive' : 'vote-negative'}>Type of vote: {vote.voteType}</p>
-                            <p>{formatDate(vote.createdAt)}</p>
-                          </>
+              {/* All Other Votes */}
+              <h2 className="mb-4 text-center text-xl text-gray-400">
+                All Other Votes:
+              </h2>
+              <div className="max-h-[50vh] space-y-3 overflow-y-auto">
+                {remainingVotes.map((vote, index) => (
+                  <article
+                    key={index}
+                    className="cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-colors hover:border-gray-700"
+                    onClick={() => toggleExpanded(index)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={vote.image || "/default-userimage.png"}
+                        alt="Profile Picture"
+                        width={44}
+                        height={44}
+                        className="h-11 w-11 rounded-full"
+                      />
+                      <p className="text-gray-300">{vote.name}</p>
+                      <div className="ml-auto flex items-center gap-2">
+                        <span className="text-sm text-gray-400">
+                          Votes:{" "}
+                          <span className="text-gold-400 font-bold">
+                            {vote.voteCount}
+                          </span>
+                        </span>
+                        {isAdmin && (
+                          <button
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-800/50 bg-red-900/30 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-900/50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(vote.id);
+                            }}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Delete
+                          </button>
                         )}
-                      </li>
+                      </div>
                     </div>
-                  ))}
-                </ul>
+
+                    <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                      <img
+                        src={vote.imageUrl || "/favicon.png"}
+                        alt={`Cover for ${vote.song}`}
+                        className="mx-auto h-20 w-20 rounded-lg object-cover sm:mx-0"
+                      />
+                      <div className="text-center sm:text-left">
+                        <a
+                          href={`https://open.spotify.com/search/${encodeURIComponent(
+                            vote.song,
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-white hover:underline"
+                        >
+                          {vote.song}
+                        </a>
+                        <a
+                          href={`https://open.spotify.com/search/${encodeURIComponent(
+                            vote.artist,
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-sm text-gray-500 hover:underline"
+                        >
+                          {vote.artist}
+                        </a>
+                      </div>
+                    </div>
+
+                    {expandedIndex === index && (
+                      <div className="mt-3 flex flex-wrap gap-3 border-t border-gray-800 pt-3">
+                        <span
+                          className={`rounded-lg px-2 py-1 text-xs ${
+                            vote.voteType === "+"
+                              ? "bg-green-900/30 text-green-400"
+                              : "bg-red-900/30 text-red-400"
+                          }`}
+                        >
+                          {vote.voteType === "+" ? "Upvote" : "Downvote"}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {formatDate(vote.createdAt)}
+                        </span>
+                      </div>
+                    )}
+                  </article>
+                ))}
               </div>
             </>
           )}
-        </section>
+        </div>
       </main>
     </div>
   );
