@@ -4,7 +4,6 @@ import styles from "./HamburgerMenu.module.css";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import {
-  FaHome,
   FaUser,
   FaCalendarAlt,
   FaChartLine,
@@ -25,7 +24,6 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/", label: "Home", icon: <FaHome /> },
   { href: "/profile", label: "Profile", icon: <FaUser /> },
   { href: "/calendar", label: "Calendar", icon: <FaCalendarAlt /> },
   { href: "/rankingToday", label: "Ranking", icon: <FaChartLine /> },
