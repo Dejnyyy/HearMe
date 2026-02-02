@@ -122,7 +122,7 @@ const Calendar: React.FC = () => {
               </button>
               <Link
                 href="/voteToday"
-                className="rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 px-3 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-105 active:scale-95"
+                className="bg-gold-500 hover:bg-gold-400 rounded-xl px-3 py-2 text-sm font-semibold text-black shadow-md transition active:scale-95"
               >
                 Vote today →
               </Link>
@@ -162,7 +162,7 @@ const Calendar: React.FC = () => {
                   <p className="mb-3 text-white/70">No votes yet.</p>
                   <button
                     onClick={() => router.push("/voteToday")}
-                    className="rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:scale-105 active:scale-95"
+                    className="bg-gold-500 hover:bg-gold-400 rounded-xl px-4 py-2 text-sm font-semibold text-black shadow-md transition active:scale-95"
                   >
                     Vote now →
                   </button>

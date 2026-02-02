@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSession } from "next-auth/react";
 import { searchSpotifySongs, getAccessToken } from "../../utils/spotifyApi";
 
 interface SearchFormProps {
@@ -7,7 +6,6 @@ interface SearchFormProps {
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
-  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -40,7 +38,6 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
     }
   }, []);
 
-  // Debounced search effect
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       performSearch(searchQuery);
@@ -56,38 +53,40 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   };
 
   return (
-    <div className="font-mono font-semibold">
+    <div>
       <input
-        className="m-3 w-2/3 rounded-md py-1 pl-2 text-black"
+        className="focus:border-gold-500 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 transition-colors focus:outline-none"
         type="text"
-        placeholder="Search a song"
+        placeholder="Search for a song..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+
       {isSearching && (
-        <span className="text-sm text-gray-400">Searching...</span>
+        <p className="mt-3 text-sm text-gray-500">Searching...</p>
       )}
 
-      {searchResults.map((song) => (
-        <li
-          className="m-2 flex cursor-pointer list-none items-center rounded-lg px-2 py-2 hover:bg-gray-500"
-          key={song.id}
-          onClick={() => handleSongClick(song)}
-        >
-          <img
-            src={song.album.images[2]?.url || "default-image-url"}
-            alt={`Album cover for ${song.name}`}
-            className="song-image rounded-lg"
-          />
-          <div className="mx-2">
-            <strong className="w-auto">{song.name}</strong>
-            <br></br>
-            <span className="w-auto text-gray-400">
-              {getArtistsNames(song)}
-            </span>
+      <div className="mt-3 space-y-2">
+        {searchResults.map((song) => (
+          <div
+            className="hover:border-gold-500/30 flex cursor-pointer items-center gap-3 rounded-xl border border-gray-700/50 bg-gray-800/50 p-3 transition-all hover:bg-gray-700/50"
+            key={song.id}
+            onClick={() => handleSongClick(song)}
+          >
+            <img
+              src={song.album.images[2]?.url || "/default-userimage.png"}
+              alt=""
+              className="h-12 w-12 rounded-lg object-cover"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-medium text-white">{song.name}</p>
+              <p className="truncate text-sm text-gray-500">
+                {getArtistsNames(song)}
+              </p>
+            </div>
           </div>
-        </li>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

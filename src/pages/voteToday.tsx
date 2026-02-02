@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { ThumbsUp, ThumbsDown, X } from "lucide-react";
 
-/* ==================== Types ==================== */
 interface Artist {
   name: string;
 }
@@ -26,14 +25,12 @@ interface Song {
   album: Album;
 }
 
-/* ==================== Helpers ==================== */
 const getArtistsNames = (track: Song): string =>
   track?.artists?.length
     ? track.artists.map((a) => a.name).join(", ")
     : "Unknown Artist";
 
 const getImageUrl = (track?: Song) => {
-  // Prefer mid/large image, gracefully fall back
   return (
     track?.album?.images?.[1]?.url ??
     track?.album?.images?.[0]?.url ??
@@ -42,7 +39,6 @@ const getImageUrl = (track?: Song) => {
   );
 };
 
-/* ==================== Component ==================== */
 const Vote: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -53,7 +49,6 @@ const Vote: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Hydrate selection from querystring or localStorage
   useEffect(() => {
     const { selectedSong: querySong } = router.query;
     if (typeof querySong === "string") {
@@ -63,10 +58,9 @@ const Vote: React.FC = () => {
         localStorage.setItem("selectedSong", querySong);
         return;
       } catch {
-        // ignore parse error, fall back to localStorage
+        // ignore parse error
       }
     }
-    // fallback: get from localStorage on mount
     const ls = localStorage.getItem("selectedSong");
     if (ls) {
       try {
@@ -128,7 +122,6 @@ const Vote: React.FC = () => {
         const msg =
           (await response.text()) || response.statusText || "Unknown error";
         toast.error("Vote failed: " + msg, {
-          className: "toast-message",
           position: "top-right",
           autoClose: 3000,
         });
@@ -136,14 +129,12 @@ const Vote: React.FC = () => {
       }
 
       toast.success("Thank you for your vote!", {
-        className: "toast-message",
         position: "top-right",
         autoClose: 1800,
       });
       router.push("/profile");
     } catch (err) {
       toast.error("Vote failed", {
-        className: "toast-message",
         position: "top-right",
         autoClose: 3000,
       });
@@ -153,129 +144,114 @@ const Vote: React.FC = () => {
   };
 
   return (
-    <div>
-      <main
-        className="min-h-screen w-full bg-cover bg-center text-white"
-        style={{ backgroundImage: 'url("/HearMeBG4.png")' }}
-      >
-        <HamburgerMenu />
+    <div className="min-h-screen bg-black">
+      <HamburgerMenu />
 
+      <main className="px-4 pb-16 pt-8">
         {/* Header */}
-        <section className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 pt-8">
-          <h1 className="font-mono text-xl font-semibold tracking-wide">
-            Vote
-          </h1>
+        <div className="mx-auto mb-8 max-w-4xl">
+          <h1 className="mb-2 text-3xl font-bold text-white">Vote</h1>
+          <p className="text-gray-500">
+            Search and vote for your song of the day
+          </p>
           {!isUserLoggedIn && !isAuthLoading && (
-            <span className="rounded-full bg-yellow-500/20 px-3 py-1 text-sm text-yellow-300">
-              Log in to submit your vote
-            </span>
+            <div className="bg-gold-500/10 border-gold-500/20 mt-4 rounded-xl border px-4 py-3">
+              <p className="text-gold-400 text-sm">
+                Log in to submit your vote
+              </p>
+            </div>
           )}
-        </section>
+        </div>
 
-        {/* Content */}
-        <section className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 px-4 pb-16 pt-6 lg:grid-cols-2">
+        {/* Content Grid */}
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Left: Search */}
-          <div className="rounded-2xl border border-white/10 bg-zinc-900/50 backdrop-blur-md">
-            <div className="flex items-center justify-between border-b border-white/10 p-4">
-              <h2 className="font-mono text-sm uppercase tracking-wider text-zinc-300">
-                Search a track
+          <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+            <div className="border-b border-gray-800 px-5 py-4">
+              <h2 className="text-sm font-medium uppercase tracking-wider text-gray-500">
+                Search Track
               </h2>
             </div>
-            <div className="max-h-[28rem] overflow-y-auto p-3 md:p-4">
-              {/* Keep your existing search form; just pass the handler */}
+            <div className="max-h-[500px] overflow-y-auto p-5">
               <SearchForm onSongClick={handleSongClick} />
             </div>
           </div>
 
           {/* Right: Selected */}
-          <div className="rounded-2xl border border-white/10 bg-zinc-900/50 backdrop-blur-md">
-            <div className="flex items-center justify-between border-b border-white/10 p-4">
-              <h2 className="font-mono text-sm uppercase tracking-wider text-zinc-300">
-                Selected track
+          <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
+            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
+              <h2 className="text-sm font-medium uppercase tracking-wider text-gray-500">
+                Selected Track
               </h2>
               {selectedSong && (
                 <button
                   onClick={clearSelection}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-zinc-800/60 px-3 py-1 text-xs text-zinc-300 hover:bg-zinc-700/60"
-                  aria-label="Clear selection"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-gray-800 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-700"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                   Clear
                 </button>
               )}
             </div>
 
             {!selectedSong ? (
-              <div className="flex flex-col items-center justify-center gap-3 p-8 text-center text-zinc-400">
-                <div className="h-14 w-14 rounded-2xl border border-white/10 bg-zinc-800/60" />
-                <p className="max-w-sm text-sm">
-                  Pick a song from the left to preview it here and cast your
-                  vote.
+              <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
+                <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl border border-gray-700 bg-gray-800">
+                  <span className="text-3xl">🎵</span>
+                </div>
+                <p className="max-w-xs text-sm text-gray-500">
+                  Pick a song from the search to preview it here and cast your
+                  vote
                 </p>
               </div>
             ) : (
-              <div className="p-4 md:p-6">
-                <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-zinc-800/60 p-3">
-                  <div className="shrink-0">
-                    <Image
-                      src={albumImage}
-                      alt={`Album cover for ${selectedSong.name}`}
-                      width={80}
-                      height={80}
-                      className="rounded-lg"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="truncate font-mono text-base font-semibold">
+              <div className="p-5">
+                {/* Song Card */}
+                <div className="flex items-center gap-4 rounded-xl border border-gray-700 bg-gray-800 p-4">
+                  <Image
+                    src={albumImage}
+                    alt={`Album cover for ${selectedSong.name}`}
+                    width={80}
+                    height={80}
+                    className="rounded-lg"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-lg font-semibold text-white">
                       {selectedSong.name}
-                    </div>
-                    <div className="truncate text-sm text-zinc-400">
-                      {artistNames}
-                    </div>
+                    </p>
+                    <p className="truncate text-gray-500">{artistNames}</p>
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                {/* Vote Buttons */}
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
                   <button
-                    className="inline-flex items-center gap-2 rounded-full bg-green-500 px-6 py-2 font-mono font-semibold text-black transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="bg-gold-500 hover:bg-gold-400 inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => handleVote("+")}
                     disabled={!isUserLoggedIn || isSubmitting || isAuthLoading}
-                    aria-disabled={
-                      !isUserLoggedIn || isSubmitting || isAuthLoading
-                    }
                   >
                     <ThumbsUp className="h-5 w-5" />
                     Upvote
                   </button>
                   <button
-                    className="inline-flex items-center gap-2 rounded-full bg-red-500 px-6 py-2 font-mono font-semibold text-black transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gray-700 px-8 py-3 font-semibold text-white transition hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => handleVote("-")}
                     disabled={!isUserLoggedIn || isSubmitting || isAuthLoading}
-                    aria-disabled={
-                      !isUserLoggedIn || isSubmitting || isAuthLoading
-                    }
                   >
                     <ThumbsDown className="h-5 w-5" />
                     Downvote
                   </button>
                 </div>
 
-                {/* Hints / states */}
-                {!isUserLoggedIn && !isAuthLoading && (
-                  <p className="mt-4 text-center text-sm text-yellow-300/90">
-                    You need to be logged in to vote.
-                  </p>
-                )}
                 {isSubmitting && (
-                  <p className="mt-2 text-center text-sm text-zinc-400">
+                  <p className="mt-4 text-center text-sm text-gray-500">
                     Submitting your vote…
                   </p>
                 )}
               </div>
             )}
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

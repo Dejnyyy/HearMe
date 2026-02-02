@@ -32,7 +32,6 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
     }
   }, []);
 
-  // Debounced search effect
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       performSearch(searchQuery);
@@ -59,7 +58,6 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
 
       const data = await response.json();
       if (response.ok) {
-        console.log("Favorite album updated:", data);
         onAlbumClick(album);
         setSearchResults([]);
         setSearchQuery("");
@@ -72,34 +70,34 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
   };
 
   return (
-    <div>
+    <div className="p-3">
       <input
-        className="m-3 rounded-md py-1 pl-2 text-black"
+        className="focus:border-gold-500 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:outline-none"
         type="text"
-        placeholder="Find your album..."
+        placeholder="Search album..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       {isSearching && (
-        <span className="text-sm text-gray-400">Searching...</span>
+        <p className="mt-2 text-xs text-gray-500">Searching...</p>
       )}
 
-      {searchResults.map((album) => (
-        <li
-          className="m-2 flex cursor-pointer list-none items-center rounded px-2 hover:bg-gray-500"
-          key={album.id}
-          onClick={() => handleAlbumClick(album)}
-        >
-          <img
-            src={album.images[2]?.url || "default-image-url"}
-            alt={`Image for ${album.name}`}
-            className="album-image h-auto w-20"
-          />
-          <div className="mx-2">
-            <strong className="w-auto">{album.name}</strong>
+      <div className="mt-2 space-y-1">
+        {searchResults.map((album) => (
+          <div
+            className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700"
+            key={album.id}
+            onClick={() => handleAlbumClick(album)}
+          >
+            <img
+              src={album.images[2]?.url || "/default-userimage.png"}
+              alt=""
+              className="h-10 w-10 rounded-lg object-cover"
+            />
+            <span className="font-medium text-white">{album.name}</span>
           </div>
-        </li>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

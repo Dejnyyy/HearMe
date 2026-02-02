@@ -200,17 +200,17 @@ const Explore: React.FC = () => {
         <section className="mx-auto w-full max-w-5xl px-4 pt-10">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div>
-              <h1 className="text-center font-mono text-3xl font-semibold tracking-wide sm:text-left">
+              <h1 className="text-center text-3xl font-bold tracking-wide text-white sm:text-left">
                 Explore
               </h1>
-              <p className="text-center font-mono text-sm text-zinc-300 sm:text-left">
+              <p className="text-center text-sm text-gray-500 sm:text-left">
                 All {worldFeed ? "World" : "Friends"} Votes
               </p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleSort}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/60 px-4 py-2 font-mono text-sm backdrop-blur hover:bg-zinc-800/60"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm hover:bg-gray-800"
               >
                 {sortByDateDesc ? (
                   <ArrowDownAZ className="h-4 w-4" />
@@ -221,7 +221,7 @@ const Explore: React.FC = () => {
               </button>
               <button
                 onClick={toggleFeed}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/60 px-4 py-2 font-mono text-sm backdrop-blur hover:bg-zinc-800/60"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm hover:bg-gray-800"
               >
                 {worldFeed ? (
                   <Globe2 className="h-4 w-4" />
@@ -242,7 +242,7 @@ const Explore: React.FC = () => {
               return (
                 <article
                   key={vote.id}
-                  className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4 backdrop-blur-md transition hover:bg-zinc-900/60"
+                  className="rounded-2xl border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700"
                   onClick={() => onCardToggle(vote.id)}
                   role="button"
                 >
@@ -260,7 +260,7 @@ const Explore: React.FC = () => {
                       }}
                     />
                     <button
-                      className="truncate text-left font-mono text-sm text-zinc-200 hover:underline"
+                      className="truncate text-left text-sm text-gray-300 hover:underline"
                       onClick={(e) => {
                         e.stopPropagation();
                         goToUser(vote.userId);

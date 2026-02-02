@@ -36,16 +36,16 @@ const formatDate = (dateString: string) =>
 const coverSrc = (url?: string) => url || "/default-image-url";
 const avatarSrc = (url?: string) => url || "/default-userimage.png";
 
-const rankGradient = (rank: number) => {
+const rankBorder = (rank: number) => {
   switch (rank) {
     case 0:
-      return "from-yellow-400 to-yellow-50"; // Gold
+      return "border-gold-500"; // Gold
     case 1:
-      return "from-zinc-300 to-zinc-50"; // Silver
+      return "border-gray-400"; // Silver
     case 2:
-      return "from-amber-700 to-amber-50"; // Bronze
+      return "border-amber-700"; // Bronze
     default:
-      return "from-zinc-600 to-zinc-100";
+      return "border-gray-700";
   }
 };
 
@@ -142,17 +142,17 @@ const RankingToday: React.FC = () => {
         <section className="mx-auto w-full max-w-5xl px-4 pt-10">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div>
-              <h1 className="text-center font-mono text-3xl font-semibold tracking-wide sm:text-left">
+              <h1 className="text-center text-3xl font-bold tracking-wide text-white sm:text-left">
                 Ranking (Today)
               </h1>
-              <p className="text-center font-mono text-sm text-zinc-300 sm:text-left">
+              <p className="text-center text-sm text-gray-500 sm:text-left">
                 {worldFeed ? "World" : "Friends"} leaderboard
               </p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleFeed}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/60 px-4 py-2 font-mono text-sm backdrop-blur hover:bg-zinc-800/60"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm hover:bg-gray-800"
               >
                 {worldFeed ? (
                   <Globe2 className="h-4 w-4" />
@@ -187,15 +187,15 @@ const RankingToday: React.FC = () => {
                 {top.map((v, i) => (
                   <article
                     key={v.id}
-                    className={`rounded-2xl border border-white/10 bg-gradient-to-b ${rankGradient(
+                    className={`rounded-2xl border-2 ${rankBorder(
                       i,
-                    )} p-4 text-black shadow-sm`}
+                    )} bg-gray-900 p-4 text-white shadow-sm`}
                   >
                     <div className="mb-2 flex items-center justify-between">
-                      <div className="inline-flex items-center gap-2 rounded-full bg-white/60 px-3 py-1 text-xs font-semibold">
+                      <div className="bg-gold-500 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-black">
                         <Trophy className="h-4 w-4" />#{i + 1}
                       </div>
-                      <div className="inline-flex items-center gap-2 rounded-full bg-black/10 px-3 py-1 text-xs">
+                      <div className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-3 py-1 text-xs text-gray-300">
                         Votes: <span className="font-bold">{v.voteCount}</span>
                       </div>
                     </div>
@@ -211,7 +211,7 @@ const RankingToday: React.FC = () => {
                         onClick={() => goUser(v.userId)}
                       />
                       <button
-                        className="truncate text-left font-mono text-sm hover:underline"
+                        className="truncate text-left text-sm text-gray-300 hover:underline"
                         onClick={() => goUser(v.userId)}
                       >
                         {v.name ?? "Unknown"}
@@ -233,7 +233,7 @@ const RankingToday: React.FC = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-3 truncate text-center font-mono text-base font-semibold hover:underline"
+                        className="mt-3 truncate text-center text-base font-semibold text-white hover:underline"
                       >
                         {v.song}
                       </a>
@@ -243,7 +243,7 @@ const RankingToday: React.FC = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="truncate text-center font-mono text-sm text-zinc-700 hover:underline"
+                        className="truncate text-center text-sm text-gray-500 hover:underline"
                       >
                         {v.artist}
                       </a>
@@ -253,7 +253,7 @@ const RankingToday: React.FC = () => {
               </div>
 
               {/* Others */}
-              <h2 className="mt-8 text-center font-mono text-xl">
+              <h2 className="mt-8 text-center text-xl text-gray-400">
                 All other votes
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-3">
@@ -262,7 +262,7 @@ const RankingToday: React.FC = () => {
                   return (
                     <article
                       key={v.id}
-                      className="rounded-2xl border border-white/10 bg-zinc-900/50 p-4 backdrop-blur-md transition hover:bg-zinc-900/60"
+                      className="rounded-2xl border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700"
                     >
                       {/* row: user + admin */}
                       <div className="flex items-center gap-3">

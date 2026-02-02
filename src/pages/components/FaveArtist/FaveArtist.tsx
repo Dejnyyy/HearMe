@@ -56,7 +56,7 @@ const FaveArtist: React.FC = () => {
   return (
     <div>
       <div
-        className="flex cursor-pointer items-center gap-3 rounded-xl p-2 transition-all hover:bg-white/5"
+        className="flex cursor-pointer items-center gap-3 rounded-xl p-2 transition-all hover:bg-gray-800"
         onClick={toggleSearch}
       >
         {selectedLastArtistImg ? (
@@ -66,7 +66,7 @@ const FaveArtist: React.FC = () => {
             className="h-12 w-12 rounded-lg object-cover"
           />
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-800">
             <span className="text-xl">🎤</span>
           </div>
         )}
@@ -74,10 +74,10 @@ const FaveArtist: React.FC = () => {
           <p className="truncate font-medium text-white">
             {selectedLastArtist ?? "Click to select"}
           </p>
-          <p className="text-xs text-gray-500">Tap to change</p>
+          <p className="text-xs text-gray-600">Tap to change</p>
         </div>
         <svg
-          className="h-4 w-4 text-gray-500"
+          className="text-gold-500 h-4 w-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -102,7 +102,7 @@ const FaveArtist: React.FC = () => {
         }}
         unmountOnExit
       >
-        <div className="mt-3 max-h-64 overflow-y-auto rounded-xl border border-white/10 bg-gray-800/80 backdrop-blur">
+        <div className="mt-3 max-h-64 overflow-y-auto rounded-xl border border-gray-700 bg-gray-800">
           <SearchArtists onArtistClick={handleArtistClick} />
         </div>
       </CSSTransition>
