@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
-import {db} from 'lib/prisma';
+import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
+import { db } from "lib/prisma";
 
 interface UserDetails {
   id: string;
@@ -17,12 +17,12 @@ interface VoteCount {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<VoteCount[] | { error: string }>
+  res: NextApiResponse<VoteCount[] | { error: string }>,
 ) {
   // Check for user session
   const session = await getSession({ req });
   if (!session || !session.user || !session.user.id) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const userId = session.user.id;
@@ -31,20 +31,19 @@ export default async function handler(
     // Fetch friendships where the user is either the user or the friend
     const friendships = await db.friendship.findMany({
       where: {
-        OR: [
-          { userId: userId },
-          { friendId: userId }
-        ],
+        OR: [{ userId: userId }, { friendId: userId }],
       },
       select: {
         userId: true,
         friendId: true,
-      }
+      },
     });
 
     // Extract all unique user IDs from friendships
-    const allUserIds = new Set<string>(friendships.flatMap(f => [f.userId, f.friendId]));
-    allUserIds.add(userId);  // Include the current user's votes
+    const allUserIds = new Set<string>(
+      friendships.flatMap((f) => [f.userId, f.friendId]),
+    );
+    allUserIds.add(userId); // Include the current user's votes
 
     // Fetch votes from these users
     const votes = await db.vote.findMany({
@@ -59,33 +58,34 @@ export default async function handler(
     });
 
     // Agregate votes by song and artist
-    const voteCounts: Record<string, VoteCount> = votes.reduce((acc, vote) => {
-      const accumulator: Record<string, VoteCount> = {};
+    const voteCounts: Record<string, VoteCount> = votes.reduce(
+      (acc, vote) => {
+        const key = `${vote.song}-${vote.artist}`;
+        if (!acc[key]) {
+          acc[key] = {
+            song: vote.song,
+            artist: vote.artist,
+            voteCount: 0,
+            users: [],
+          };
+        }
+        acc[key]!.voteCount++;
 
-      const key = `${vote.song}-${vote.artist}`;
-      if (!accumulator[key]) {
-        accumulator[key] = {
-          song: vote.song,
-          artist: vote.artist,
-          voteCount: 0,
-          users: [],
-        };
-      }
-      accumulator[key].voteCount++;
-      
-      accumulator[key].users.push({
-        id: vote.user.id,
-        name: vote.user.name ?? '',
-        image: vote.user.image ?? '',
-      });
-      return acc;
-    }, {});
+        acc[key]!.users.push({
+          id: vote.user.id,
+          name: vote.user.name ?? "",
+          image: vote.user.image ?? "",
+        });
+        return acc;
+      },
+      {} as Record<string, VoteCount>,
+    );
 
     const results = Object.values(voteCounts);
 
     res.status(200).json(results);
   } catch (error) {
-    console.error('Failed to fetch and count votes:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Failed to fetch and count votes:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }

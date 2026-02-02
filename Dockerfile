@@ -1,13 +1,15 @@
-FROM node
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
+RUN npm ci
 
-RUN npm install
-
-COPY . /app
+COPY . .
 
 RUN npx prisma generate
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
