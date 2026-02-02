@@ -20,8 +20,6 @@ const FaveAlbum: React.FC = () => {
         console.log("Network response was not ok");
       }
       const albumData = await response.json();
-      console.log(albumData.favoriteAlbum);
-      console.log(albumData.favAlbImg);
       setLastSelectedAlbumImg(albumData.favAlbImg);
       setLastSelectedAlbum(albumData.favoriteAlbum);
     } catch (error) {
@@ -46,14 +44,8 @@ const FaveAlbum: React.FC = () => {
     localStorage.setItem("lastSelectedAlbum", JSON.stringify(album));
 
     toast.success(`Favorite album set to ${album.name}`, {
-      className: "toast-message",
       position: "top-right",
       autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
     });
 
     await fetchFavoriteAlbum();
@@ -63,27 +55,41 @@ const FaveAlbum: React.FC = () => {
   return (
     <div>
       <div
-        className="cursor-pointer rounded-md text-center"
+        className="flex cursor-pointer items-center gap-3 rounded-xl p-2 transition-all hover:bg-white/5"
         onClick={toggleSearch}
       >
-        {lastSelectedAlbum ? (
-          <div>
-            <h2>Favourite Album:</h2>
-            <div className="flex items-center rounded-2xl bg-gray-700 p-3">
-              <img
-                src={lastSelectedAlbumImg || "default-image-url"}
-                alt={`Image for ${lastSelectedAlbum}`}
-                className={`album-image ml-2 w-16 rounded-lg ${styles.albumImage}`}
-              />
-              <div className="ml-2">
-                <strong>{lastSelectedAlbum}</strong>
-              </div>
-            </div>
-          </div>
+        {lastSelectedAlbumImg ? (
+          <img
+            src={lastSelectedAlbumImg}
+            alt=""
+            className="h-12 w-12 rounded-lg object-cover"
+          />
         ) : (
-          "Favorite Album"
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500">
+            <span className="text-xl">💿</span>
+          </div>
         )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium text-white">
+            {lastSelectedAlbum ?? "Click to select"}
+          </p>
+          <p className="text-xs text-gray-500">Tap to change</p>
+        </div>
+        <svg
+          className="h-4 w-4 text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+          />
+        </svg>
       </div>
+
       <CSSTransition
         in={isOpen}
         timeout={300}
@@ -95,7 +101,7 @@ const FaveAlbum: React.FC = () => {
         }}
         unmountOnExit
       >
-        <div className="mx-auto my-2 h-96 w-auto overflow-y-auto rounded-lg border bg-zinc-800 lg:absolute">
+        <div className="mt-3 max-h-64 overflow-y-auto rounded-xl border border-white/10 bg-gray-800/80 backdrop-blur">
           <SearchAlbums onAlbumClick={handleAlbumClick} />
         </div>
       </CSSTransition>

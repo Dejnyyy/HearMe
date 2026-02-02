@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import SearchArtists from '../SearchArtists';
-import { toast } from 'react-toastify';
-import JSON from 'json5';
-import styles from './FaveArtist.module.css';
-import { CSSTransition } from 'react-transition-group';
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import SearchArtists from "../SearchArtists";
+import { toast } from "react-toastify";
+import JSON from "json5";
+import styles from "./FaveArtist.module.css";
+import { CSSTransition } from "react-transition-group";
 
 const FaveArtist: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<any | null>(null);
-  const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(null);
-  const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<any | null>(null);
+  const [selectedLastArtist, setLastSelectedArtist] = useState<any | null>(
+    null,
+  );
+  const [selectedLastArtistImg, setLastSelectedArtistImg] = useState<
+    any | null
+  >(null);
 
   const fetchFavoriteArtist = async () => {
     try {
-      const response = await fetch('/api/getFavouriteArtist');
+      const response = await fetch("/api/getFavouriteArtist");
       if (!response.ok) {
-        console.log('Network response was not ok');
+        console.log("Network response was not ok");
       }
       const artistData = await response.json();
-      console.log(artistData.favoriteArtist);
-      console.log(artistData.favArtImg);
       setLastSelectedArtistImg(artistData.favArtImg);
       setLastSelectedArtist(artistData.favoriteArtist);
     } catch (error) {
-      console.error('Error fetching favorite artist from database:', error);
+      console.error("Error fetching favorite artist from database:", error);
     }
   };
 
@@ -40,19 +41,12 @@ const FaveArtist: React.FC = () => {
     if (selectedArtist && selectedArtist.id === artist.id) {
       return;
     }
-    console.log('Selected Artist:', artist);
     setSelectedArtist(artist);
-    localStorage.setItem('lastSelectedArtist', JSON.stringify(artist));
+    localStorage.setItem("lastSelectedArtist", JSON.stringify(artist));
 
     toast.success(`Favorite artist set to ${artist.name}`, {
-      className: 'toast-message',
-      position: 'top-right',
+      position: "top-right",
       autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
     });
 
     await fetchFavoriteArtist();
@@ -61,39 +55,54 @@ const FaveArtist: React.FC = () => {
 
   return (
     <div>
-      <div className="rounded-md text-center cursor-pointer" onClick={toggleSearch}>
-        {selectedLastArtist ? (
-          <div>
-            <h2>Favourite Artist:</h2>
-            <div className="bg-gray-700 rounded-2xl p-3 flex items-center">
-              <Image
-                src={selectedLastArtistImg || 'default-image-url'}
-                alt={`Image for ${selectedLastArtist}`}
-                className={`artist-image w-16 ml-2 rounded-lg ${styles.artistImage}`}
-             width={50}
-             height={50}
-             />
-              <div className="ml-2 ">
-                <strong>{selectedLastArtist}</strong>
-              </div>
-            </div>
-          </div>
+      <div
+        className="flex cursor-pointer items-center gap-3 rounded-xl p-2 transition-all hover:bg-white/5"
+        onClick={toggleSearch}
+      >
+        {selectedLastArtistImg ? (
+          <img
+            src={selectedLastArtistImg}
+            alt=""
+            className="h-12 w-12 rounded-lg object-cover"
+          />
         ) : (
-          'Favorite Artist'
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-pink-500">
+            <span className="text-xl">🎤</span>
+          </div>
         )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium text-white">
+            {selectedLastArtist ?? "Click to select"}
+          </p>
+          <p className="text-xs text-gray-500">Tap to change</p>
+        </div>
+        <svg
+          className="h-4 w-4 text-gray-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+          />
+        </svg>
       </div>
+
       <CSSTransition
         in={isOpen}
         timeout={300}
         classNames={{
-          enter: styles['modal-enter'],
-          enterActive: styles['modal-enter-active'],
-          exit: styles['modal-exit'],
-          exitActive: styles['modal-exit-active'],
+          enter: styles["modal-enter"],
+          enterActive: styles["modal-enter-active"],
+          exit: styles["modal-exit"],
+          exitActive: styles["modal-exit-active"],
         }}
         unmountOnExit
       >
-        <div className="mx-auto lg:absolute w-auto h-96 overflow-y-auto my-2 border rounded-lg bg-zinc-800">
+        <div className="mt-3 max-h-64 overflow-y-auto rounded-xl border border-white/10 bg-gray-800/80 backdrop-blur">
           <SearchArtists onArtistClick={handleArtistClick} />
         </div>
       </CSSTransition>
