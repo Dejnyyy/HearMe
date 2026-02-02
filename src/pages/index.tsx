@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -13,6 +13,13 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = () => {
   const { data: sessionData, status } = useSession();
   const router = useRouter();
+
+  // Auto-redirect logged in users to the app
+  useEffect(() => {
+    if (status === "authenticated" && sessionData) {
+      router.push("/profile");
+    }
+  }, [status, sessionData, router]);
 
   return (
     <>
