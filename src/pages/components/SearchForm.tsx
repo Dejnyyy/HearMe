@@ -55,7 +55,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
   return (
     <div>
       <input
-        className="focus:border-gold-500 w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 transition-colors focus:outline-none"
+        className="focus:border-gold-500 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-colors focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
         type="text"
         placeholder="Search for a song..."
         value={searchQuery}
@@ -69,7 +69,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
       <div className="mt-3 space-y-2">
         {searchResults.map((song) => (
           <div
-            className="hover:border-gold-500/30 flex cursor-pointer items-center gap-3 rounded-xl border border-gray-700/50 bg-gray-800/50 p-3 transition-all hover:bg-gray-700/50"
+            className="dark:hover:border-gold-500/30 flex cursor-pointer items-center gap-3 rounded-xl border border-gray-100 bg-white p-3 transition-all hover:border-gray-200 hover:bg-gray-50 dark:border-gray-700/50 dark:bg-gray-800/50 dark:hover:bg-gray-700/50"
             key={song.id}
             onClick={() => handleSongClick(song)}
           >
@@ -79,7 +79,9 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSongClick }) => {
               className="h-12 w-12 rounded-lg object-cover"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate font-medium text-white">{song.name}</p>
+              <p className="truncate font-medium text-gray-900 dark:text-white">
+                {song.name}
+              </p>
               <p className="truncate text-sm text-gray-500">
                 {getArtistsNames(song)}
               </p>

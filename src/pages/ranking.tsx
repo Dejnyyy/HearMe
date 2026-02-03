@@ -130,19 +130,21 @@ const Ranking: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
 
-      <main className="px-4 pb-16 pt-8 text-white">
+      <main className="px-4 pb-16 pt-8">
         {/* Header */}
         <div className="mx-auto mb-8 flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
           <div>
-            <h1 className="text-3xl font-bold text-white">Ranking</h1>
-            <p className="text-gray-500">All-time leaderboard</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Admin Ranking
+            </h1>
+            <p className="text-gray-500">All-time leaderboard management</p>
           </div>
           <button
             onClick={toggleTypeShown}
-            className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm transition-colors hover:bg-gray-800"
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
           >
             {shownType ? (
               <Globe2 className="h-4 w-4" />
@@ -158,28 +160,32 @@ const Ranking: React.FC = () => {
           {loading ? (
             <Loading />
           ) : votes.length === 0 ? (
-            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-10 text-center">
-              <p className="text-lg text-gray-400">No votes yet.</p>
+            <div className="rounded-2xl border border-gray-200 bg-white p-10 text-center dark:border-gray-800 dark:bg-gray-900">
+              <p className="text-lg text-gray-500 dark:text-gray-400">
+                No votes yet.
+              </p>
             </div>
           ) : (
             <>
               {/* Top 3 */}
-              <h2 className="mb-4 text-center text-xl text-gray-400">Top 3:</h2>
+              <h2 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
+                Top 3
+              </h2>
               <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
                 {topVotes.map((vote, index) => (
                   <article
                     key={index}
-                    className={`rounded-2xl border-2 ${getRankBorder(
+                    className={`rounded-3xl border-2 ${getRankBorder(
                       index,
-                    )} bg-gray-900 p-4`}
+                    )} bg-white p-5 shadow-lg transition-transform hover:-translate-y-1 dark:bg-gray-900`}
                   >
                     <div className="mb-3 flex items-center justify-between">
-                      <div className="bg-gold-500 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold text-black">
-                        <Trophy className="h-4 w-4" />#{index + 1}
+                      <div className="bg-gold-500 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold text-black">
+                        <Trophy className="h-3 w-3" />#{index + 1}
                       </div>
-                      <div className="text-sm text-gray-400">
+                      <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
                         Votes:{" "}
-                        <span className="text-gold-400 font-bold">
+                        <span className="text-gold-600 dark:text-gold-400 font-bold">
                           {vote.voteCount}
                         </span>
                       </div>
@@ -191,16 +197,18 @@ const Ranking: React.FC = () => {
                         alt="Profile Picture"
                         width={40}
                         height={40}
-                        className="h-10 w-10 rounded-full"
+                        className="h-10 w-10 rounded-full border border-gray-100 dark:border-gray-800"
                       />
-                      <p className="text-gray-300">{vote.name}</p>
+                      <p className="truncate font-semibold text-gray-900 dark:text-white">
+                        {vote.name}
+                      </p>
                     </div>
 
                     <div className="flex flex-col items-center">
                       <img
                         src={vote.imageUrl || "/favicon.png"}
                         alt={`Cover for ${vote.song}`}
-                        className="mb-3 h-32 w-32 rounded-lg object-cover"
+                        className="mb-4 h-32 w-32 rounded-2xl object-cover shadow-md"
                       />
                       <a
                         href={`https://open.spotify.com/search/${encodeURIComponent(
@@ -208,7 +216,7 @@ const Ranking: React.FC = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-center font-medium text-white hover:underline"
+                        className="text-center text-lg font-bold text-gray-900 hover:underline dark:text-white"
                       >
                         {vote.song}
                       </a>
@@ -218,7 +226,7 @@ const Ranking: React.FC = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-gray-500 hover:underline"
+                        className="text-sm font-medium text-gray-500 hover:underline dark:text-gray-400"
                       >
                         {vote.artist}
                       </a>
@@ -228,14 +236,14 @@ const Ranking: React.FC = () => {
               </div>
 
               {/* All Other Votes */}
-              <h2 className="mb-4 text-center text-xl text-gray-400">
-                All Other Votes:
+              <h2 className="mb-4 text-center text-xl font-bold text-gray-900 dark:text-white">
+                All Other Votes
               </h2>
-              <div className="max-h-[50vh] space-y-3 overflow-y-auto">
+              <div className="custom-scroll max-h-[60vh] space-y-3 overflow-y-auto pr-2">
                 {remainingVotes.map((vote, index) => (
                   <article
                     key={index}
-                    className="cursor-pointer rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-colors hover:border-gray-700"
+                    className="hover:border-gold-500/50 cursor-pointer rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800"
                     onClick={() => toggleExpanded(index)}
                   >
                     <div className="flex items-center gap-3">
@@ -244,19 +252,21 @@ const Ranking: React.FC = () => {
                         alt="Profile Picture"
                         width={44}
                         height={44}
-                        className="h-11 w-11 rounded-full"
+                        className="h-11 w-11 rounded-full border border-gray-100 dark:border-gray-800"
                       />
-                      <p className="text-gray-300">{vote.name}</p>
+                      <p className="font-semibold text-gray-900 dark:text-white">
+                        {vote.name}
+                      </p>
                       <div className="ml-auto flex items-center gap-2">
-                        <span className="text-sm text-gray-400">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                           Votes:{" "}
-                          <span className="text-gold-400 font-bold">
+                          <span className="text-gold-600 dark:text-gold-400 font-bold">
                             {vote.voteCount}
                           </span>
                         </span>
                         {isAdmin && (
                           <button
-                            className="inline-flex items-center gap-1 rounded-lg border border-red-800/50 bg-red-900/30 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-900/50"
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400 dark:hover:bg-red-900/20"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleDeleteClick(vote.id);
@@ -273,7 +283,7 @@ const Ranking: React.FC = () => {
                       <img
                         src={vote.imageUrl || "/favicon.png"}
                         alt={`Cover for ${vote.song}`}
-                        className="mx-auto h-20 w-20 rounded-lg object-cover sm:mx-0"
+                        className="mx-auto h-20 w-20 rounded-xl object-cover shadow-sm sm:mx-0"
                       />
                       <div className="text-center sm:text-left">
                         <a
@@ -282,7 +292,7 @@ const Ranking: React.FC = () => {
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-medium text-white hover:underline"
+                          className="block text-lg font-bold text-gray-900 hover:underline dark:text-white"
                         >
                           {vote.song}
                         </a>
@@ -292,7 +302,7 @@ const Ranking: React.FC = () => {
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block text-sm text-gray-500 hover:underline"
+                          className="block text-sm font-medium text-gray-500 hover:underline dark:text-gray-400"
                         >
                           {vote.artist}
                         </a>
@@ -300,17 +310,17 @@ const Ranking: React.FC = () => {
                     </div>
 
                     {expandedIndex === index && (
-                      <div className="mt-3 flex flex-wrap gap-3 border-t border-gray-800 pt-3">
+                      <div className="mt-3 flex flex-wrap gap-3 border-t border-gray-100 pt-3 dark:border-gray-800">
                         <span
-                          className={`rounded-lg px-2 py-1 text-xs ${
+                          className={`rounded-lg px-2 py-1 text-xs font-bold ${
                             vote.voteType === "+"
-                              ? "bg-green-900/30 text-green-400"
-                              : "bg-red-900/30 text-red-400"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                           }`}
                         >
                           {vote.voteType === "+" ? "Upvote" : "Downvote"}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
                           {formatDate(vote.createdAt)}
                         </span>
                       </div>

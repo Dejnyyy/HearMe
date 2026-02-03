@@ -32,8 +32,8 @@ const getArtistsNames = (track: Song): string =>
 
 const getImageUrl = (track?: Song) => {
   return (
-    track?.album?.images?.[1]?.url ??
     track?.album?.images?.[0]?.url ??
+    track?.album?.images?.[1]?.url ??
     track?.album?.images?.[2]?.url ??
     "/default-image-url"
   );

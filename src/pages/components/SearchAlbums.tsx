@@ -52,7 +52,10 @@ const SearchAlbums: React.FC<SearchFormProps> = ({ onAlbumClick }) => {
         body: JSON.stringify({
           userId,
           albumName: album.name,
-          favAlbImg: album.images[2]?.url,
+          favAlbImg:
+            album.images[0]?.url ||
+            album.images[1]?.url ||
+            album.images[2]?.url,
         }),
       });
 

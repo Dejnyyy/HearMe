@@ -51,7 +51,10 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
         body: JSON.stringify({
           userId,
           artistName: artist.name,
-          favArtImg: artist.images[2]?.url,
+          favArtImg:
+            artist.images[0]?.url ||
+            artist.images[1]?.url ||
+            artist.images[2]?.url,
         }),
       });
 

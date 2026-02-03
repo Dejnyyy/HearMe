@@ -97,57 +97,59 @@ const Vote: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
 
-      <main className="flex min-h-screen flex-col items-center px-4 pb-16 pt-16 text-white">
-        <h1 className="mb-8 text-3xl font-bold">Vote</h1>
+      <main className="flex min-h-screen flex-col items-center px-4 pb-16 pt-16">
+        <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">
+          Admin Vote
+        </h1>
 
         {/* Search Section */}
-        <div className="mb-6 w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-900 p-4">
-          <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-500">
+        <div className="mb-6 w-full max-w-lg rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Search Track
           </h2>
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-96 overflow-y-auto">
             <SearchForm onSongClick={handleSongClick} />
           </div>
         </div>
 
         {/* Selected Song */}
         {selectedSong && (
-          <div className="w-full max-w-lg rounded-2xl border border-gray-800 bg-gray-900 p-4">
-            <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-gray-500">
+          <div className="w-full max-w-lg rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               Selected Track
             </h2>
 
-            <div className="mb-6 flex items-center gap-4 rounded-xl border border-gray-700 bg-gray-800 p-4">
+            <div className="mb-6 flex items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800">
               <Image
-                src={selectedSong.album.images[2]?.url ?? "default-image-url"}
+                src={selectedSong.album.images[0]?.url ?? "default-image-url"}
                 alt={`Album cover for ${selectedSong.name}`}
-                width={64}
-                height={64}
-                className="rounded-lg"
+                width={80}
+                height={80}
+                className="h-20 w-20 rounded-xl object-cover shadow-sm"
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-white">
+                <p className="truncate text-lg font-bold text-gray-900 dark:text-white">
                   {selectedSong.name}
                 </p>
-                <p className="truncate text-gray-500">
+                <p className="truncate text-gray-500 dark:text-gray-400">
                   {getArtistsNames(selectedSong)}
                 </p>
               </div>
             </div>
 
-            <div className="flex justify-center gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <button
-                className="bg-gold-500 hover:bg-gold-400 inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-black transition"
+                className="bg-gold-500 hover:bg-gold-400 flex items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-black shadow-lg transition-transform active:scale-95"
                 onClick={() => handleVote("+")}
               >
                 <ThumbsUp className="h-5 w-5" />
                 Upvote
               </button>
               <button
-                className="inline-flex items-center gap-2 rounded-xl bg-gray-700 px-8 py-3 font-semibold text-white transition hover:bg-gray-600"
+                className="flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-gray-100 px-6 py-4 font-bold text-gray-700 transition-all hover:bg-gray-200 active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
                 onClick={() => handleVote("-")}
               >
                 <ThumbsDown className="h-5 w-5" />
