@@ -74,7 +74,7 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
   return (
     <div className="p-3">
       <input
-        className="focus:border-gold-500 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white placeholder-gray-400 focus:outline-none"
+        className="focus:border-gold-500 w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
         type="text"
         placeholder="Search artist..."
         value={searchQuery}
@@ -87,7 +87,7 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
       <div className="mt-2 space-y-1">
         {searchResults.map((artist) => (
           <div
-            className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700"
+            className="flex cursor-pointer items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
             key={artist.id}
             onClick={() => handleArtistClick(artist)}
           >
@@ -96,7 +96,9 @@ const SearchArtists: React.FC<SearchFormProps> = ({ onArtistClick }) => {
               alt=""
               className="h-10 w-10 rounded-lg object-cover"
             />
-            <span className="font-medium text-white">{artist.name}</span>
+            <span className="font-medium text-gray-900 dark:text-white">
+              {artist.name}
+            </span>
           </div>
         ))}
       </div>

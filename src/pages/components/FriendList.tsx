@@ -8,8 +8,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
-  users?: User[]; // ✅ optional + default
-  loading?: boolean; // ✅ optional
+  users?: User[];
+  loading?: boolean;
 };
 
 type ExtendedUser = User & {
@@ -19,23 +19,11 @@ type ExtendedUser = User & {
   image: string;
 };
 
-const glass =
-  "bg-[rgba(18,18,18,0.86)] backdrop-blur-md border border-white/10 rounded-2xl";
-const chip =
-  "inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold text-white/90 bg-white/10 border border-white/10";
-const btnBase =
-  "rounded-xl px-4 py-2 text-sm font-semibold transition active:scale-95";
-const btnGhost = `${btnBase} text-white/90 bg-white/10 border border-white/10 hover:bg-white/15`;
-const listWrap = "max-h-[60vh] overflow-y-auto pr-1 custom-scroll";
-const nameBtn =
-  "truncate text-left font-semibold text-white hover:underline focus:outline-none focus:underline";
-
 const FriendList: React.FC<Props> = ({ users = [] }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const meId = sessionData?.user?.id ?? null;
 
-  // ✅ initialize safely (users may be empty on first SSR render)
   const [userList, setUserList] = useState<ExtendedUser[]>(
     (users ?? []).map((u) => ({
       ...u,
@@ -46,7 +34,6 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
     })),
   );
 
-  // when `users` prop changes (after fetch), rebuild local state
   useEffect(() => {
     const base = (users ?? []).map((u) => ({
       ...u,
@@ -100,7 +87,6 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
 
   const handleUserClick = (userId: string) => router.push(`/profile/${userId}`);
 
-  // actions
   const onAddFriend = async (userId: string) => {
     if (!meId) return;
     try {
@@ -156,11 +142,12 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
   };
 
   const Badge = ({ kind }: { kind: "friend" | "requested" | "incoming" }) => {
-    const base = `${chip}`;
+    const base =
+      "inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold";
     if (kind === "friend")
       return (
         <span
-          className={`${base} border-green-300/20 bg-green-400/10 text-green-300`}
+          className={`${base} bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400`}
         >
           Friend
         </span>
@@ -168,13 +155,15 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
     if (kind === "requested")
       return (
         <span
-          className={`${base} border-amber-300/20 bg-amber-400/10 text-amber-300`}
+          className={`${base} bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400`}
         >
           Requested
         </span>
       );
     return (
-      <span className={`${base} border-sky-300/20 bg-sky-400/10 text-sky-300`}>
+      <span
+        className={`${base} bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400`}
+      >
         Request
       </span>
     );
@@ -185,7 +174,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
       <div className="flex items-center gap-3">
         <button
           onClick={() => handleUserClick(u.id)}
-          className="shrink-0 overflow-hidden rounded-full border border-white/20"
+          className="shrink-0 overflow-hidden rounded-full border border-gray-200 dark:border-gray-700"
           aria-label={`Open profile of ${u.name ?? "user"}`}
         >
           <Image
@@ -202,7 +191,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
             <button
               onClick={() => handleUserClick(u.id)}
               title={u.name ?? ""}
-              className={nameBtn}
+              className="hover:text-gold-600 dark:hover:text-gold-400 truncate text-left font-semibold text-gray-900 hover:underline dark:text-white"
             >
               {u.name ?? "Unknown user"}
             </button>
@@ -214,9 +203,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
               <Badge kind="incoming" />
             ) : null}
             {u.isAdmin && (
-              <span
-                className={`${chip} border-violet-300/20 bg-violet-400/10 text-violet-200`}
-              >
+              <span className="inline-flex items-center rounded-lg bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">
                 Admin
               </span>
             )}
@@ -228,7 +215,6 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
     </li>
   );
 
-  // Sections
   const Section = ({
     title,
     children,
@@ -236,18 +222,20 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
     title: string;
     children: React.ReactNode;
   }) => (
-    <section className={`${glass} p-5 sm:p-6`}>
-      <h2 className="text-xl font-bold text-white">{title}</h2>
-      <div className={listWrap}>{children}</div>
+    <section className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+        {title}
+      </h2>
+      <div className="custom-scroll max-h-[60vh] overflow-y-auto pr-1">
+        {children}
+      </div>
     </section>
   );
 
-  // Derived lists
   const friends = userList.filter((u) => u.isFriend);
   const incoming = userList.filter((u) => u.isRequestReceived && !u.isFriend);
   const sent = userList.filter((u) => u.requestPending);
 
-  // Search list
   const [searchList, setSearchList] = useState<ExtendedUser[]>(userList);
   useEffect(() => setSearchList(userList), [userList]);
   const onSearch = (term: string) => {
@@ -259,20 +247,23 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
     );
   };
 
+  const btnGhost =
+    "rounded-xl px-4 py-2 text-sm font-semibold transition active:scale-95 border border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800";
+
   return (
     <div>
       <ToastContainer />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Section title="Friends">
           {friends.length ? (
-            <ul className="divide-y divide-white/5">
+            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
               {friends.map((u) =>
                 Row(
                   u,
                   meId !== u.id ? (
                     <button
                       disabled
-                      className="bg-green-400/15 rounded-xl border border-green-300/20 px-3 py-1.5 text-xs font-semibold text-green-300"
+                      className="rounded-xl border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-semibold text-green-600 dark:border-green-900/30 dark:bg-green-900/10 dark:text-green-400"
                     >
                       Friends
                     </button>
@@ -281,7 +272,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
               )}
             </ul>
           ) : (
-            <div className="border-white/12 rounded-xl border border-dashed p-8 text-center text-white/70">
+            <div className="rounded-xl border border-dashed border-gray-200 p-8 text-center text-gray-500 dark:border-gray-800 dark:text-gray-400">
               No friends yet.
             </div>
           )}
@@ -289,13 +280,13 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
 
         <Section title="Pending Friend Requests">
           {incoming.length ? (
-            <ul className="divide-y divide-white/5">
+            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
               {incoming.map((u) =>
                 Row(
                   u,
                   <div className="flex gap-2">
                     <button
-                      className={btnGhost + " hover:text-green-400"}
+                      className={`${btnGhost} hover:text-green-600 dark:hover:text-green-400`}
                       onClick={(e) => {
                         e.stopPropagation();
                         acceptFriendRequest(u.id);
@@ -304,7 +295,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
                       Accept
                     </button>
                     <button
-                      className={btnGhost + " hover:text-red-400"}
+                      className={`${btnGhost} hover:text-red-600 dark:hover:text-red-400`}
                       onClick={(e) => {
                         e.stopPropagation();
                         rejectFriendRequest(u.id);
@@ -317,7 +308,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
               )}
             </ul>
           ) : (
-            <div className="border-white/12 rounded-xl border border-dashed p-8 text-center text-white/70">
+            <div className="rounded-xl border border-dashed border-gray-200 p-8 text-center text-gray-500 dark:border-gray-800 dark:text-gray-400">
               No pending requests.
             </div>
           )}
@@ -325,13 +316,13 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
 
         <Section title="Sent Requests">
           {sent.length ? (
-            <ul className="divide-y divide-white/5">
+            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
               {sent.map((u) =>
                 Row(
                   u,
                   <button
                     disabled
-                    className="border-white/15 rounded-xl border bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/70"
+                    className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
                   >
                     Pending
                   </button>,
@@ -339,22 +330,24 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
               )}
             </ul>
           ) : (
-            <div className="border-white/12 rounded-xl border border-dashed p-8 text-center text-white/70">
+            <div className="rounded-xl border border-dashed border-gray-200 p-8 text-center text-gray-500 dark:border-gray-800 dark:text-gray-400">
               No sent requests.
             </div>
           )}
         </Section>
 
-        <section className={`${glass} p-5 sm:p-6 lg:col-span-2`}>
+        <section className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900 lg:col-span-2">
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-bold text-white">Users</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Users
+            </h2>
             <div className="sm:w-80">
               <SearchBar onSearch={onSearch} />
             </div>
           </div>
 
-          <div className={listWrap}>
-            <ul className="divide-y divide-white/5">
+          <div className="custom-scroll max-h-[60vh] overflow-y-auto pr-1">
+            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
               {searchList.map((u) => {
                 const canAdd =
                   !u.isFriend &&
@@ -365,7 +358,7 @@ const FriendList: React.FC<Props> = ({ users = [] }) => {
                   u,
                   canAdd ? (
                     <button
-                      className={btnGhost + " hover:text-yellow-400"}
+                      className={`${btnGhost} hover:text-gold-600 dark:hover:text-gold-400`}
                       onClick={(e) => {
                         e.stopPropagation();
                         onAddFriend(u.id);

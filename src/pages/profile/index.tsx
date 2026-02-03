@@ -5,7 +5,8 @@ import HamburgerMenu from "../components/HamburgerMenu";
 import { useEffect, useState } from "react";
 import FaveArtist from "../components/FaveArtist";
 import FaveAlbum from "../components/FaveAlbum";
-import { Music, Calendar, Zap } from "lucide-react";
+import { Music, Calendar, Zap, Edit2 } from "lucide-react";
+import ProfileImageSelector from "../components/ProfileImageSelector";
 
 type LastVoteDetails = {
   date: Date | string;
@@ -74,6 +75,20 @@ const Profile: React.FC = () => {
   }, [sessionData]);
 
   const profileImage = sessionData?.user?.image;
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentProfileImage, setCurrentProfileImage] = useState(profileImage);
+
+  // Update local state when session updates
+  useEffect(() => {
+    if (sessionData?.user?.image) {
+      setCurrentProfileImage(sessionData.user.image);
+    }
+  }, [sessionData]);
+
+  const handleImageSelected = (newImageUrl: string) => {
+    setCurrentProfileImage(newImageUrl);
+    setIsImageModalOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
@@ -83,12 +98,15 @@ const Profile: React.FC = () => {
         {/* Profile Header */}
         <div className="mt-8 flex flex-col items-center">
           {/* Profile Picture */}
-          <div className="relative mb-4">
-            <div className="dark:ring-gold-500/50 h-28 w-28 overflow-hidden rounded-full bg-white p-1 shadow-xl ring-2 ring-gray-200 dark:bg-gray-900">
+          <div
+            className="group relative mb-4 cursor-pointer"
+            onClick={() => setIsImageModalOpen(true)}
+          >
+            <div className="dark:ring-gold-500/50 h-28 w-28 overflow-hidden rounded-full bg-white p-1 shadow-xl ring-2 ring-gray-200 transition-transform group-hover:scale-105 dark:bg-gray-900">
               <div className="h-full w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
-                {profileImage && !imageError ? (
+                {currentProfileImage && !imageError ? (
                   <Image
-                    src={profileImage}
+                    src={currentProfileImage}
                     alt=""
                     width={112}
                     height={112}
@@ -103,6 +121,12 @@ const Profile: React.FC = () => {
                 )}
               </div>
             </div>
+            {/* Edit Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="rounded-full bg-white p-2 shadow-lg dark:bg-gray-800">
+                <Edit2 className="h-4 w-4 text-gray-900 dark:text-white" />
+              </div>
+            </div>
           </div>
 
           {/* Username */}
@@ -110,6 +134,29 @@ const Profile: React.FC = () => {
             {sessionData?.user?.name ?? "User"}
           </h1>
         </div>
+
+        {/* Image Selection Modal */}
+        {isImageModalOpen && (
+          <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm duration-200">
+            <div className="animate-in zoom-in-95 w-full max-w-md overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl duration-200 dark:border-gray-800 dark:bg-gray-900">
+              <div className="flex items-center justify-between border-b border-gray-100 p-4 dark:border-gray-800">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Change Profile Picture
+                </h2>
+                <button
+                  onClick={() => setIsImageModalOpen(false)}
+                  className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+              <ProfileImageSelector
+                onImageSelected={handleImageSelected}
+                onCancel={() => setIsImageModalOpen(false)}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Stats Row */}
         <div className="mb-10 grid w-full max-w-2xl grid-cols-3 gap-3 sm:gap-6">
