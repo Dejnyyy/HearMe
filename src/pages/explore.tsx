@@ -10,7 +10,15 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loading from "./components/Loading";
-import { ArrowDownAZ, ArrowUpAZ, Users, Globe2, Trash2 } from "lucide-react";
+import {
+  ArrowDownAZ,
+  ArrowUpAZ,
+  Users,
+  Globe2,
+  Trash2,
+  Calendar,
+  Music,
+} from "lucide-react";
 
 /* ==================== Types ==================== */
 interface Vote {
@@ -28,9 +36,8 @@ interface Vote {
 /* ==================== Helpers ==================== */
 const formatDate = (dateString: string) =>
   new Date(dateString).toLocaleString("cs-CZ", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+    day: "numeric",
+    month: "long",
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -106,8 +113,6 @@ const Explore: React.FC = () => {
       });
 
       setHasMore((prevVotesCount) => {
-        // Can't access prev here; compute using latest known length after setVotes.
-        // Instead, compare using incoming totals: next line recalculated below in effect.
         return true;
       });
     } catch (e) {
@@ -119,12 +124,7 @@ const Explore: React.FC = () => {
   }, [apiEndpoint, fetchUserDetails]);
 
   // Keep hasMore in sync with total vs local count (re-check after each fetch)
-  useEffect(() => {
-    // When backend provides totalVotes only in the fetch, we can't access here;
-    // as a simple heuristic: if the fetch returned less than requested (20), stop.
-    // Better: the endpoint already sets totalVotes; if needed, you can return it from fetchVotes.
-    // For now we'll rely on "page bumps until empty page".
-  }, [votes.length]);
+  useEffect(() => {}, [votes.length]);
 
   // initial + on page/world toggle
   useEffect(() => {
@@ -189,121 +189,141 @@ const Explore: React.FC = () => {
 
   /* ==================== UI ==================== */
   return (
-    <div>
-      <main
-        className="min-h-screen w-full bg-cover bg-center text-white"
-        style={{ backgroundImage: 'url("/HearMeBG4.png")' }}
-      >
-        <HamburgerMenu />
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
+      <HamburgerMenu />
 
+      <main className="w-full">
         {/* Header / Controls */}
         <section className="mx-auto w-full max-w-5xl px-4 pt-10">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <div>
-              <h1 className="text-center text-3xl font-bold tracking-wide text-white sm:text-left">
+              <h1 className="text-center text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-left">
                 Explore
               </h1>
-              <p className="text-center text-sm text-gray-500 sm:text-left">
-                All {worldFeed ? "World" : "Friends"} Votes
+              <p className="mt-1 text-center text-lg text-gray-500 dark:text-gray-400 sm:text-left">
+                Latest from {worldFeed ? "the World" : "your Friends"}
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <button
                 onClick={toggleSort}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm hover:bg-gray-800"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
               >
                 {sortByDateDesc ? (
                   <ArrowDownAZ className="h-4 w-4" />
                 ) : (
                   <ArrowUpAZ className="h-4 w-4" />
                 )}
-                Date {sortByDateDesc ? "Desc." : "Asc."}
+                <span className="hidden sm:inline">Date</span>{" "}
+                {sortByDateDesc ? "Desc." : "Asc."}
               </button>
               <button
                 onClick={toggleFeed}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-sm hover:bg-gray-800"
+                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
               >
                 {worldFeed ? (
                   <Globe2 className="h-4 w-4" />
                 ) : (
                   <Users className="h-4 w-4" />
                 )}
-                Showing: {worldFeed ? "World" : "Friends"}
+                {worldFeed ? "World" : "Friends"}
               </button>
             </div>
           </div>
         </section>
 
         {/* Feed */}
-        <section className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6">
-          <div className="grid grid-cols-1 gap-4">
+        <section className="mx-auto w-full max-w-5xl px-4 pb-20 pt-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {sortedVotes.map((vote) => {
-              const expanded = expandedId === vote.id;
               return (
                 <article
                   key={vote.id}
-                  className="rounded-2xl border border-gray-800 bg-gray-900 p-4 transition hover:border-gray-700"
-                  onClick={() => onCardToggle(vote.id)}
-                  role="button"
+                  className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md dark:border-gray-800 dark:bg-gray-900"
                 >
-                  {/* Top: user row */}
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={vote.image || "/default-userimage.png"}
-                      alt="Profile picture"
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full object-cover"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToUser(vote.userId);
-                      }}
-                    />
-                    <button
-                      className="truncate text-left text-sm text-gray-300 hover:underline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToUser(vote.userId);
-                      }}
-                    >
-                      {vote.name ?? "Unknown"}
-                    </button>
-
-                    {isAdmin && (
-                      <button
-                        className="ml-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-red-600/20 px-3 py-1 text-xs text-red-200 hover:bg-red-600/30"
+                  <div className="p-5">
+                    {/* Header: User */}
+                    <div className="mb-4 flex items-center gap-3">
+                      <Image
+                        src={vote.image || "/default-userimage.png"}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 cursor-pointer rounded-full object-cover ring-2 ring-gray-100 dark:ring-gray-800"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(vote.id);
+                          goToUser(vote.userId);
                         }}
-                        aria-label="Delete vote"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Middle: song row */}
-                  <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                    <div className="shrink-0">
-                      <Image
-                        src={vote.imageUrl || "/default-image-url"}
-                        alt={`Cover for ${vote.song}`}
-                        width={100}
-                        height={100}
-                        className="h-24 w-24 rounded-lg object-cover"
                       />
+                      <div className="min-w-0 flex-1">
+                        <button
+                          className="block w-full truncate text-left font-semibold text-gray-900 hover:underline dark:text-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goToUser(vote.userId);
+                          }}
+                        >
+                          {vote.name ?? "Unknown"}
+                        </button>
+                        <p className="flex items-center gap-1 text-xs text-gray-500">
+                          {formatDate(vote.createdAt)}
+                        </p>
+                      </div>
+                      {isAdmin && (
+                        <button
+                          className="p-1 text-gray-400 transition-colors hover:text-red-500"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(vote.id);
+                          }}
+                          aria-label="Delete vote"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
-                    <div className="min-w-0">
+
+                    {/* Song Content */}
+                    <div className="group relative">
                       <a
                         href={`https://open.spotify.com/search/${encodeURIComponent(
                           vote.song,
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block truncate font-mono text-lg font-semibold hover:underline"
-                        onClick={(e) => e.stopPropagation()}
+                        className="block"
+                      >
+                        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800">
+                          <Image
+                            src={vote.imageUrl || "/default-image-url"}
+                            alt={`Cover for ${vote.song}`}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          {/* Vote Type Badge */}
+                          <div className="absolute right-3 top-3">
+                            <div
+                              className={`rounded-full px-3 py-1 text-xs font-bold shadow-lg backdrop-blur-md ${
+                                vote.voteType === "+"
+                                  ? "bg-white/90 text-black dark:bg-black/80 dark:text-white"
+                                  : "bg-red-500/90 text-white"
+                              }`}
+                            >
+                              {vote.voteType === "+" ? "Upvote" : "Downvote"}
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+
+                    <div className="mt-4">
+                      <a
+                        href={`https://open.spotify.com/search/${encodeURIComponent(
+                          vote.song,
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-gold-600 dark:hover:text-gold-400 block truncate text-lg font-bold text-gray-900 transition-colors dark:text-white"
                       >
                         {vote.song}
                       </a>
@@ -313,51 +333,34 @@ const Explore: React.FC = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block truncate font-mono text-sm text-zinc-300 hover:underline"
-                        onClick={(e) => e.stopPropagation()}
+                        className="block truncate text-sm font-medium text-gray-500 hover:underline dark:text-gray-400"
                       >
                         {vote.artist}
                       </a>
-
-                      {/* Expanded meta */}
-                      {expanded && (
-                        <div className="mt-2 space-y-1">
-                          <p
-                            className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
-                              vote.voteType === "+"
-                                ? "bg-green-500/20 text-green-300"
-                                : "bg-red-500/20 text-red-300"
-                            }`}
-                          >
-                            Type: {vote.voteType}
-                          </p>
-                          <p className="text-xs text-zinc-400">
-                            {formatDate(vote.createdAt)}
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </article>
               );
             })}
-
-            {/* Loading / Empty / Sentinel */}
-            {loading && (
-              <div className="mt-2">
-                <Loading />
-              </div>
-            )}
-
-            {!loading && sortedVotes.length === 0 && (
-              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-8 text-center text-zinc-300 backdrop-blur-md">
-                No votes yet.
-              </div>
-            )}
-
-            {/* Sentinel for infinite scroll */}
-            <div ref={sentinelRef} className="h-6 w-px self-center opacity-0" />
           </div>
+
+          {/* Loading / Empty / Sentinel */}
+          {loading && (
+            <div className="mt-8">
+              <Loading />
+            </div>
+          )}
+
+          {!loading && sortedVotes.length === 0 && (
+            <div className="rounded-3xl border border-dashed border-gray-200 p-12 text-center dark:border-gray-800">
+              <p className="text-lg text-gray-500 dark:text-gray-400">
+                No votes found in this feed.
+              </p>
+            </div>
+          )}
+
+          {/* Sentinel for infinite scroll */}
+          <div ref={sentinelRef} className="h-6 w-px self-center opacity-0" />
         </section>
       </main>
     </div>

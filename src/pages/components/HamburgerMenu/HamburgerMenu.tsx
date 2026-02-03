@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./HamburgerMenu.module.css";
 import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
+import { Sun, Moon } from "lucide-react";
 import {
   FaUser,
   FaCalendarAlt,
@@ -51,14 +53,21 @@ const HamburgerMenu: React.FC = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
 
-  // Detect mobile on client
+  // Theme
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Detect mobile & mount
   useEffect(() => {
+    setMounted(true);
     const update = () =>
       setIsMobile(typeof window !== "undefined" && window.innerWidth <= 768);
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  if (!mounted) return null;
 
   // Close on route change
   useEffect(() => {
@@ -111,6 +120,27 @@ const HamburgerMenu: React.FC = () => {
           </Link>
         </li>
       ))}
+
+      {/* Theme Toggle */}
+      <li role="none" className={styles.themeItem}>
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className={styles.themeBtn}
+          role="menuitem"
+        >
+          <span className={styles.icon}>
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </span>
+          <span className={styles.menuText}>
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </span>
+        </button>
+      </li>
+
       {/* Sign Out Button */}
       <li role="none" className={styles.signOutItem}>
         <button

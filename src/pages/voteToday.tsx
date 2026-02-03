@@ -5,7 +5,7 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import SearchForm from "./components/SearchForm";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
-import { ThumbsUp, ThumbsDown, X } from "lucide-react";
+import { ThumbsUp, ThumbsDown, X, Music, Search } from "lucide-react";
 
 interface Artist {
   name: string;
@@ -144,19 +144,21 @@ const Vote: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
 
       <main className="px-4 pb-16 pt-8">
         {/* Header */}
-        <div className="mx-auto mb-8 max-w-4xl">
-          <h1 className="mb-2 text-3xl font-bold text-white">Vote</h1>
-          <p className="text-gray-500">
+        <div className="mx-auto mb-10 max-w-4xl text-center sm:text-left">
+          <h1 className="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Vote
+          </h1>
+          <p className="text-lg text-gray-500 dark:text-gray-400">
             Search and vote for your song of the day
           </p>
           {!isUserLoggedIn && !isAuthLoading && (
-            <div className="bg-gold-500/10 border-gold-500/20 mt-4 rounded-xl border px-4 py-3">
-              <p className="text-gold-400 text-sm">
+            <div className="bg-gold-50 dark:bg-gold-500/10 border-gold-200 dark:border-gold-500/20 mt-6 inline-block rounded-xl border px-4 py-3">
+              <p className="text-gold-700 dark:text-gold-400 text-sm font-medium">
                 Log in to submit your vote
               </p>
             </div>
@@ -164,29 +166,30 @@ const Vote: React.FC = () => {
         </div>
 
         {/* Content Grid */}
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Left: Search */}
-          <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
-            <div className="border-b border-gray-800 px-5 py-4">
-              <h2 className="text-sm font-medium uppercase tracking-wider text-gray-500">
+          <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+            <div className="flex items-center gap-3 border-b border-gray-100 px-6 py-5 dark:border-gray-800">
+              <Search className="h-5 w-5 text-gray-400" />
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 Search Track
               </h2>
             </div>
-            <div className="max-h-[500px] overflow-y-auto p-5">
+            <div className="custom-scrollbar max-h-[600px] flex-1 overflow-y-auto p-6">
               <SearchForm onSongClick={handleSongClick} />
             </div>
           </div>
 
           {/* Right: Selected */}
-          <div className="overflow-hidden rounded-2xl border border-gray-800 bg-gray-900">
-            <div className="flex items-center justify-between border-b border-gray-800 px-5 py-4">
-              <h2 className="text-sm font-medium uppercase tracking-wider text-gray-500">
+          <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 Selected Track
               </h2>
               {selectedSong && (
                 <button
                   onClick={clearSelection}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-gray-800 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-700"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                 >
                   <X className="h-3.5 w-3.5" />
                   Clear
@@ -194,62 +197,71 @@ const Vote: React.FC = () => {
               )}
             </div>
 
-            {!selectedSong ? (
-              <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
-                <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl border border-gray-700 bg-gray-800">
-                  <span className="text-3xl">🎵</span>
-                </div>
-                <p className="max-w-xs text-sm text-gray-500">
-                  Pick a song from the search to preview it here and cast your
-                  vote
-                </p>
-              </div>
-            ) : (
-              <div className="p-5">
-                {/* Song Card */}
-                <div className="flex items-center gap-4 rounded-xl border border-gray-700 bg-gray-800 p-4">
-                  <Image
-                    src={albumImage}
-                    alt={`Album cover for ${selectedSong.name}`}
-                    width={80}
-                    height={80}
-                    className="rounded-lg"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-lg font-semibold text-white">
-                      {selectedSong.name}
-                    </p>
-                    <p className="truncate text-gray-500">{artistNames}</p>
+            <div className="flex flex-1 flex-col justify-center">
+              {!selectedSong ? (
+                <div className="flex flex-col items-center justify-center px-8 py-20 text-center">
+                  <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-gray-50 text-gray-300 dark:bg-gray-800 dark:text-gray-600">
+                    <Music className="h-10 w-10" />
                   </div>
-                </div>
-
-                {/* Vote Buttons */}
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-                  <button
-                    className="bg-gold-500 hover:bg-gold-400 inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-black transition disabled:cursor-not-allowed disabled:opacity-50"
-                    onClick={() => handleVote("+")}
-                    disabled={!isUserLoggedIn || isSubmitting || isAuthLoading}
-                  >
-                    <ThumbsUp className="h-5 w-5" />
-                    Upvote
-                  </button>
-                  <button
-                    className="inline-flex items-center gap-2 rounded-xl bg-gray-700 px-8 py-3 font-semibold text-white transition hover:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
-                    onClick={() => handleVote("-")}
-                    disabled={!isUserLoggedIn || isSubmitting || isAuthLoading}
-                  >
-                    <ThumbsDown className="h-5 w-5" />
-                    Downvote
-                  </button>
-                </div>
-
-                {isSubmitting && (
-                  <p className="mt-4 text-center text-sm text-gray-500">
-                    Submitting your vote…
+                  <p className="max-w-xs text-base text-gray-500 dark:text-gray-400">
+                    Pick a song from the search to preview it here and cast your
+                    vote
                   </p>
-                )}
-              </div>
-            )}
+                </div>
+              ) : (
+                <div className="p-8">
+                  {/* Song Card */}
+                  <div className="flex flex-col items-center gap-6 rounded-2xl border border-gray-100 bg-gray-50 p-6 dark:border-gray-800 dark:bg-gray-800/50 sm:flex-row">
+                    <Image
+                      src={albumImage}
+                      alt={`Album cover for ${selectedSong.name}`}
+                      width={120}
+                      height={120}
+                      className="rounded-2xl shadow-md"
+                      unoptimized
+                    />
+                    <div className="min-w-0 flex-1 text-center sm:text-left">
+                      <p className="mb-1 truncate text-xl font-bold text-gray-900 dark:text-white">
+                        {selectedSong.name}
+                      </p>
+                      <p className="truncate font-medium text-gray-500 dark:text-gray-400">
+                        {artistNames}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Vote Buttons */}
+                  <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                    <button
+                      className="bg-gold-500 hover:bg-gold-600 dark:bg-gold-500 dark:hover:bg-gold-400 shadow-gold-500/20 inline-flex items-center gap-2 rounded-xl px-10 py-4 font-bold text-white shadow-lg transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none dark:text-black"
+                      onClick={() => handleVote("+")}
+                      disabled={
+                        !isUserLoggedIn || isSubmitting || isAuthLoading
+                      }
+                    >
+                      <ThumbsUp className="h-5 w-5" />
+                      Upvote
+                    </button>
+                    <button
+                      className="inline-flex items-center gap-2 rounded-xl bg-gray-100 px-10 py-4 font-bold text-gray-600 transition-all hover:bg-gray-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                      onClick={() => handleVote("-")}
+                      disabled={
+                        !isUserLoggedIn || isSubmitting || isAuthLoading
+                      }
+                    >
+                      <ThumbsDown className="h-5 w-5" />
+                      Downvote
+                    </button>
+                  </div>
+
+                  {isSubmitting && (
+                    <p className="mt-6 animate-pulse text-center text-sm font-medium text-gray-500">
+                      Submitting your vote…
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>

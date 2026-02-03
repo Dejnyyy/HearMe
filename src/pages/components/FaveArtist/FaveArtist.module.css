@@ -1,32 +1,5 @@
 /* styles/FaveArtist.module.css */
-.FaveArtist {
-    cursor: pointer;
-    
-  }.popup {
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    opacity: 0;
-    transform: translateY(-20px);
-    pointer-events: none; /* Ensure the hidden element doesn't capture mouse events */
-  }
-  
-  .popupOpen {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto; /* Allow interactions when the element is visible */
-  }
-  
-  .artistImage {
-    transition: transform 0.3s ease;
-  }
-  
-  .artistImage:hover {
-    transform: scale(1.1);
-  }
-  /* FaveArtist.module.css */
-
-.artistImage {
-  transition: opacity 0.5s ease-in-out;
-}
+/* Cleaned up CSS module */
 
 .modal-enter {
   opacity: 0;
@@ -36,7 +9,9 @@
 .modal-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
+  transition:
+    opacity 300ms,
+    transform 300ms;
 }
 
 .modal-exit {
@@ -47,5 +22,7 @@
 .modal-exit-active {
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity 300ms, transform 300ms;
+  transition:
+    opacity 300ms,
+    transform 300ms;
 }

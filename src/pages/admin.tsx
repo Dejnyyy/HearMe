@@ -48,10 +48,15 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
-      <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
-        <UsersPage userList={users} onDeleteUser={handleDeleteUser} />
+      <main className="flex min-h-screen flex-col items-center justify-start px-4 py-8">
+        <div className="w-full max-w-6xl">
+          <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">
+            Admin Dashboard
+          </h1>
+          <UsersPage userList={users} onDeleteUser={handleDeleteUser} />
+        </div>
       </main>
     </div>
   );

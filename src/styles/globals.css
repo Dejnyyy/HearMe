@@ -1,76 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --toastify-color-success: #f59e0b;
-  --color-gold: #f59e0b;
-  --color-gold-light: #fbbf24;
-  --color-gold-dark: #d97706;
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 transition-colors duration-300 dark:bg-black dark:text-gray-100;
+  }
 }
 
 * {
   font-family: "Quicksand", sans-serif;
 }
 
-::selection {
-  background: #f59e0b;
-  color: black;
-}
-
-/* Scrollbar styling */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 5px;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #f59e0b;
-  border-radius: 50px;
+  @apply rounded-full bg-gray-300 transition-colors hover:bg-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #d97706;
+/* Global utility classes */
+.glass-panel {
+  @apply border border-gray-200 bg-white/70 shadow-sm backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/70 dark:shadow-none;
 }
 
-/* Toast styling */
 .toast-message {
-  background: black;
-  color: #fff;
-  font-size: 16px;
-  padding: 16px;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-/* Vote colors */
-.vote-positive {
-  color: #22c55e;
-}
-
-.vote-negative {
-  color: #ef4444;
-}
-
-/* Custom scroll for components */
-.custom-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.3);
-  border-radius: 10px;
-}
-
-.custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.5);
+  @apply rounded-xl border border-gray-100 bg-white font-sans text-gray-900 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white;
 }

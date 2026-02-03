@@ -5,6 +5,7 @@ import HamburgerMenu from "../components/HamburgerMenu";
 import { useEffect, useState } from "react";
 import FaveArtist from "../components/FaveArtist";
 import FaveAlbum from "../components/FaveAlbum";
+import { Music, Calendar, Zap } from "lucide-react";
 
 type LastVoteDetails = {
   date: Date | string;
@@ -75,16 +76,16 @@ const Profile: React.FC = () => {
   const profileImage = sessionData?.user?.image;
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
 
-      <main className="flex min-h-screen flex-col items-center px-4 py-8 text-white">
+      <main className="flex min-h-screen flex-col items-center px-4 py-8 text-gray-900 dark:text-white">
         {/* Profile Header */}
         <div className="mt-8 flex flex-col items-center">
           {/* Profile Picture */}
           <div className="relative mb-4">
-            <div className="border-gold-500 h-28 w-28 overflow-hidden rounded-full border-2 p-0.5">
-              <div className="h-full w-full overflow-hidden rounded-full bg-gray-900">
+            <div className="dark:ring-gold-500/50 h-28 w-28 overflow-hidden rounded-full bg-white p-1 shadow-xl ring-2 ring-gray-200 dark:bg-gray-900">
+              <div className="h-full w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
                 {profileImage && !imageError ? (
                   <Image
                     src={profileImage}
@@ -96,7 +97,7 @@ const Profile: React.FC = () => {
                     unoptimized
                   />
                 ) : (
-                  <div className="bg-gold-500 flex h-full w-full items-center justify-center text-3xl font-bold text-black">
+                  <div className="dark:bg-gold-500 flex h-full w-full items-center justify-center bg-gray-200 text-3xl font-bold text-gray-500 dark:text-black">
                     {sessionData?.user?.name?.charAt(0)?.toUpperCase() ?? "?"}
                   </div>
                 )}
@@ -105,36 +106,47 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Username */}
-          <h1 className="mb-6 text-2xl font-bold tracking-wide">
+          <h1 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
             {sessionData?.user?.name ?? "User"}
           </h1>
         </div>
 
         {/* Stats Row */}
-        <div className="mb-8 flex flex-wrap justify-center gap-4">
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 px-6 py-4 text-center">
-            <p className="text-gold-400 text-3xl font-bold">{voteCount}</p>
-            <p className="text-sm text-gray-500">Total Votes</p>
+        <div className="mb-10 grid w-full max-w-2xl grid-cols-3 gap-3 sm:gap-6">
+          <div className="flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+            <Zap className="text-gold-500 mb-2 h-5 w-5" />
+            <p className="dark:text-gold-400 text-2xl font-bold text-gray-900">
+              {voteCount}
+            </p>
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+              Votes
+            </p>
           </div>
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 px-6 py-4 text-center">
-            <p className="text-lg font-semibold text-white">
+          <div className="flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+            <Calendar className="mb-2 h-5 w-5 text-blue-500 dark:text-blue-400" />
+            <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
               {firstVote ?? "—"}
             </p>
-            <p className="text-sm text-gray-500">First Vote</p>
+            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+              First
+            </p>
           </div>
-          <div className="rounded-2xl border border-gray-800 bg-gray-900 px-6 py-4 text-center">
-            <p className="text-lg font-semibold text-white">
+          <div className="flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+            <Music className="mb-2 h-5 w-5 text-purple-500 dark:text-purple-400" />
+            <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-white">
               {lastVote ?? "—"}
             </p>
-            <p className="text-sm text-gray-500">Last Vote</p>
+            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+              Last
+            </p>
           </div>
         </div>
 
         {/* Latest Vote Card */}
         {lastVoteDetails && (
-          <div className="mb-8 w-full max-w-md">
-            <h2 className="mb-3 text-center text-sm font-medium uppercase tracking-wider text-gray-500">
-              Latest Vote
+          <div className="mb-10 w-full max-w-md">
+            <h2 className="mb-4 text-center text-xs font-bold uppercase tracking-widest text-gray-400">
+              Latest Track
             </h2>
             <a
               href={`https://open.spotify.com/search/${encodeURIComponent(
@@ -142,58 +154,45 @@ const Profile: React.FC = () => {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:border-gold-500/50 flex items-center gap-4 rounded-2xl border border-gray-800 bg-gray-900 p-4 transition-all"
+              className="hover:border-gold-400/30 group flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md dark:border-gray-800 dark:bg-gray-900 dark:shadow-none"
             >
               {lastVoteDetails.imageUrl ? (
                 <img
                   src={lastVoteDetails.imageUrl}
                   alt=""
-                  className="h-16 w-16 rounded-xl object-cover"
+                  className="h-16 w-16 rounded-xl object-cover shadow-sm"
                 />
               ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gray-800">
-                  <span className="text-2xl">🎵</span>
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                  <Music className="h-6 w-6 text-gray-400" />
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-white">
+                <p className="group-hover:text-gold-600 dark:group-hover:text-gold-400 truncate font-bold text-gray-900 transition-colors dark:text-white">
                   {lastVoteDetails.song}
                 </p>
-                <p className="truncate text-sm text-gray-500">
+                <p className="truncate text-sm text-gray-500 dark:text-gray-400">
                   {lastVoteDetails.artist}
                 </p>
               </div>
-              <svg
-                className="h-5 w-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
             </a>
           </div>
         )}
 
         {/* Favorites Section */}
         <div className="w-full max-w-4xl">
-          <h2 className="mb-4 text-center text-sm font-medium uppercase tracking-wider text-gray-500">
+          <h2 className="mb-6 text-center text-xs font-bold uppercase tracking-widest text-gray-400">
             Favorites
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-              <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-gray-400">
                 Favourite Artist
               </h3>
               <FaveArtist />
             </div>
-            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-4">
-              <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-gray-600">
+            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+              <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-gray-400">
                 Favourite Album
               </h3>
               <FaveAlbum />

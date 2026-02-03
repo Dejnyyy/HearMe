@@ -4,6 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import HamburgerMenu from "./components/HamburgerMenu";
+import {
+  Calendar as CalendarIcon,
+  ArrowDownAZ,
+  ArrowUpAZ,
+  Clock,
+  Music,
+} from "lucide-react";
 
 type Vote = {
   song: string;
@@ -21,13 +28,6 @@ const Calendar: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [sortByDateDesc, setSortByDateDesc] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  // 🟢 Design style variables
-  const glass =
-    "bg-[rgba(18,18,18,0.86)] backdrop-blur-md border border-white/10 rounded-2xl";
-  const h2 = "text-white/95 font-semibold font-mono text-lg sm:text-xl";
-  const chip =
-    "inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold font-mono text-white/90 bg-white/10 border border-white/10";
 
   useEffect(() => {
     const fetchVotes = async () => {
@@ -78,185 +78,196 @@ const Calendar: React.FC = () => {
   const toggleExpanded = (index: number) =>
     setExpandedIndex(expandedIndex === index ? null : index);
 
-  const sortingLabel = sortByDateDesc ? "Newest first" : "Oldest first";
-
   return (
-    <div className="relative">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-black">
       <HamburgerMenu />
 
-      <main
-        className="min-h-screen w-full bg-black"
-        style={{
-          backgroundImage: 'url("/HearMeBG4.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-          {/* 🟣 HERO SECTION */}
-          <section
-            className={`${glass} flex flex-col gap-4 p-5 sm:p-6 md:flex-row md:items-center md:justify-between`}
-          >
-            <div className="flex items-center gap-3">
-              <Image
-                src={sessionData?.user?.image ?? "/default-userimage.png"}
-                alt="Profile picture"
-                width={56}
-                height={56}
-                className="h-14 w-14 rounded-full border border-white/20 object-cover"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-white">Calendar</h1>
-                <p className="text-sm text-white/60">
-                  Your votes history in one place.
-                </p>
+      <main className="w-full">
+        <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
+          {/* Header */}
+          <section className="mb-8 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition-all dark:border-gray-800 dark:bg-gray-900 md:p-8">
+            <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Image
+                    src={sessionData?.user?.image ?? "/default-userimage.png"}
+                    alt="Profile picture"
+                    width={64}
+                    height={64}
+                    className="h-16 w-16 rounded-full border-2 border-gray-100 object-cover shadow-sm dark:border-gray-700"
+                  />
+                  <div className="absolute -bottom-1 -right-1 rounded-full bg-white p-1.5 dark:bg-gray-900">
+                    <CalendarIcon className="text-gold-500 h-4 w-4" />
+                  </div>
+                </div>
+                <div className="text-center md:text-left">
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    Calendar
+                  </h1>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Your voting history · {votes.length} votes total
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleSortingOrder}
-                className="hover:bg-white/15 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm font-semibold text-white/90 transition active:scale-95"
-              >
-                {sortingLabel} {sortByDateDesc ? "↓" : "↑"}
-              </button>
-              <Link
-                href="/voteToday"
-                className="bg-gold-500 hover:bg-gold-400 rounded-xl px-3 py-2 text-sm font-semibold text-black shadow-md transition active:scale-95"
-              >
-                Vote today →
-              </Link>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={toggleSortingOrder}
+                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                >
+                  {sortByDateDesc ? (
+                    <ArrowDownAZ className="h-4 w-4" />
+                  ) : (
+                    <ArrowUpAZ className="h-4 w-4" />
+                  )}
+                  {sortByDateDesc ? "Newest first" : "Oldest first"}
+                </button>
+                <Link
+                  href="/voteToday"
+                  className="bg-gold-500 hover:bg-gold-600 dark:hover:bg-gold-400 shadow-gold-500/20 rounded-xl px-5 py-2 text-sm font-bold text-white shadow-lg transition active:scale-95 dark:text-black"
+                >
+                  Vote today →
+                </Link>
+              </div>
             </div>
           </section>
 
-          {/* 🟣 VOTES LIST */}
-          <section className={`${glass} p-4 sm:p-5`}>
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className={h2}>My Votes</h2>
-              <span className={chip}>Total: {votes.length}</span>
-            </div>
-
-            {/* Scrollable section */}
+          {/* List */}
+          <section>
             <div className="custom-scroll max-h-[70vh] overflow-y-auto pr-1">
               {loading ? (
                 // Loading skeletons
-                <ul className="space-y-3">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <li
+                <div className="space-y-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div
                       key={i}
-                      className="rounded-xl border border-white/10 bg-white/5 p-3"
-                    >
-                      <div className="flex gap-3">
-                        <div className="h-12 w-12 animate-pulse rounded-lg bg-white/10" />
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 w-1/2 animate-pulse rounded bg-white/10" />
-                          <div className="h-3 w-1/3 animate-pulse rounded bg-white/10" />
-                        </div>
-                      </div>
-                    </li>
+                      className="h-24 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-800"
+                    />
                   ))}
-                </ul>
+                </div>
               ) : votes.length === 0 ? (
                 // Empty state
-                <div className="border-white/12 rounded-xl border border-dashed p-8 text-center">
-                  <p className="mb-3 text-white/70">No votes yet.</p>
-                  <button
-                    onClick={() => router.push("/voteToday")}
-                    className="bg-gold-500 hover:bg-gold-400 rounded-xl px-4 py-2 text-sm font-semibold text-black shadow-md transition active:scale-95"
+                <div className="rounded-3xl border border-dashed border-gray-300 p-12 text-center dark:border-gray-700">
+                  <p className="mb-4 text-lg text-gray-500 dark:text-gray-400">
+                    No votes recorded yet.
+                  </p>
+                  <Link
+                    href="/voteToday"
+                    className="bg-gold-500 hover:bg-gold-600 dark:hover:bg-gold-400 inline-block rounded-xl px-6 py-3 font-semibold text-white shadow-md transition dark:text-black"
                   >
-                    Vote now →
-                  </button>
+                    Cast your first vote
+                  </Link>
                 </div>
               ) : (
                 // Votes list
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {sortedVotes.map((vote, index) => {
                     const isOpen = expandedIndex === index;
                     return (
                       <li
                         key={`${vote.song}-${vote.createdAt}-${index}`}
-                        className="hover:bg-white/7 cursor-pointer rounded-xl border border-white/10 bg-white/5 p-3 transition"
+                        className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
+                          isOpen
+                            ? "border-gold-500/50 dark:border-gold-500/30 scale-[1.01] transform bg-white shadow-md dark:bg-gray-900"
+                            : "border-gray-100 bg-white hover:border-gray-200 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
+                        }`}
                         onClick={() => toggleExpanded(index)}
                       >
-                        {/* Top section */}
-                        <div className="sm:flex sm:items-center sm:gap-3">
-                          {/* Cover */}
-                          <div className="mx-auto flex-shrink-0 sm:mx-0">
-                            <Image
-                              src={vote.imageUrl || "/favicon.png"}
-                              alt={`Cover for ${vote.song}`}
-                              width={64}
-                              height={64}
-                              className="border-white/15 h-16 w-16 rounded-lg border object-cover"
-                            />
-                          </div>
+                        <div className="cursor-pointer p-4">
+                          <div className="flex items-center gap-4">
+                            {/* Cover */}
+                            <div className="relative flex-shrink-0">
+                              <Image
+                                src={vote.imageUrl || "/favicon.png"}
+                                alt={`Cover for ${vote.song}`}
+                                width={64}
+                                height={64}
+                                className="h-16 w-16 rounded-xl bg-gray-100 object-cover shadow-sm"
+                              />
+                              <div
+                                className={`absolute -bottom-2 -right-2 rounded-full border-2 border-white p-1 dark:border-gray-900 ${
+                                  vote.voteType === "+"
+                                    ? "bg-green-100 text-green-600"
+                                    : "bg-red-100 text-red-600"
+                                }`}
+                              >
+                                {vote.voteType === "+" ? (
+                                  <svg
+                                    className="h-3 w-3"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={3}
+                                      d="M5 10l7-7m0 0l7 7m-7-7v18"
+                                    />
+                                  </svg>
+                                ) : (
+                                  <svg
+                                    className="h-3 w-3"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={3}
+                                      d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
 
-                          {/* Song & artist */}
-                          <div className="mt-2 min-w-0 flex-1 text-center sm:mt-0 sm:text-left">
-                            <Link
-                              href={`https://open.spotify.com/search/${encodeURIComponent(
-                                vote.song || "",
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block truncate font-semibold text-white hover:underline"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {vote.song}
-                            </Link>
-                            <Link
-                              href={`https://open.spotify.com/search/${encodeURIComponent(
-                                vote.artist || "",
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-white/70 hover:underline"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {vote.artist}
-                            </Link>
-                          </div>
+                            {/* Content */}
+                            <div className="min-w-0 flex-1">
+                              <h3 className="truncate text-lg font-bold text-gray-900 dark:text-white">
+                                {vote.song}
+                              </h3>
+                              <p className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
+                                {vote.artist}
+                              </p>
+                            </div>
 
-                          {/* User avatar + name */}
-                          <div className="mt-3 flex items-center justify-center gap-2 sm:mt-0 sm:justify-end">
-                            <Image
-                              src={
-                                sessionData?.user?.image ??
-                                "/default-userimage.png"
-                              }
-                              alt="profile picture"
-                              width={32}
-                              height={32}
-                              className="h-8 w-8 rounded-full border border-white/20 object-cover"
-                            />
-                            <p className="max-w-[160px] truncate text-sm text-white/80">
-                              {sessionData?.user?.name}
-                            </p>
+                            {/* Date (Desktop) */}
+                            <div className="hidden items-center gap-2 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-400 dark:bg-gray-800 sm:flex">
+                              <Clock className="h-3.5 w-3.5" />
+                              {formatDate(vote.createdAt)}
+                            </div>
                           </div>
                         </div>
 
-                        {/* Expandable section */}
+                        {/* Expandable Details */}
                         <div
-                          className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
+                          className={`grid transition-[grid-template-rows,opacity,padding] duration-300 ease-in-out ${
                             isOpen
                               ? "grid-rows-[1fr] opacity-100"
-                              : "grid-rows-[0fr] opacity-80"
+                              : "grid-rows-[0fr] opacity-0"
                           }`}
                         >
-                          <div className="overflow-hidden">
-                            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 p-3">
-                              <span
-                                className={`rounded-md px-2 py-1 text-xs font-semibold ${
-                                  vote.voteType === "+"
-                                    ? "bg-green-400/15 border border-green-300/20 text-green-300"
-                                    : "bg-red-400/15 border border-red-300/20 text-red-300"
-                                }`}
-                              >
-                                {vote.voteType === "+" ? "Upvote" : "Downvote"}
-                              </span>
-                              <span className="text-sm text-white/60">
+                          <div className="overflow-hidden border-t border-gray-100 bg-gray-50/50 dark:border-gray-800 dark:bg-black/20">
+                            <div className="flex flex-col items-center justify-between gap-4 p-4 sm:flex-row">
+                              <div className="text-sm text-gray-500 dark:text-gray-400 sm:hidden">
+                                <span className="font-semibold">Date:</span>{" "}
                                 {formatDate(vote.createdAt)}
-                              </span>
+                              </div>
+                              <div className="flex gap-2">
+                                <a
+                                  href={`https://open.spotify.com/search/${encodeURIComponent(
+                                    vote.song || "",
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 rounded-lg bg-[#1DB954]/10 px-4 py-2 text-sm font-bold text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
+                                >
+                                  <Music className="h-4 w-4" />
+                                  Open in Spotify
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>

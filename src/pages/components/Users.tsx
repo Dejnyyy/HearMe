@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import SearchBar from "./SearchBar";
 import Image from "next/image";
+import { Trash2 } from "lucide-react";
 
 interface UsersPageProps {
   userList: User[];
@@ -124,43 +125,73 @@ const UsersPage: React.FC<UsersPageProps> = ({
   };
 
   return (
-    <div className="w-full max-w-lg">
-      <h1 className="mb-4 text-2xl font-bold text-white">User List</h1>
-      <SearchBar onSearch={handleSearch} />
-      <ul className="mt-4 max-h-80 overflow-y-auto rounded-2xl border border-gray-800 bg-gray-900 p-2">
-        {filteredUserList.map((user) => (
-          <div
-            className="flex cursor-pointer items-center rounded-xl p-3 transition-colors hover:bg-gray-800"
-            key={user.id}
-            onClick={() => handleUserClick(user.id)}
-          >
-            <li className="flex-1">
-              <div className="flex flex-row items-center">
-                <Image
-                  src={user.image || "/default-userimage.png"}
-                  alt="Profile picture"
-                  width={40}
-                  height={40}
-                  unoptimized={true}
-                  className="h-10 w-10 rounded-full"
-                />
-                <p className="ml-3 font-medium text-white">{user.name}</p>
+    <div className="w-full">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          All Users
+        </h2>
+        <div className="w-full max-w-sm">
+          <SearchBar onSearch={handleSearch} />
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <ul className="custom-scroll max-h-[600px] divide-y divide-gray-100 overflow-y-auto dark:divide-gray-800">
+          {filteredUserList.map((user) => (
+            <li
+              key={user.id}
+              className="group flex cursor-pointer items-center justify-between p-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              onClick={() => handleUserClick(user.id)}
+            >
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Image
+                    src={user.image || "/default-userimage.png"}
+                    alt="Profile picture"
+                    width={48}
+                    height={48}
+                    unoptimized={true}
+                    className="h-12 w-12 rounded-full border border-gray-100 object-cover dark:border-gray-700"
+                  />
+                  {user.isAdmin && (
+                    <div className="absolute -bottom-1 -right-1 rounded-full border border-violet-200 bg-violet-100 px-1.5 py-0.5 text-[10px] font-bold uppercase text-violet-600 dark:border-violet-800 dark:bg-violet-900/50 dark:text-violet-300">
+                      Admin
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="group-hover:text-gold-600 dark:group-hover:text-gold-400 text-base font-semibold text-gray-900 transition-colors dark:text-white">
+                    {user.name}
+                  </p>
+                  <p className="font-mono text-xs text-gray-500 dark:text-gray-400">
+                    ID: {user.id.substring(0, 8)}...
+                  </p>
+                </div>
               </div>
+
+              {isLoggedInUserAdmin && user.isAdmin !== true && (
+                <button
+                  className="rounded-lg p-2 text-gray-400 transition-all hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (
+                      confirm(`Are you sure you want to delete ${user.name}?`)
+                    ) {
+                      onDeleteUser(user.id);
+                    }
+                  }}
+                  title="Delete User"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </button>
+              )}
             </li>
-            {isLoggedInUserAdmin && user.isAdmin !== true && (
-              <button
-                className="ml-2 rounded-lg border border-gray-700 bg-gray-800 px-4 py-1.5 text-sm text-gray-300 transition-colors hover:border-red-700 hover:bg-red-900/50 hover:text-red-400"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteUser(user.id);
-                }}
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        ))}
-      </ul>
+          ))}
+        </ul>
+        <div className="border-t border-gray-100 bg-gray-50 p-3 text-center text-xs text-gray-500 dark:border-gray-800 dark:bg-gray-800/50 dark:text-gray-400">
+          Total users: {filteredUserList.length}
+        </div>
+      </div>
     </div>
   );
 };
