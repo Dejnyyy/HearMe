@@ -123,9 +123,6 @@ const Explore: React.FC = () => {
     return () => ac.abort();
   }, [apiEndpoint, fetchUserDetails]);
 
-  // Keep hasMore in sync with total vs local count (re-check after each fetch)
-  useEffect(() => {}, [votes.length]);
-
   // initial + on page/world toggle
   useEffect(() => {
     fetchVotes();

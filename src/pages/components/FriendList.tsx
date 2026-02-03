@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -27,11 +27,10 @@ const btnBase =
   "rounded-xl px-4 py-2 text-sm font-semibold transition active:scale-95";
 const btnGhost = `${btnBase} text-white/90 bg-white/10 border border-white/10 hover:bg-white/15`;
 const listWrap = "max-h-[60vh] overflow-y-auto pr-1 custom-scroll";
-const sectionTitle = "text-white text-xl font-bold";
 const nameBtn =
   "truncate text-left font-semibold text-white hover:underline focus:outline-none focus:underline";
 
-const FriendList: React.FC<Props> = ({ users = [], loading = false }) => {
+const FriendList: React.FC<Props> = ({ users = [] }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const meId = sessionData?.user?.id ?? null;
@@ -46,8 +45,6 @@ const FriendList: React.FC<Props> = ({ users = [], loading = false }) => {
       image: u.image || "/default-userimage.png",
     })),
   );
-  const [filteredUserList, setFilteredUserList] =
-    useState<ExtendedUser[]>(userList);
 
   // when `users` prop changes (after fetch), rebuild local state
   useEffect(() => {
@@ -59,7 +56,6 @@ const FriendList: React.FC<Props> = ({ users = [], loading = false }) => {
       image: u.image || "/default-userimage.png",
     }));
     setUserList(base);
-    setFilteredUserList(base);
   }, [users]);
 
   const fetchUserData = async () => {
@@ -92,7 +88,6 @@ const FriendList: React.FC<Props> = ({ users = [], loading = false }) => {
       }));
 
       setUserList(decorated);
-      setFilteredUserList(decorated);
     } catch (e) {
       console.error("Error fetching user data:", e);
     }
@@ -102,14 +97,6 @@ const FriendList: React.FC<Props> = ({ users = [], loading = false }) => {
     fetchUserData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meId, users]);
-
-  const handleSearch = (term: string) => {
-    const t = term.trim().toLowerCase();
-    if (!t) return setFilteredUserList(userList);
-    setFilteredUserList(
-      userList.filter((u) => (u.name || "").toLowerCase().includes(t)),
-    );
-  };
 
   const handleUserClick = (userId: string) => router.push(`/profile/${userId}`);
 

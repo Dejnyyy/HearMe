@@ -67,8 +67,6 @@ const HamburgerMenu: React.FC = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  if (!mounted) return null;
-
   // Close on route change
   useEffect(() => {
     const handleRoute = () => setIsOpen(false);
@@ -91,6 +89,8 @@ const HamburgerMenu: React.FC = () => {
     }
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, isMobile]);
+
+  if (!mounted) return null;
 
   const items = NAV_ITEMS.filter((i) => (i.adminOnly ? isAdmin : true));
 
