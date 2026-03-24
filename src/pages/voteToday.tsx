@@ -48,6 +48,35 @@ const Vote: React.FC = () => {
 
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recommendations, setRecommendations] = useState<Song[]>([]);
+  const [isLoadingRecs, setIsLoadingRecs] = useState(false);
+
+  useEffect(() => {
+    if (!isUserLoggedIn) return;
+    const fetchRecs = async () => {
+      setIsLoadingRecs(true);
+      try {
+        const res = await fetch("/api/getRecommendations");
+        if (res.ok) {
+          const data = await res.json();
+          const mapped: Song[] = data.recommendations.map((r: any) => ({
+            name: r.name,
+            artists: [{ name: r.artist }],
+            album: {
+              images: [{ url: r.imageUrl || "/default-image-url" }],
+            },
+            id: r.id,
+          }));
+          setRecommendations(mapped);
+        }
+      } catch (e) {
+        console.error("Failed to fetch recommendations", e);
+      } finally {
+        setIsLoadingRecs(false);
+      }
+    };
+    fetchRecs();
+  }, [isUserLoggedIn]);
 
   useEffect(() => {
     const { selectedSong: querySong } = router.query;
@@ -157,13 +186,52 @@ const Vote: React.FC = () => {
             Search and vote for your song of the day
           </p>
           {!isUserLoggedIn && !isAuthLoading && (
-            <div className="bg-gold-50 dark:bg-gold-500/10 border-gold-200 dark:border-gold-500/20 mt-6 inline-block rounded-xl border px-4 py-3">
-              <p className="text-gold-700 dark:text-gold-400 text-sm font-medium">
+            <div className="mt-6 inline-block rounded-xl border border-gold-200 bg-gold-50 px-4 py-3 dark:border-gold-500/20 dark:bg-gold-500/10">
+              <p className="text-sm font-medium text-gold-700 dark:text-gold-400">
                 Log in to submit your vote
               </p>
             </div>
           )}
         </div>
+
+        {/* Recommendations Section */}
+        {recommendations.length > 0 && (
+          <div className="mx-auto mb-10 max-w-5xl">
+            <h2 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              <Music className="h-4 w-4" /> Recommended from your Spotify
+            </h2>
+            <div className="custom-scrollbar flex gap-4 overflow-x-auto pb-4">
+              {recommendations.map((song, idx) => {
+                const img = getImageUrl(song);
+                const aName = getArtistsNames(song);
+                return (
+                  <button
+                    key={(song as any).id || idx}
+                    onClick={() => handleSongClick(song)}
+                    className="flex w-36 flex-shrink-0 flex-col items-center gap-3 rounded-2xl border border-transparent p-3 transition-all hover:border-gray-200 hover:bg-white dark:hover:border-gray-800 dark:hover:bg-gray-900"
+                  >
+                    <Image
+                      src={img}
+                      alt={song.name}
+                      width={100}
+                      height={100}
+                      className="h-24 w-24 rounded-xl object-cover shadow-sm transition-transform hover:scale-105"
+                      unoptimized
+                    />
+                    <div className="w-full text-center">
+                      <p className="truncate text-sm font-bold text-gray-900 dark:text-white">
+                        {song.name}
+                      </p>
+                      <p className="truncate text-xs font-medium text-gray-500 dark:text-gray-400">
+                        {aName}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Content Grid */}
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
@@ -233,7 +301,7 @@ const Vote: React.FC = () => {
                   {/* Vote Buttons */}
                   <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                     <button
-                      className="bg-gold-500 hover:bg-gold-600 dark:bg-gold-500 dark:hover:bg-gold-400 shadow-gold-500/20 inline-flex items-center gap-2 rounded-xl px-10 py-4 font-bold text-white shadow-lg transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none dark:text-black"
+                      className="inline-flex items-center gap-2 rounded-xl bg-gold-500 px-10 py-4 font-bold text-white shadow-lg shadow-gold-500/20 transition-all hover:bg-gold-600 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none dark:bg-gold-500 dark:text-black dark:hover:bg-gold-400"
                       onClick={() => handleVote("+")}
                       disabled={
                         !isUserLoggedIn || isSubmitting || isAuthLoading
