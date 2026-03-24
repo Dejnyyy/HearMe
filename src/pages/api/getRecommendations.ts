@@ -25,7 +25,7 @@ export default async function getRecommendations(
       },
     });
 
-    if (!account || !account.access_token) {
+    if (!account?.access_token) {
       return res
         .status(401)
         .json({ error: "No Spotify account linked or missing access token" });
@@ -45,11 +45,9 @@ export default async function getRecommendations(
     if (!spotifyRes.ok) {
       // If unauthorized (e.g. token expired), we might need the user to re-login
       if (spotifyRes.status === 401) {
-        return res
-          .status(401)
-          .json({
-            error: "Spotify token expired. Please log out and back in.",
-          });
+        return res.status(401).json({
+          error: "Spotify token expired. Please log out and back in.",
+        });
       }
       return res.status(500).json({ error: "Failed to fetch from Spotify" });
     }
