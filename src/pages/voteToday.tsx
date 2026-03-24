@@ -208,21 +208,21 @@ const Vote: React.FC = () => {
                   <button
                     key={(song as any).id || idx}
                     onClick={() => handleSongClick(song)}
-                    className="flex w-36 flex-shrink-0 flex-col items-center gap-3 rounded-2xl border border-transparent p-3 transition-all hover:border-gray-200 hover:bg-white dark:hover:border-gray-800 dark:hover:bg-gray-900"
+                    className="flex w-24 flex-shrink-0 flex-col items-center gap-2 rounded-2xl border border-transparent p-2 transition-all hover:border-gray-200 hover:bg-white dark:hover:border-gray-800 dark:hover:bg-gray-900"
                   >
                     <Image
                       src={img}
                       alt={song.name}
-                      width={100}
-                      height={100}
-                      className="h-24 w-24 rounded-xl object-cover shadow-sm transition-transform hover:scale-105"
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 rounded-xl object-cover shadow-sm transition-transform hover:scale-105"
                       unoptimized
                     />
                     <div className="w-full text-center">
-                      <p className="truncate text-sm font-bold text-gray-900 dark:text-white">
+                      <p className="truncate text-xs font-bold text-gray-900 dark:text-white">
                         {song.name}
                       </p>
-                      <p className="truncate text-xs font-medium text-gray-500 dark:text-gray-400">
+                      <p className="truncate text-[10px] font-medium text-gray-500 dark:text-gray-400">
                         {aName}
                       </p>
                     </div>

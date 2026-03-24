@@ -163,14 +163,14 @@ const Vote: React.FC = () => {
                   <button
                     key={(song as any).id || idx}
                     onClick={() => handleSongClick(song)}
-                    className="flex w-32 flex-shrink-0 flex-col items-center gap-2 rounded-2xl border border-transparent p-2 transition-all hover:border-gray-200 hover:bg-gray-50 dark:hover:border-gray-800 dark:hover:bg-gray-800"
+                    className="flex w-24 flex-shrink-0 flex-col items-center gap-2 rounded-2xl border border-transparent p-2 transition-all hover:border-gray-200 hover:bg-gray-50 dark:hover:border-gray-800 dark:hover:bg-gray-800"
                   >
                     <Image
                       src={img}
                       alt={song.name}
-                      width={80}
-                      height={80}
-                      className="h-20 w-20 rounded-xl object-cover shadow-sm transition-transform hover:scale-105"
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 rounded-xl object-cover shadow-sm transition-transform hover:scale-105"
                       unoptimized
                     />
                     <div className="w-full text-center">
