@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
       clientId: env.SPOTIFY_CLIENT_ID,
       clientSecret: env.SPOTIFY_CLIENT_SECRET,
       authorization:
-        "https://accounts.spotify.com/authorize?scope=user-read-email,user-read-private,user-read-recently-played,user-top-read",
+        "https://accounts.spotify.com/authorize?scope=user-read-email,user-read-private,user-read-recently-played,user-top-read&show_dialog=true",
     }),
   ],
   events: {
