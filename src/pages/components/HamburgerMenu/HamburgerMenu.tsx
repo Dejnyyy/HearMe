@@ -154,6 +154,18 @@ const HamburgerMenu: React.FC = () => {
           <span className={styles.menuText}>Sign Out</span>
         </button>
       </li>
+
+      {/* Credit */}
+      <li role="none" className={styles.creditItem}>
+        <a
+          href="https://dejny.eu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.creditLink}
+        >
+          dejny.eu
+        </a>
+      </li>
     </ul>
   );
 

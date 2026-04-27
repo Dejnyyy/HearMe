@@ -229,6 +229,31 @@
   transform: scale(0.98);
 }
 
+.creditItem {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.creditLink {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.creditLink:hover {
+  color: #6b7280;
+}
+
+:global(.dark) .creditLink {
+  color: #4b5563;
+}
+
+:global(.dark) .creditLink:hover {
+  color: #6b7280;
+}
+
 /* ===== Mobile overlay sheet ===== */
 .mobileWrap {
   position: relative;

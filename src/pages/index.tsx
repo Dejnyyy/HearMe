@@ -24,9 +24,29 @@ const Home: React.FC<HomeProps> = () => {
   return (
     <>
       <Head>
-        <title>HearMe</title>
-        <meta name="description" content="Created by Dejny" />
+        <title>HearMe — Music Voting &amp; Discovery</title>
+        <meta
+          name="description"
+          content="HearMe is a social music app where you vote for your favourite tracks every day, discover what your friends are listening to, and explore trending songs together."
+        />
         <link rel="icon" href="/favicon.ico" />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hearme.dejny.eu/" />
+        <meta property="og:title" content="HearMe — Music Voting &amp; Discovery" />
+        <meta
+          property="og:description"
+          content="Vote for your favourite songs every day, see what your friends are listening to, and discover new music on HearMe."
+        />
+        <meta property="og:image" content="https://hearme.dejny.eu/hearmethumbnail.png" />
+        {/* Twitter / X */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="HearMe — Music Voting &amp; Discovery" />
+        <meta
+          name="twitter:description"
+          content="Vote for your favourite songs every day, see what your friends are listening to, and discover new music on HearMe."
+        />
+        <meta name="twitter:image" content="https://hearme.dejny.eu/hearmethumbnail.png" />
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
@@ -40,8 +60,8 @@ const Home: React.FC<HomeProps> = () => {
           priority
         />
 
-        {/* Greeting */}
-        {sessionData && (
+        {/* App title — always visible for SEO */}
+        {sessionData ? (
           <h1 className="mb-6 text-center font-mono text-lg font-semibold text-white">
             Hello,{" "}
             <span className="cursor-pointer underline">
@@ -52,6 +72,20 @@ const Home: React.FC<HomeProps> = () => {
               HearMe
             </LinearGradient>
           </h1>
+        ) : (
+          <h1 className="mb-2 text-center font-mono text-3xl font-bold text-white">
+            <LinearGradient gradient={["to left", "#FFD700, #ff68f0"]}>
+              HearMe
+            </LinearGradient>
+          </h1>
+        )}
+
+        {/* Tagline */}
+        {!sessionData && (
+          <p className="mb-6 max-w-sm text-center font-mono text-sm text-gray-400">
+            Vote for your favourite track every day. Discover what your friends
+            are listening to. Explore trending music together.
+          </p>
         )}
 
         {/* Auth Buttons */}
@@ -66,6 +100,16 @@ const Home: React.FC<HomeProps> = () => {
             Enter App →
           </button>
         )}
+
+        {/* Footer credit */}
+        <a
+          href="https://dejny.eu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-6 font-mono text-xs text-gray-600 transition hover:text-gray-400"
+        >
+          dejny.eu
+        </a>
       </main>
     </>
   );
