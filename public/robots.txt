@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hearme.dejny.eu/sitemap.xml
