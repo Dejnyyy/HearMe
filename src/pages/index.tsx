@@ -232,7 +232,7 @@ const Home: React.FC = () => {
         <title>HearMe — Music Voting &amp; Discovery</title>
         <meta
           name="description"
-          content="HearMe is a social music app where you vote for your favourite tracks every day, discover what your friends are listening to, and explore trending songs together."
+          content="HearMe is a social music app: vote for your favourite track every day, see what your friends are listening to and explore trending songs together."
         />
         <link rel="icon" href="/favicon.ico" />
         {/* Open Graph */}
@@ -252,6 +252,23 @@ const Home: React.FC = () => {
           content="Vote for your favourite songs every day, see what your friends are listening to, and discover new music on HearMe."
         />
         <meta name="twitter:image" content="https://hearme.dejny.eu/hearmethumbnail.png" />
+        <link rel="canonical" href="https://hearme.dejny.eu/" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "HearMe",
+              url: "https://hearme.dejny.eu/",
+              logo: "https://hearme.dejny.eu/favicon.png",
+              description:
+                "HearMe is a social music app: vote for your favourite track every day, see what your friends are listening to and explore trending songs together.",
+              founder: { "@type": "Person", name: "Daniel Slabý", url: "https://dejny.eu" },
+              sameAs: ["https://dejny.eu", "https://github.com/Dejnyyy/HearMe"],
+            }),
+          }}
+        />
       </Head>
 
       <main className="relative z-10 mb-80 min-h-screen overflow-x-hidden bg-white text-gray-900">
